@@ -51,37 +51,36 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
 							<thead>
 								<tr>
 									<th class="text-center">#</th>
-									<th class="text-center">DNI</th>
+									<th class="text-center">NOMBRE DE USUARIO</th>
 									<th class="text-center">NOMBRES</th>
 									<th class="text-center">APELLIDOS</th>
-									<th class="text-center">TELÉFONO</th>
+									<th class="text-center">CELULAR</th>
 									<th class="text-center">TIPO DE USUARIO</th>
-									<th class="text-center">ELIMINAR</th>
+									<th class="text-center">ESTADO</th>
+									<th class="text-center">EDITAR</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php
-									$sql = "SELECT usuario.ID_usuario, personal.Dni, personal.Nombre, personal.Apellido, personal.Celular, tipo_usuario.Nombre_tipousuario
+									$sql = "SELECT usuario.ID_usuario, usuario.Nombre_usuario, personal.Nombre, personal.Apellido, personal.Celular, tipo_usuario.Nombre_tipousuario, usuario.Estado
 											FROM usuario
-											JOIN personal ON usuario.ID_usuario = personal.ID_personal
+											JOIN personal ON usuario.id_personal = personal.ID_personal
 											JOIN tipo_usuario ON usuario.ID_tipousuario = tipo_usuario.ID_tipousuario";
 									$resultado = $pdo->query($sql);
 									while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) {
 								?>
 								<tr>
 									<td><?php echo $fila['ID_usuario']; ?></td>
-									<td><?php echo $fila['Dni']; ?></td>
+									<td><?php echo $fila['Nombre_usuario']; ?></td>
 									<td><?php echo $fila['Nombre']; ?></td>
 									<td><?php echo $fila['Apellido']; ?></td>
 									<td><?php echo $fila['Celular']; ?></td>
 									<td><?php echo $fila['Nombre_tipousuario']; ?></td>
-							
+									<td><?php echo $fila['Estado']; ?></td>
 									<td>
-										<form>
-											<button type="submit" class="btn btn-danger btn-raised btn-xs">
-												<i class="zmdi zmdi-delete"></i>
-											</button>
-										</form>
+										<a href="editar.php?ID_usuario=<?php echo $fila['ID_usuario']; ?>" class="btn btn-success btn-raised btn-xs">
+											<i class="zmdi zmdi-edit"></i>
+										</a>
 									</td>
 								</tr>
 								<?php
@@ -111,3 +110,4 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
 
 </body>
 </html>
+

@@ -16,19 +16,22 @@ try {
     $personal_exists = $consulta->fetchColumn();
 
     if ($personal_exists) {
+        // Preparar la inserción en la tabla `usuario`
         $sentencia = $pdo->prepare("INSERT INTO usuario 
-            (ID_usuario, Nombre_usuario, Contraseña, ID_tipousuario, Estado) 
-            VALUES (:id_usuario, :nombre_usuario, :contrasena, :id_tipousuario, :estado_usuario)");
+            (id_personal, Nombre_usuario, Contraseña, ID_tipousuario, Estado) 
+            VALUES (:id_personal, :nombre_usuario, :contrasena, :id_tipousuario, :estado_usuario)");
 
-        $id_usuario = $id_personal;
-
-        $sentencia->bindParam(':id_usuario', $id_usuario);
+        // Asignar valores a los parámetros de la consulta
+        $sentencia->bindParam(':id_personal', $id_personal);
         $sentencia->bindParam(':nombre_usuario', $nombre_usuario);
         $sentencia->bindParam(':contrasena', $contrasena);
         $sentencia->bindParam(':id_tipousuario', $id_tipousuario);
         $sentencia->bindParam(':estado_usuario', $estado_usuario);
 
+        // Ejecutar la sentencia de inserción
         $sentencia->execute();
+        
+        // Redirigir a la página de usuarios
         header("Location: " . $URL . "/usuario/index.php");
         exit();
     } else {
@@ -37,4 +40,3 @@ try {
 } catch (PDOException $e) {
     echo "Error al registrar al usuario: " . $e->getMessage() . ".";
 }
-
