@@ -1,71 +1,24 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-
-    <?php
-    include "app/config.php";
-    include "layout/sesion.php";
-    session_start();
-    include "layout/parte1.php";
-    ?>
+    <title>Página de Presentación - Señales Internacionales</title>
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <!-- Content page -->
-		<div class="container-fluid">
-			<div class="page-header">
-			  <h1 class="text-titles">System <small>Tiles</small></h1>
-			</div>
-		</div>
-		<div class="full-box text-center" style="padding: 30px 10px;">
-			<article class="full-box tile">
-				<div class="full-box tile-title text-center text-titles text-uppercase">
-					Usuarios
-				</div>
-				<div class="full-box tile-icon text-center">
-					<i class="zmdi zmdi-account"></i>
-				</div>
-				<div class="full-box tile-number text-titles">
-					<p class="full-box">7</p>
-					<small>Register</small>
-				</div>
-			</article>
-			<article class="full-box tile">
-				<div class="full-box tile-title text-center text-titles text-uppercase">
-					Clientes
-				</div>
-				<div class="full-box tile-icon text-center">
-					<i class="zmdi zmdi-male-alt"></i>
-				</div>
-				<div class="full-box tile-number text-titles">
-					<p class="full-box">10</p>
-					<small>Register</small>
-				</div>
-			</article>
-			<article class="full-box tile">
-				<div class="full-box tile-title text-center text-titles text-uppercase">
-					Proveedores
-				</div>
-				<div class="full-box tile-icon text-center">
-					<i class="zmdi zmdi-face"></i>
-				</div>
-				<div class="full-box tile-number text-titles">
-					<p class="full-box">70</p>
-					<small>Register</small>
-				</div>
-			</article>
-		</div>
+    <div class="fullscreen-background">
+        <div class="intro">
+            <img src="img/señales_logo.png" alt="Logo" class="logo">
+            <div class="text-background">
+            <h1>Bienvenido a Señales Internacionales</h1>
+            <p>Conectando personas a través de nuestros servicios de internet y televisión de alta calidad.</p>
+            </div>
+            <!-- Botón de ingreso -->
+            <button id="ingresar-btn">Ingresar</button>
+        </div>
+    </div>
+    <script src="js/script.js"></script>
 </body>
-
-<footer>
-<?php
-include "layout/parte2.php";
-?>
-
-</footer>
 </html>
-
-

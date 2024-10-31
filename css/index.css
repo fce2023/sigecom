@@ -1,0 +1,91 @@
+/* Elimina los márgenes y rellenos para que la imagen cubra toda la pantalla */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.fullscreen-background {
+    background-image: url('../img/internet.jpg'); /* Ruta de tu imagen */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal */
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Ocupa toda la altura de la pantalla */
+    margin: 0;
+    background-color: #f0f0f0; /* Cambia el color de fondo si lo deseas */
+}
+
+/* Estilo de la imagen */
+.logo {
+    width: 250px; /* Ajusta el tamaño de la imagen: aquí lo agrandé a 250px */
+    height: auto; /* Mantiene la proporción de la imagen */
+    margin-top: -100px;
+    transition: transform 0.3s ease; /* Añade una transición para efectos */
+}
+
+/* Efecto hover para hacer un poco de zoom al pasar el mouse */
+.logo:hover {
+    transform: scale(1.1); /* Agranda la imagen un 10% al pasar el cursor */
+}
+
+}
+
+.intro h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.intro p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.text-background {
+    background-color: rgba(255, 255, 255, 0.8); /* Color de fondo con un poco de transparencia */
+    padding: 20px; /* Espacio interior */
+    border-radius: 10px; /* Bordes redondeados */
+    text-align: center; /* Centrar el texto */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para un efecto flotante */
+}
+
+.text-background h1,
+.text-background p {
+    margin: 0; /* Eliminar margen para mejor control */
+    color: #333; /* Color de texto */
+}
+
+#ingresar-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: rgba(41, 128, 185, 0.8);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#ingresar-btn:hover {
+    background-color: rgba(52, 152, 219, 0.8);
+}

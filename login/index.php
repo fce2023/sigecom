@@ -1,41 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<title>LogIn</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<link rel="stylesheet" href="../plant/css/main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Iniciar Sesión</title>
 </head>
 <body>
-	<div class="full-box login-container cover">
-		<form action="../app/controllers/login/ingreso.php" method="post" autocomplete="off" class="logInForm">
-			<p class="text-center text-muted"><i class="zmdi zmdi-account-circle zmdi-hc-5x"></i></p>
-			<p class="text-center text-muted text-uppercase">Inicia sesión con tu cuenta</p>
-			<div class="form-group label-floating">
-			  <label class="control-label" for="UserName">Usuario</label>
-			  <input class="form-control" id="UserName" type="text" name="usuario">
-			  <p class="help-block">Escribe tú nombre de usuario</p>
-			</div>
-			<div class="form-group label-floating">
-			  <label class="control-label" for="UserPass">Contraseña</label>
-			  <input class="form-control" id="UserPass" type="password" name="clave">
-			  <p class="help-block">Escribe tú contraseña</p>
-			</div>
-			<div class="form-group text-center">
-				<input type="submit" value="Iniciar sesión" class="btn btn-info" style="color: #FFF;">
-			</div>
-		</form>
-	</div>
-	<!--====== Scripts -->
-	<script src="<?php echo $URL; ?>plant/js/jquery-3.1.1.min.js"></script>
-	<script src="./plant/js/bootstrap.min.js"></script>
-	<script src="./plant/js/material.min.js"></script>
-	<script src="./plant/js/ripples.min.js"></script>
-	<script src="./plant/js/sweetalert2.min.js"></script>
-	<script src="./plant/js/jquery.mCustomScrollbar.concat.min.js"></script>
-	<script src="./plant/js/main.js"></script>
-	<script>
-		$.material.init();
-	</script>
+    <div class="login-wrapper">
+        <div class="logo-container">
+            <img src="../img/señales_logo.png" alt="Logo de la Empresa" class="logo">
+        </div>
+        <div class="login-container">
+            <h2>Iniciar Sesión</h2>
+            
+            <!-- Mostrar el mensaje de error si existe -->
+            <?php if (isset($_GET['error'])): ?>
+                <p style="color: red;"><?php echo htmlspecialchars($_GET['error']); ?></p>
+            <?php endif; ?>
+            
+            <form action="../app/controllers/login/ingreso.php" method="POST">
+                <!-- Mantener el nombre de usuario si existe en la URL -->
+                <input type="text" name="username" placeholder="Usuario" 
+                       value="<?php echo isset($_GET['username']) ? htmlspecialchars($_GET['username']) : ''; ?>" required>
+                
+                <div class="password-container">
+                    <input type="password" name="password" id="password" placeholder="Contraseña" required>
+                    <span id="togglePassword" onclick="togglePasswordVisibility()">
+                        <i class="fas fa-eye-slash"></i> <!-- Ícono de ojo para mostrar/ocultar contraseña -->
+                    </span>
+                </div>
+                <button type="submit">Iniciar sesión</button>
+                <p class="forgot-password"><a href="#">¿Olvidaste tu contraseña?</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('togglePassword').querySelector('i');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye'); // Cambiar a ícono de "ojo tachado"
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash'); // Cambiar a ícono de "ojo"
+            }
+        }
+    </script>
 </body>
 </html>
