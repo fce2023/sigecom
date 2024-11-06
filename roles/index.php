@@ -98,7 +98,7 @@ include ('../app/controllers/roles/listado_de_tipos_usuario.php');
 
 
                         <td>
-						<form action="<?php echo $URL; ?>/app/controllers/tipousuario/eliminar.php" method="post" onsubmit="return confirmacionEliminar(event, this);">
+						<form action="<?php echo $URL; ?>/app/controllers/roles/eliminar.php" method="post" onsubmit="return confirmacionEliminar(event, this);">
 									<input type="hidden" name="id_tipousuario" value="<?php echo $fila['ID_tipousuario']; ?>">
 									<button type="submit" class="btn btn-danger btn-raised btn-xs">
 										<i class="zmdi zmdi-delete"></i>
@@ -225,4 +225,7 @@ function confirmacionEliminar(e, form) {
         </div>
         <div class="modal-footer">
             <button type="button" id="confirmDelete">Sí, eliminarlo</button>
-
+            <button type="button" id="cancelDelete">Cancelar</button>
+        </div>
+    </div>
+</div>

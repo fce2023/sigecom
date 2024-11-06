@@ -34,10 +34,120 @@
 						</a>
 					</li>
 					<li>
-						<a href="#!" title="Cerrar Sesión" class="btn-exit-system">
-							<i class="zmdi zmdi-power"></i>
-						</a>
-					</li>
+    <a href="#" title="Cerrar Sesión" onclick="confirmacionCerrarSesion(event)">
+        <i class="zmdi zmdi-power"></i>
+    </a>
+</li>
+
+<!-- Modal de confirmación de cierre de sesión -->
+<div id="customConfirmModalLogout" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>¿Estás seguro que deseas cerrar sesión?</h2>
+        </div>
+        <div class="modal-footer">
+            <button id="confirmDeleteLogout">Sí</button>
+            <button id="cancelDeleteLogout">No</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmacionCerrarSesion(e) {
+    e.preventDefault(); // Prevenir el envío del formulario por defecto
+
+    // Mostrar el modal de confirmación
+    var modal = document.getElementById("customConfirmModalLogout");
+    modal.style.display = "block";
+
+    // Configurar el comportamiento del botón de confirmación
+    document.getElementById("confirmDeleteLogout").onclick = function() {
+        window.location.href = "<?php echo $URL; ?>/app/controllers/login/cerrar_sesion.php";
+    };
+
+    // Configurar el comportamiento del botón de cancelación
+    document.getElementById("cancelDeleteLogout").onclick = function() {
+        modal.style.display = "none"; // Cerrar el modal si el usuario cancela
+    };
+
+    // Cerrar el modal si el usuario hace clic fuera de él
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+}
+</script>
+
+<style>
+/* Estilo para el modal de confirmación de cierre de sesión */
+#customConfirmModalLogout {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    overflow: auto;
+    backdrop-filter: blur(5px); /* Añadir desenfoque para un efecto más elegante */
+}
+
+/* Estilo del contenido del modal */
+#customConfirmModalLogout .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 70%;
+    max-width: 500px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    color: #333;
+    text-align: center;
+}
+
+/* Estilo del título */
+#customConfirmModalLogout .modal-header h2 {
+    margin: 0 0 20px;
+    color: #444;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Estilo de los botones */
+#customConfirmModalLogout .modal-footer button {
+    padding: 12px 25px;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 25px;
+    color: #fff;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Estilo del botón de confirmación */
+#customConfirmModalLogout .modal-footer #confirmDeleteLogout {
+    background-color: #3085d6;
+}
+
+#customConfirmModalLogout .modal-footer #confirmDeleteLogout:hover {
+    background-color: #267ac8;
+    transform: scale(1.05);
+}
+
+/* Estilo del botón de cancelación */
+#customConfirmModalLogout .modal-footer #cancelDeleteLogout {
+    background-color: #d33;
+}
+
+#customConfirmModalLogout .modal-footer #cancelDeleteLogout:hover {
+    background-color: #b22;
+    transform: scale(1.05);
+}
+
+</style>
 				</ul>
 			</div>
 			<!-- SideBar Menu -->

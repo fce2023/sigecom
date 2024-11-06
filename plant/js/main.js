@@ -23,7 +23,7 @@ $(document).ready(function(){
 		  	confirmButtonText: '<i class="zmdi zmdi-run"></i> Si, Cerrar Sesión!',
 		  	cancelButtonText: '<i class="zmdi zmdi-close-circle"></i> No, Cancelar!'
 		}).then(function () {
-			window.location.href="app/controllers/login/cerrar_sesion.php";
+			window.location.href=URL+"/app/controllers/login/cerrar_sesion.php";
 		});
 	});
 	$('.btn-menu-dashboard').on('click', function(e){
