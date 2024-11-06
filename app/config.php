@@ -1,10 +1,10 @@
 <?php
 //Definir las constantes para la conexion a la base de datos
-define('SERVIDOR','144.22.57.73');
+define('SERVIDOR','localhost');
 define('PUERTO','3306');
-define('USUARIO','zuli');
-define('PASSWORD','*Zuli2024*');
-define('BD','señalesinternacionales');
+define('USUARIO','root');
+define('PASSWORD','');
+define('BD','sigecom');
 
 //Definir la variable $servidor con los datos de la conexion
 $servidor = "mysql:host=".SERVIDOR.";port=".PUERTO.";dbname=".BD;

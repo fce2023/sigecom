@@ -8,7 +8,6 @@
     <?php
     include "app/config.php";
     include "layout/sesion.php";
-
     include "layout/parte1.php";
     ?>
 </head>
@@ -16,7 +15,7 @@
     <!-- Content page -->
 		<div class="container-fluid">
 			<div class="page-header">
-			  <h1 class="text-titles">System <small>Tiles</small></h1>
+			  <h1 class="text-titles">S <small>SH</small></h1>
 			</div>
 		</div>
 		<div class="full-box text-center" style="padding: 30px 10px;">
@@ -27,8 +26,13 @@
 				<div class="full-box tile-icon text-center">
 					<i class="zmdi zmdi-account"></i>
 				</div>
+				<?php
+				$consulta = "SELECT COUNT(*) AS cantidad FROM usuario";
+				$resultado = $pdo->query($consulta);
+				$fila = $resultado->fetch(PDO::FETCH_ASSOC);
+				?>
 				<div class="full-box tile-number text-titles">
-					<p class="full-box">7</p>
+					<p class="full-box"><?php echo $fila['cantidad']; ?></p>
 					<small>Register</small>
 				</div>
 			</article>

@@ -24,12 +24,12 @@
 				</figure>
 				<ul class="full-box list-unstyled text-center">
 					<li>
-						<a href="my-data.html" title="Mis datos">
+						<a href="<?php echo $URL; ?>/my_data" title="Mis datos">
 							<i class="zmdi zmdi-account-circle"></i>
 						</a>
 					</li>
 					<li>
-						<a href="my-account.html" title="Mi cuenta">
+						<a href="<?php echo $URL; ?>/my_account" title="Mi cuenta">
 							<i class="zmdi zmdi-settings"></i>
 						</a>
 					</li>
@@ -43,10 +43,11 @@
 			<!-- SideBar Menu -->
 			<ul class="list-unstyled full-box dashboard-sideBar-Menu">
 				<li>
-					<a href="<?php echo $URL; ?>/index.php">
+					<a href="<?php echo $URL; ?>/home.php">
 						<i class="zmdi zmdi-home zmdi-hc-fw"></i> Inicio
 					</a>
 				</li>
+				<?php if ($rol_sesion === "superadministrador"): ?>
 
 				<li>
 					<a href="#!" class="btn-sideBar-SubMenu">
@@ -115,16 +116,12 @@
 						</li>
 					</ul>
 				</li>
-				<li>
-					<a href="catalog.html">
-						<i class="zmdi zmdi-book-image zmdi-hc-fw"></i> Permisos
-					</a>
-				</li>
+
 			</ul>
 		</div>
 	</section>
 
-
+<?php endif; ?>
 	<!-- Content page-->
 	<section class="full-box dashboard-contentPage">
 		<!-- NavBar -->

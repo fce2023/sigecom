@@ -1,12 +1,12 @@
 <?php
 
-$id_cargo = 1; // Replace with the desired cargo ID
-
-$sql = "SELECT Nom_cargo FROM cargo WHERE ID_cargo = :id_cargo";
+$sql = "SELECT p.ID_personal, p.Dni, p.Nombre, p.Apellido, p.Celular, c.ID_cargo, c.Nom_cargo, p.Estado
+        FROM personal p
+        INNER JOIN cargo c ON p.ID_cargo = c.ID_cargo
+        WHERE p.Estado = 1
+        ORDER BY p.Nombre";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([':id_cargo' => $id_cargo]);
-$resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$cargo_nombre = $resultado['Nom_cargo'] ?? 'Cargo no encontrado';
+$stmt->execute();
+$personal = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
