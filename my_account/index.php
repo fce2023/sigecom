@@ -119,3 +119,103 @@ include ('../app/controllers/cargo/listado_de_cargo.php');
 
 </body>
 </html>
+
+
+<script>
+function confirmacionEliminar(e, form) {
+    e.preventDefault(); // Prevenir el envío del formulario por defecto
+
+    // Mostrar el modal de confirmación
+    var modal = document.getElementById("customConfirmModal");
+    modal.style.display = "block";
+
+    // Configurar el comportamiento del botón de confirmación
+    document.getElementById("confirmDelete").onclick = function() {
+        form.submit(); // Enviar el formulario si el usuario confirma
+    };
+
+    // Configurar el comportamiento del botón de cancelación
+    document.getElementById("cancelDelete").onclick = function() {
+        modal.style.display = "none"; // Cerrar el modal si el usuario cancela
+    };
+
+    // Cerrar el modal si el usuario hace clic fuera de él
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+}
+
+
+
+
+
+</script>
+
+<style>
+/* Estilos para el modal personalizado */
+#customConfirmModal {
+    display: none; /* Ocultar el modal por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Hacer que el contenido sea desplazable si es necesario */
+    background-color: rgba(0, 0, 0, 0.4); /* Fondo oscuro */
+}
+
+/* Estilo del contenido del modal */
+#customConfirmModal .modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo del título */
+#customConfirmModal .modal-header h2 {
+    margin: 0;
+}
+
+/* Estilo de los botones */
+#customConfirmModal .modal-footer button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+#customConfirmModal .modal-footer #confirmDelete {
+    background-color: #3085d6;
+    color: white;
+}
+
+#customConfirmModal .modal-footer #cancelDelete {
+    background-color: #d33;
+    color: white;
+}
+</style>
+
+<!-- Modal de confirmación personalizado -->
+<div id="customConfirmModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>¿Estás seguro?</h2>
+        </div>
+        <div class="modal-body">
+            <p>No podrás revertir esto.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="confirmDelete">Sí, eliminarlo</button>
+            <button type="button" id="cancelDelete">Cancelar</button>
+        </div>
+    </div>
+</div>

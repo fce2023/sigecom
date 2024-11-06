@@ -3,7 +3,7 @@
 /* Fondo de pantalla para todo el cuerpo */
 body {
     font-family: Arial, sans-serif;
-    background-image: url('img/tecnico.jpg'); /* Asegúrate de que la ruta sea correcta */
+    background-image: url('../img/tecnico.jpg'); /* Asegúrate de que la ruta sea correcta */
     background-size: cover; /* La imagen cubre toda la pantalla */
     background-position: center; /* Centra la imagen */
     background-repeat: no-repeat; /* Evita que la imagen se repita */
@@ -34,11 +34,18 @@ body {
         display: none;
     }
 }
-
-.logo {
-    max-width: 300px; /* Ajusta según el tamaño de tu logo */
+@media (max-width: 768px) {
+    .logo {
+        display: none; /* Ocultar en pantallas pequeñas */
+    }
 }
 
+@media (min-width: 769px) {
+    .logo {
+        display: block; /* Mostrar en pantallas grandes */
+        width: 250px; /* Ajustar el tamaño para escritorio */
+    }
+}
 /* Contenedor del formulario de inicio de sesión */
 .login-container {
     background: #fff;
