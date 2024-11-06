@@ -52,6 +52,12 @@ include ('../layout/parte1.php');
                                     <input pattern="[0-9+]{1,11}" class="form-control" type="text" name="celular-reg" maxlength="11">
                                 </div>
                             </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="form-group label-floating">
+                                    <label class="control-label" style="color: #2196F3;">Dirección</label>
+                                    <input type="text" class="form-control" name="direccion-reg" maxlength="50">
+                                </div>
+                            </div>
                             <div class="col-xs-12">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Cargo</label>
