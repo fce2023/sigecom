@@ -91,7 +91,7 @@ include ('../app/controllers/personal/listado_de_personal.php');
                         <td><?php echo $fila['Apellido']; ?></td>
                         <td><?php echo $fila['Celular']; ?></td>
                         <td><?php 
-                            $query2 = "SELECT Nom_cargo FROM cargo WHERE ID_cargo = ".$fila['ID_cargo'];
+                            
                             $query2 = "SELECT Nom_cargo FROM cargo WHERE ID_cargo = " . $fila['ID_cargo'];
                             $cargo = $pdo->query($query2);
                             foreach ($cargo as $fila2) {
