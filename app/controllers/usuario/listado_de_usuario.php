@@ -2,7 +2,7 @@
 
 $id_usuario = 1; // Replace with the desired usuario ID
 
-$sql = "SELECT u.ID_usuario, u.id_personal, u.Nombre_usuario, u.Contraseña, u.ID_tipousuario, u.Estado
+$sql = "SELECT u.ID_usuario, u.id_personal, u.Nombre_usuario, u.Contraseña, u.ID_tipousuario, u.Estado, u.Correo
         FROM usuario u
         WHERE u.ID_usuario = :id_usuario";
 $stmt = $pdo->prepare($sql);
@@ -15,4 +15,5 @@ $usuario_nombre = $resultado['Nombre_usuario'] ?? 'Usuario no encontrado';
 $usuario_contraseña = $resultado['Contraseña'] ?? '';
 $usuario_id_tipousuario = $resultado['ID_tipousuario'] ?? 0;
 $usuario_estado = $resultado['Estado'] ?? '';
+$usuario_correo = $resultado['Correo'] ?? '';
 

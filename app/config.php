@@ -22,7 +22,7 @@ try{
 $URL = "http://localhost/SIGECOM/";
 
 //Definir la zona horaria
-date_default_timezone_set("America/Caracas");
+date_default_timezone_set("America/Lima");
 //Definir la fecha y hora actual
 $fechaHora = date('Y-m-d H:i:s');
 

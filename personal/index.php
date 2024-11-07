@@ -42,7 +42,7 @@ include ('../app/controllers/personal/listado_de_personal.php');
         <form method="GET" action="" class="estado-filter-form">
             <label for="filtroEstado">Mostrar:</label>
             <select id="filtroEstado" name="filtroEstado" class="form-control estado-filter-select" onchange="this.form.submit()">
-                <option value="todos" <?php echo (isset($_GET['filtroEstado']) && $_GET['filtroEstado'] == 'todos') ? 'selected' : ''; ?>>Mostrar ambos</option>
+                <option value="todos" <?php echo (isset($_GET['filtroEstado']) && $_GET['filtroEstado'] == 'todos') ? 'selected' : ''; ?>>Ambos</option>
                 <option value="activos" <?php echo (isset($_GET['filtroEstado']) && $_GET['filtroEstado'] == 'activos') ? 'selected' : ''; ?>>Mostrar solo activos</option>
                 <option value="inactivos" <?php echo (isset($_GET['filtroEstado']) && $_GET['filtroEstado'] == 'inactivos') ? 'selected' : ''; ?>>Mostrar solo inactivos</option>
             </select>
@@ -85,11 +85,19 @@ include ('../app/controllers/personal/listado_de_personal.php');
                     foreach ($personal as $fila) {
                     ?>
                     <tr>
-                        <td><?php echo $fila['ID_personal']; ?></td>
+                        <td><?php 
+                            static $contador = 1;
+                            echo $contador;
+                            $contador++;
+                            ?>
+                        </td>
+
+                        
                         <td><?php echo $fila['Dni']; ?></td>
                         <td><?php echo $fila['Nombre']; ?></td>
                         <td><?php echo $fila['Apellido']; ?></td>
                         <td><?php echo $fila['Celular']; ?></td>
+                       
                         <td><?php 
                             
                             $query2 = "SELECT Nom_cargo FROM cargo WHERE ID_cargo = " . $fila['ID_cargo'];
@@ -130,8 +138,8 @@ include ('../app/controllers/personal/listado_de_personal.php');
             </div>
             <nav class="text-center">
                 <ul class="pagination pagination-sm">
-                    <li class="disabled"><a href="javascript:void(0)">«</a></li>
-                    <li class="active"><a href="javascript:void(0)">1</a></li>
+                <li><a href="javascript:void(0)">«</a></li>
+                    <li><a href="javascript:void(0)">1</a></li>
                     <li><a href="javascript:void(0)">2</a></li>
                     <li><a href="javascript:void(0)">3</a></li>
                     <li><a href="javascript:void(0)">4</a></li>

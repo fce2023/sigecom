@@ -1,12 +1,11 @@
 <link rel="stylesheet" href="<?php echo $URL; ?>/css/editar_tipos_usuario.css">
-
 <div class="custom-modal" id="modal-tipo-usuario-<?php echo isset($id_tipousuario) ? $id_tipousuario : ''; ?>"
      data-nombre="<?php echo isset($fila['Nombre_tipousuario']) ? htmlspecialchars($fila['Nombre_tipousuario']) : ''; ?>"
      data-estado="<?php echo isset($fila['Estado']) ? htmlspecialchars($fila['Estado']) : ''; ?>">
     <div class="custom-modal-content">
         <div class="custom-modal-header">
             <h5 class="custom-modal-title">Editar Tipo de Usuario</h5>
-            <span class="close" onclick="closeModal('modal-tipo-usuario-editar-<?php echo isset($id_tipousuario) ? $id_tipousuario : ''; ?>')">&times;</span>
+            <span class="close" onclick="closeModal('modal-tipo-usuario-<?php echo isset($id_tipousuario) ? $id_tipousuario : ''; ?>')">&times;</span>
         </div>
         <div class="custom-modal-body">
             <form id="editarFormTipoUsuario<?php echo isset($id_tipousuario) ? $id_tipousuario : ''; ?>"
@@ -46,5 +45,6 @@
         </div>
     </div>
 </div>
+
 <?php endif; ?>
 

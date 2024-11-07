@@ -29,3 +29,14 @@ function openModalTipoUsuario(id_tipousuario) {
 
     modal.style.display = "block";
 }
+
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) {
+        console.error(`El modal con ID ${modalId} no se encuentra en el DOM.`);
+        return;
+    }
+
+    modal.style.display = "none";
+}
