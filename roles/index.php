@@ -114,7 +114,7 @@ include ('../app/controllers/roles/listado_de_tipos_usuario.php');
             </table>
 			<script src="<?php echo $URL; ?>/js/funciones_tipo_usuario.js"></script>
             </div>
-            <nav class="text-center">s
+            <nav class="text-center">
                 <ul class="pagination pagination-sm">
                     <li class="disabled"><a href="javascript:void(0)">«</a></li>
                     <li class="active"><a href="javascript:void(0)">1</a></li>

@@ -71,7 +71,7 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                 <thead>
                     <tr>
                         <th class="text-center">#</th>
-                        <th class="text-center">ID Personal</th>
+                        <th class="text-center">Nombre personal</th>
                         <th class="text-center">NOMBRE</th>
                         <th class="text-center">TIPO DE USUARIO</th>
                         <th class="text-center">ESTADO</th>
@@ -85,7 +85,15 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                     ?>
                     <tr>
                         <td><?php echo $fila['ID_usuario']; ?></td>
-                        <td><?php echo $fila['id_personal']; ?></td>
+                        <td>
+                            <?php 
+                                $query2 = "SELECT Nombre, Apellido, Dni FROM personal WHERE ID_personal = ".$fila['id_personal'];
+                                $personal = $pdo->query($query2);
+                                foreach ($personal as $fila2) {
+                                    echo $fila2['Nombre']." ".$fila2['Apellido']." (DNI: ".$fila2['Dni']." )";
+                                }
+                            ?>
+                        </td>
                         <td><?php echo $fila['Nombre_usuario']; ?></td>
                         <td><?php 
                             $query2 = "SELECT Nombre_tipousuario FROM tipo_usuario WHERE ID_tipousuario = ".$fila['ID_tipousuario'];
@@ -126,8 +134,8 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
             </div>
             <nav class="text-center">
                 <ul class="pagination pagination-sm">
-                    <li class="disabled"><a href="javascript:void(0)">«</a></li>
-                    <li class="active"><a href="javascript:void(0)">1</a></li>
+                <li><a href="javascript:void(0)">«</a></li>
+                    <li><a href="javascript:void(0)">1</a></li>
                     <li><a href="javascript:void(0)">2</a></li>
                     <li><a href="javascript:void(0)">3</a></li>
                     <li><a href="javascript:void(0)">4</a></li>
