@@ -24,15 +24,33 @@ include ('../app/controllers/personal/listado_de_personal.php');
 		</div>
 	</div>
 
-	<div class="container-fluid">
+
+
+    <div class="container-fluid">
 		<ul class="breadcrumb breadcrumb-tabs">
 			<li>
-				<a href="crear.php" class="btn btn-success">
+				<a href="crear.php" class="btn btn-info">
 					<i class="zmdi zmdi-plus"></i> &nbsp; NUEVO PERSONAL
 				</a>
 			</li>
 		</ul>
 	</div>
+
+	<div class="container-fluid">
+		<ul class="breadcrumb breadcrumb-tabs">
+			<li>
+				<a href="<?php echo $URL; ?>/app/controllers/personal/generar_pdf.php" target="_blank" class="btn btn-info">
+					<i class="zmdi zmdi-file-pdf"></i> &nbsp; GENERAR PDF
+				</a>
+			</li>
+			<li>
+				<a href="<?php echo $URL; ?>/app/controllers/personal/generar_exel.php" target="_blank" class="btn btn-success">
+					<i class="zmdi zmdi-file-excel"></i> &nbsp; GENERAR EXCEL
+				</a>
+			</li>
+		</ul>
+	</div>
+
 	<!-- Panel listado de personal -->
 <div class="container-fluid" style="background-color: #E5E5E5;">
     <div class="panel panel-success">

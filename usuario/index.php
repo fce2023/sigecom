@@ -33,6 +33,21 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
 			</li>
 		</ul>
 	</div>
+
+    <div class="container-fluid">
+		<ul class="breadcrumb breadcrumb-tabs">
+			<li>
+				<a href="<?php echo $URL; ?>/app/controllers/usuario/generar_pdf.php" target="_blank" class="btn btn-info">
+					<i class="zmdi zmdi-file-pdf"></i> &nbsp; GENERAR PDF
+				</a>
+			</li>
+			<li>
+				<a href="<?php echo $URL; ?>/app/controllers/usuario/generar_exel.php" target="_blank" class="btn btn-success">
+					<i class="zmdi zmdi-file-excel"></i> &nbsp; GENERAR EXCEL
+				</a>
+			</li>
+		</ul>
+	</div>
 	
 	<!-- Panel listado de usuarios -->
 <div class="container-fluid">
@@ -84,6 +99,7 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                     foreach ($usuarios as $fila) {
                     ?>
                     <tr>
+                        <td><?php echo isset($contador) ? ++$contador : ($contador = 1); ?></td>
                         <td><?php echo $contador += 1; ?></td>
                         <td>
                             <?php 
@@ -123,6 +139,8 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
 									</button>
 						</form>
 
+
+
                         </td>
                     </tr>
                     <?php
@@ -130,6 +148,16 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                     ?>
                 </tbody>
             </table>
+            <?php if (isset($_GET['error'])): ?>
+                            <div class="alert alert-danger">
+                                <?php echo htmlspecialchars($_GET['error']); ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php if (isset($_GET['success'])): ?>
+                            <div class="alert alert-success">
+                                <?php echo htmlspecialchars($_GET['success']); ?>
+                            </div>
+                        <?php endif; ?>
 			<script src="<?php echo $URL; ?>/js/funciones_usuario.js"></script>
             </div>
             <nav class="text-center">

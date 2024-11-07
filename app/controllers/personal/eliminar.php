@@ -98,11 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Script para ocultar la notificación después de unos segundos
         setTimeout(function() {
             var notification = document.getElementById('notification');
-            if (notification) {
+            if (notification && (notification.classList.contains('success') || notification.classList.contains('error'))) {
                 notification.classList.add('hide');
                 window.location.href = "<?= $URL ?>/personal";
             }
-        }, 4000); // 5 segundos para que desaparezca
+        }, 2000); // 5 segundos para que desaparezca
     </script>
 </body>
 </html>

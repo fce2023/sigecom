@@ -30,6 +30,22 @@ include ('../app/controllers/cargo/listado_de_cargo.php');
 			</li>
 		</ul>
 	</div>
+
+	<div class="container-fluid">
+		<ul class="breadcrumb breadcrumb-tabs">
+			<li>
+				<a href="<?php echo $URL; ?>/app/controllers/cargo/generar_pdf.php" target="_blank" class="btn btn-info">
+					<i class="zmdi zmdi-file-pdf"></i> &nbsp; GENERAR PDF
+				</a>
+			</li>
+			<li>
+				<a href="<?php echo $URL; ?>/app/controllers/cargo/generar_exel.php" target="_blank" class="btn btn-success">
+					<i class="zmdi zmdi-file-excel"></i> &nbsp; GENERAR EXCEL
+				</a>
+			</li>
+		</ul>
+	</div>
+	
 	
 	<!-- Panel listado de cargo -->
 	<div class="container-fluid">
@@ -78,7 +94,7 @@ include ('../app/controllers/cargo/listado_de_cargo.php');
 							foreach ($cargos as $fila) {
 							?>
 							<tr>
-							<td><?php echo $contador += 1; ?></td>
+							<td><?php echo isset($contador) ? ++$contador : ($contador = 1); ?></td>
 								<td><?php echo $fila['Nom_cargo']; ?></td>
 								<td style="color: <?php echo $fila['Estado'] == 1 ? 'green' : 'red'; ?>"><?php echo $fila['Estado'] == 1 ? 'Activo' : 'Inactivo'; ?></td>
 								<td>

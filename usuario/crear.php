@@ -65,8 +65,18 @@ include ('../layout/parte1.php');
                             <div class="col-xs-12">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Nombre del Usuario *</label>
-                                    <input class="form-control" type="text" name="nombre-usuario" required="" maxlength="50">
-                                </div>
+                                    <input id="nombre-usuario" class="form-control" type="text" name="nombre-usuario" required="" maxlength="50">
+                                    <?php if (isset($_GET['error'])): ?>
+                                        <div class="alert alert-danger">
+                                            <?php echo htmlspecialchars($_GET['error']); ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if (isset($_GET['success'])): ?>
+                                        <div class="alert alert-success">
+                                            <?php echo htmlspecialchars($_GET['success']); ?>
+                                        </div>
+                                    <?php endif; ?>
                             </div>
                             <div class="col-xs-12">
                                 <div class="form-group label-floating">
@@ -113,7 +123,9 @@ include ('../layout/parte1.php');
                     <button type="submit" class="btn btn-primary btn-raised btn-sm"><i class="zmdi zmdi-floppy"></i> Guardar</button>
                 </p>
             </form>
-        </div>
+
+
+
     </div>
 </div>
 

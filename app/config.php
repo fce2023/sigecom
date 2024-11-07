@@ -1,9 +1,9 @@
 <?php
 //Definir las constantes para la conexion a la base de datos
-define('SERVIDOR','sehuacho.ddns.net');
+define('SERVIDOR','localhost');
 define('PUERTO','3306');
 define('USUARIO','root');
-define('PASSWORD','*Royner123123*');
+define('PASSWORD','');
 define('BD','sigecom');
 
 //Definir la variable $servidor con los datos de la conexion
@@ -19,7 +19,7 @@ try{
 }
 
 //Definir la variable $URL con la ruta del sistema
-$URL = "https://sehuacho.com/sigecom/";
+$URL = "http://localhost/sigecom/";
 
 //Definir la zona horaria
 date_default_timezone_set("America/Lima");
