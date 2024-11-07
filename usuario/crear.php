@@ -65,7 +65,7 @@ include ('../layout/parte1.php');
                             <div class="col-xs-12">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Nombre del Usuario *</label>
-                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,50}" class="form-control" type="text" name="nombre-usuario" required="" maxlength="50">
+                                    <input class="form-control" type="text" name="nombre-usuario" required="" maxlength="50">
                                 </div>
                             </div>
                             <div class="col-xs-12">

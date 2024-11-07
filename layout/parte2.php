@@ -1,3 +1,9 @@
 <footer class="footer full-box text-center">
-	<p class="text-footer">SIGECOM &copy; 2017</p>
+	<p class="text-footer">SIGECOM &copy; Grupo 2: 2024 Julio. B, Betty .S, Daniel. T @Todos los Derechos Reservados </p>
 </footer>
+
+
+<!-- -	Borda Goycochea Julio Giomar Renato
+-	Suloaga Santiago Betty Josefina
+-	Torres Leon Daniel Steven
+ -->

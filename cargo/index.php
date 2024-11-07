@@ -78,7 +78,7 @@ include ('../app/controllers/cargo/listado_de_cargo.php');
 							foreach ($cargos as $fila) {
 							?>
 							<tr>
-								<td><?php echo $fila['ID_cargo']; ?></td>
+							<td><?php echo $contador += 1; ?></td>
 								<td><?php echo $fila['Nom_cargo']; ?></td>
 								<td style="color: <?php echo $fila['Estado'] == 1 ? 'green' : 'red'; ?>"><?php echo $fila['Estado'] == 1 ? 'Activo' : 'Inactivo'; ?></td>
 								<td>

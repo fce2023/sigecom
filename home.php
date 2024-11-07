@@ -15,11 +15,11 @@
     <!-- Content page -->
 		<div class="container-fluid">
 			<div class="page-header">
-			  <h1 class="text-titles">S <small>SH</small></h1>
+			  <h1 class="text-titles">Dashboard <small>System</small></h1>
 			</div>
 		</div>
 		<div class="full-box text-center" style="padding: 30px 10px;">
-			<article class="full-box tile">
+			<article class="full-box tile" onclick="location.href='<?php echo $URL; ?>/usuario/index.php'">
 				<div class="full-box tile-title text-center text-titles text-uppercase">
 					Usuarios
 				</div>
@@ -36,17 +36,22 @@
 					<small>Register</small>
 				</div>
 			</article>
-			<article class="full-box tile">
+			<article class="full-box tile" onclick="location.href='<?php echo $URL; ?>/personal/index.php'">
 				<div class="full-box tile-title text-center text-titles text-uppercase">
-					Clientes
+					PERSONAL
 				</div>
 				<div class="full-box tile-icon text-center">
 					<i class="zmdi zmdi-male-alt"></i>
 				</div>
-				<div class="full-box tile-number text-titles">
-					<p class="full-box">10</p>
-					<small>Register</small>
-				</div>
+				                <?php
+                $consultaClientes = "SELECT COUNT(*) AS cantidad FROM personal";
+                $resultadoClientes = $pdo->query($consultaClientes);
+                $filaClientes = $resultadoClientes->fetch(PDO::FETCH_ASSOC);
+                ?>
+                <div class="full-box tile-number text-titles">
+                    <p class="full-box"><?php echo $filaClientes['cantidad']; ?></p>
+                    <small>Register</small>
+                </div>
 			</article>
 			<article class="full-box tile">
 				<div class="full-box tile-title text-center text-titles text-uppercase">
@@ -55,8 +60,13 @@
 				<div class="full-box tile-icon text-center">
 					<i class="zmdi zmdi-face"></i>
 				</div>
+				<?php
+				$consultaProveedores = "SELECT COUNT(*) AS cantidad FROM proveedor";
+				$resultadoProveedores = $pdo->query($consultaProveedores);
+				$filaProveedores = $resultadoProveedores->fetch(PDO::FETCH_ASSOC);
+				?>
 				<div class="full-box tile-number text-titles">
-					<p class="full-box">70</p>
+					<p class="full-box"><?php echo $filaProveedores['cantidad']; ?></p>
 					<small>Register</small>
 				</div>
 			</article>

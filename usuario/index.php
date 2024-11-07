@@ -84,7 +84,7 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                     foreach ($usuarios as $fila) {
                     ?>
                     <tr>
-                        <td><?php echo $fila['ID_usuario']; ?></td>
+                        <td><?php echo $contador += 1; ?></td>
                         <td>
                             <?php 
                                 $query2 = "SELECT Nombre, Apellido, Dni FROM personal WHERE ID_personal = ".$fila['id_personal'];

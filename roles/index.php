@@ -82,7 +82,7 @@ include ('../app/controllers/roles/listado_de_tipos_usuario.php');
                     foreach ($tipos_usuario as $fila) {
                     ?>
                     <tr>
-                        <td><?php echo $fila['ID_tipousuario']; ?></td>
+                        <td><?php echo $contador += 1; ?></td>
                         <td><?php echo $fila['Nombre_tipousuario']; ?></td>
                         <td style="color: <?php echo $fila['Estado'] == '1' ? 'green' : 'red'; ?>"><?php echo $fila['Estado'] == '1' ? 'Activo' : 'Inactivo'; ?></td>
                         <td>
