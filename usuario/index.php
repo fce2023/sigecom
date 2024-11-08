@@ -87,7 +87,7 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-center">Nombre personal</th>
-                        <th class="text-center">NOMBRE</th>
+                        
                         <th class="text-center">TIPO DE USUARIO</th>
                         <th class="text-center">ESTADO</th>
                         <th class="text-center">EDITAR</th>
@@ -100,7 +100,7 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                     ?>
                     <tr>
                         <td><?php echo isset($contador) ? ++$contador : ($contador = 1); ?></td>
-                        <td><?php echo $contador += 1; ?></td>
+                       
                         <td>
                             <?php 
                                 $query2 = "SELECT Nombre, Apellido, Dni FROM personal WHERE ID_personal = ".$fila['id_personal'];

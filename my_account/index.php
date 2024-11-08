@@ -76,23 +76,38 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                 <div class="col-xs-12">
                     <div class="form-group label-floating">
                         <label class="control-label">Contraseña actual *</label>
-                        <input class="form-control" type="password" name="password-up" required="" maxlength="70">
+                        <input class="form-control password-toggle" type="password" name="password-up" required="" maxlength="70">
+                        <span class="toggle-password"><i class="zmdi zmdi-eye"></i></span>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group label-floating">
                         <label class="control-label">Nueva contraseña *</label>
-                        <input class="form-control" type="password" name="newPassword1-up" required="" maxlength="70">
+                        <input class="form-control password-toggle" type="password" name="newPassword1-up" required="" maxlength="70">
+                        <span class="toggle-password"><i class="zmdi zmdi-eye"></i></span>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group label-floating">
                         <label class="control-label">Repita la nueva contraseña *</label>
-                        <input class="form-control" type="password" name="newPassword2-up" required="" maxlength="70">
+                        <input class="form-control password-toggle" type="password" name="newPassword2-up" required="" maxlength="70">
+                        <span class="toggle-password"><i class="zmdi zmdi-eye"></i></span>
                     </div>
                 </div>
             </div>
         </div>
+
+<script>
+document.querySelectorAll('.toggle-password').forEach(item => {
+    item.addEventListener('click', event => {
+        const input = item.previousElementSibling;
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        item.querySelector('i').classList.toggle('zmdi-eye');
+        item.querySelector('i').classList.toggle('zmdi-eye-off');
+    });
+});
+</script>
     </fieldset>
 
     <br>
