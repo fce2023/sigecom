@@ -12,7 +12,7 @@
 >
     <div class="custom-modal-content">
         <div class="custom-modal-header">
-            <h5 class="custom-modal-title">Editar Personal</h5>
+            <h5 class="custom-modal-title">Edicion Personal</h5>
             <span class="close" onclick="closeModal('editarModalPersonal<?php echo isset($id_personal) ? $id_personal : ''; ?>')">&times;</span>
         </div>
         <div class="custom-modal-body">
@@ -21,7 +21,7 @@
                 <input type="hidden" name="id_personal" value="<?php echo isset($id_personal) ? $id_personal : ''; ?>">
 
                 <div class="form-group">
-                    <label for="nombre-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Nombre</label>
+                    <label for="nombre-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Nombre Personal</label>
                     <input type="text" class="form-control" id="nombre-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="nombre-reg" value="<?php echo isset($fila['Nombre']) ? htmlspecialchars($fila['Nombre']) : ''; ?>" required>
                 </div>
 

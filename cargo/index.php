@@ -14,6 +14,8 @@ include ('../app/controllers/cargo/listado_de_cargo.php');
 </head>
 <body>
 
+   
+
 	<!-- Content page -->
 	<div class="container-fluid">
 		<div class="page-header">

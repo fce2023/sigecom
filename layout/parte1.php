@@ -148,6 +148,8 @@ function confirmacionCerrarSesion(e) {
 }
 
 </style>
+
+
 				</ul>
 			</div>
 			<!-- SideBar Menu -->
@@ -157,6 +159,7 @@ function confirmacionCerrarSesion(e) {
 						<i class="zmdi zmdi-home zmdi-hc-fw"></i> Inicio
 					</a>
 				</li>
+
 				<?php if ($rol_sesion === "superadministrador"): ?>
 
 				<li>
@@ -171,8 +174,6 @@ function confirmacionCerrarSesion(e) {
                         <li>
 							<a href="<?php echo $URL; ?>/personal/crear.php"><i class="zmdi zmdi-plus zmdi-hc-fw"></i> Agregar Personal</a>
 						</li>
-
-
 
 					</ul>
 				</li>
@@ -226,6 +227,36 @@ function confirmacionCerrarSesion(e) {
 						</li>
 					</ul>
 				</li>
+
+				
+				<li>
+					<a href="#!" class="btn-sideBar-SubMenu">
+						<i class="zmdi zmdi-case-download zmdi-hc-fw"></i> Inventario <i class="zmdi zmdi-caret-down pull-right"></i>
+					</a>
+					<ul class="list-unstyled full-box">
+						<li>
+							<a href="<?php echo $URL; ?>/inventario/productos/crear.php"><i class="zmdi zmdi-case-download zmdi-hc-fw"></i> Productos</a>
+						</li>
+						<li>
+							<a href="<?php echo $URL; ?>inventario/movimientos/entrada/"><i class="zmdi zmdi-plus zmdi-hc-fw"></i> Movimientos</a>
+						</li>
+					</ul>
+				</li>
+
+				<li>
+					<a href="#!" class="btn-sideBar-SubMenu">
+						<i class="zmdi zmdi-group zmdi-hc-fw"></i> Proveedores <i class="zmdi zmdi-caret-down pull-right"></i>
+					</a>
+					<ul class="list-unstyled full-box">
+						<li>
+							<a href="<?php echo $URL; ?>/proveedor/crear.php"><i class="zmdi zmdi-group zmdi-hc-fw"></i> Agregar proveedor</a>
+						</li>
+						<li>
+							<a href="<?php echo $URL; ?>/proveedor/"><i class="zmdi zmdi-view-list zmdi-hc-fw"></i> Lista de proveedores</a>
+						</li>
+					</ul>
+				</li>
+
 
 			</ul>
 		</div>

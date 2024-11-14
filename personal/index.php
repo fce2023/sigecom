@@ -127,6 +127,9 @@ include ('../app/controllers/personal/listado_de_personal.php');
 
                         <td style="color: <?php echo $fila['Estado'] == 1 ? 'green' : 'red'; ?>"><?php echo $fila['Estado'] == 1 ? 'Activo' : 'Inactivo'; ?></td>
                         <td>
+
+
+                            <!--Boton de editar -->
 							<button type="button" class="btn btn-primary btn-raised btn-xs" onclick="openModal('editarModalPersonal<?php echo $fila['ID_personal']; ?>')">
 								<i class="zmdi zmdi-edit"></i>
 							</button>
