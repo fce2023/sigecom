@@ -23,6 +23,7 @@ include ('../layout/parte1.php');
                 <fieldset>
                     <legend style="color: #2196F3;"><i class="zmdi zmdi-account-box"></i> &nbsp; Información del Usuario</legend>
                     <div class="container-fluid">
+                        
                         <div class="row";
 
                         
@@ -37,7 +38,7 @@ include ('../layout/parte1.php');
                                         try {
 
                                             // Consulta preparada para obtener datos del personal activo (Estado = 1)
-                                            $consulta = $pdo->prepare("SELECT ID_personal, Nombre, Apellido, Dni FROM personal WHERE Estado = 1");
+                                            $consulta = $pdo->prepare("SELECT ID_personal, Dni, Nombre, Apellido_paterno, Apellido_materno, Celular, Direccion FROM personal WHERE Estado = 1");
                                             $consulta->execute();
                                             
                                             // Obtener resultados
@@ -48,7 +49,7 @@ include ('../layout/parte1.php');
                                                 echo "<option>No se encontraron datos</option>";
                                             } else {
                                                 foreach ($resultado as $fila) {
-                                                    echo "<option value='" . $fila['ID_personal'] . "'>" . $fila['Nombre'] . " " . $fila['Apellido'] . " - " . $fila['Dni'] . "</option>";
+                                                    echo "<option value='" . $fila['ID_personal'] . "'>" . $fila['Nombre'] . " " . $fila['Apellido_paterno'] . " " . $fila['Apellido_materno'] . " - " . $fila['Dni'] . "</option>";
                                                 }
                                             }
 
