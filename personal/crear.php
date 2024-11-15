@@ -43,13 +43,13 @@ include ('../layout/parte1.php');
                             <div class="col-xs-12 col-sm-6">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Apellido Paterno *</label>
-                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,100}" class="form-control" type="text" name="apellido_paterno-reg" required="" maxlength="100">
+                                    <input class="form-control" type="text" name="apellido-paterno-reg" required="">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-6">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Apellido Materno *</label>
-                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,250}" class="form-control" type="text" name="apellido_materno-reg" required="" maxlength="250">
+                                    <input class="form-control" type="text" name="apellido_materno-reg" required="">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-6">

@@ -2,34 +2,42 @@
 
 include ('../../config.php');
 
-$dni = $_POST['dni-reg'];
-$nombre = $_POST['nombre-reg'];
-$apellido = $_POST['apellido-reg'];
-$celular = $_POST['celular-reg'];
-$cargo = $_POST['cargo-reg'];
-$direccion = $_POST['direccion-reg'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $consulta = $pdo->prepare("INSERT INTO personal (Dni, Nombre, Apellido_paterno, Apellido_materno, Celular, Direccion, ID_cargo, Estado) VALUES (:dni, :nombres, :apellido_paterno, :apellido_materno, :celular, :direccion, :id_cargo, :estado)");
+    $consulta->execute(array(
+        ':dni' => $_POST['dni-reg'],
+        ':nombres' => $_POST['nombre-reg'],
+        ':apellido_paterno' => $_POST['apellido-paterno-reg'],
+        ':apellido_materno' => $_POST['apellido_materno-reg'],
+        ':celular' => $_POST['celular-reg'],
+        ':direccion' => $_POST['direccion-reg'],
+        ':id_cargo' => $_POST['cargo-reg'],
+        ':estado' => !empty($_POST['estado-reg']) ? ($_POST['estado-reg'] == "Activo" ? 1 : 0) : 1
+    ));
 
-try {
-    $sentencia = $pdo->prepare("INSERT INTO personal
-        (Dni, Nombre, Apellido, Celular, ID_cargo, Estado, Direccion) 
-        VALUES (:dni, :nombre, :apellido, :celular, :cargo, 1, :direccion)");
-
-    $sentencia->bindParam('dni', $dni);
-    $sentencia->bindParam('nombre', $nombre);
-    $sentencia->bindParam('apellido', $apellido);
-    $sentencia->bindParam('celular', $celular);
-    $sentencia->bindParam('cargo', $cargo);
-    $sentencia->bindParam('direccion', $direccion);
-
-    $sentencia->execute();
-
+    if ($consulta) {
+        $_SESSION['mensaje'] = "Se ha registrado correctamente el personal";
+        header('Location: '.$URL.'/personal/');
+        exit;
+    } else {
+        $_SESSION['errores'] = array("Error al registrar el personal");
+        header('Location: ../crear.php');
+        exit;
+    }
+} else {
     session_start();
-    $_SESSION['mensaje'] = "Se registró al personal de la manera correcta";
-    header('Location: ' . $URL . '/personal/index.php');
-} catch (PDOException $e) {
-    // Handle error
-    session_start();
-    $_SESSION['mensaje'] = "Error al registrar al personal: " . $e->getMessage();
-    header('Location: ' . $URL . '/personal/create.php');
+    if (isset($_SESSION['mensaje'])) {
+        echo "<p class='alert alert-success'>".$_SESSION['mensaje']."</p>";
+        unset($_SESSION['mensaje']);
+    }
+
+    if (isset($_SESSION['errores'])) {
+        echo "<p class='alert alert-danger'>";
+        foreach ($_SESSION['errores'] as $error) {
+            echo $error . "<br>";
+        }
+        echo "</p>";
+        unset($_SESSION['errores']);
+    }
 }
 
