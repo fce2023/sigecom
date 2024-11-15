@@ -37,13 +37,19 @@ include ('../layout/parte1.php');
                             <div class="col-xs-12 col-sm-6">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Nombres *</label>
-                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,50}" class="form-control" type="text" name="nombre-reg" required="" maxlength="50">
+                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,100}" class="form-control" type="text" name="nombre-reg" required="" maxlength="100">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-6">
                                 <div class="form-group label-floating">
-                                    <label class="control-label" style="color: #2196F3;">Apellidos *</label>
-                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,50}" class="form-control" type="text" name="apellido-reg" required="" maxlength="50">
+                                    <label class="control-label" style="color: #2196F3;">Apellido Paterno *</label>
+                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,100}" class="form-control" type="text" name="apellido_paterno-reg" required="" maxlength="100">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="form-group label-floating">
+                                    <label class="control-label" style="color: #2196F3;">Apellido Materno *</label>
+                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,250}" class="form-control" type="text" name="apellido_materno-reg" required="" maxlength="250">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-6">
@@ -55,7 +61,7 @@ include ('../layout/parte1.php');
                             <div class="col-xs-12 col-sm-6">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Dirección</label>
-                                    <input type="text" class="form-control" name="direccion-reg" maxlength="50">
+                                    <input type="text" class="form-control" name="direccion-reg" maxlength="250">
                                 </div>
                             </div>
                             <div class="col-xs-12">

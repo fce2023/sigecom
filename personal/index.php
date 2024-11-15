@@ -90,8 +90,10 @@ include ('../app/controllers/personal/listado_de_personal.php');
                         <th class="text-center">#</th>
                         <th class="text-center">DNI</th>
                         <th class="text-center">NOMBRE</th>
-                        <th class="text-center">APELLIDO</th>
+                        <th class="text-center">APELLIDO PATERNO</th>
+                        <th class="text-center">APELLIDO MATERNO</th>
                         <th class="text-center">CELULAR</th>
+                        <th class="text-center">DIRECCION</th>
                         <th class="text-center">CARGO</th>
                         <th class="text-center">ESTADO</th>
                         <th class="text-center">EDITAR</th>
@@ -113,9 +115,11 @@ include ('../app/controllers/personal/listado_de_personal.php');
                         
                         <td><?php echo $fila['Dni']; ?></td>
                         <td><?php echo $fila['Nombre']; ?></td>
-                        <td><?php echo $fila['Apellido']; ?></td>
+                        <td><?php echo $fila['Apellido_paterno']; ?></td>
+                        <td><?php echo $fila['Apellido_materno']; ?></td>
                         <td><?php echo $fila['Celular']; ?></td>
-                       
+                        <td><?php echo $fila['Direccion']; ?></td>
+
                         <td><?php 
                             
                             $query2 = "SELECT Nom_cargo FROM cargo WHERE ID_cargo = " . $fila['ID_cargo'];
@@ -127,7 +131,6 @@ include ('../app/controllers/personal/listado_de_personal.php');
 
                         <td style="color: <?php echo $fila['Estado'] == 1 ? 'green' : 'red'; ?>"><?php echo $fila['Estado'] == 1 ? 'Activo' : 'Inactivo'; ?></td>
                         <td>
-
 
                             <!--Boton de editar -->
 							<button type="button" class="btn btn-primary btn-raised btn-xs" onclick="openModal('editarModalPersonal<?php echo $fila['ID_personal']; ?>')">

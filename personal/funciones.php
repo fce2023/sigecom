@@ -1,56 +1,59 @@
-<link rel="stylesheet" href="<?php echo $URL; ?>/css/editar_personal.css">
-
+<link rel="stylesheet" href="<?php echo $URL; ?>/css/editar_personal.css" />
 <div class="custom-modal" id="editarModalPersonal<?php echo isset($id_personal) ? $id_personal : ''; ?>"
      <?php if (isset($fila)): ?>
-         data-nombre-personal="<?php echo htmlspecialchars($fila['Nombre']); ?>"
-         data-apellido-personal="<?php echo htmlspecialchars($fila['Apellido']); ?>"
-         data-celular-personal="<?php echo htmlspecialchars($fila['Celular']); ?>"
-         data-dni-personal="<?php echo htmlspecialchars($fila['Dni']); ?>"
-         data-estado-personal="<?php echo htmlspecialchars($fila['Estado']); ?>"
-         data-cargo-personal="<?php echo htmlspecialchars($fila['ID_cargo']); ?>"
+         data-dni-personal="<?php echo htmlspecialchars((string) $fila['Dni'], ENT_QUOTES); ?>"
+         data-nombre-personal="<?php echo htmlspecialchars((string) $fila['Nombre'], ENT_QUOTES); ?>"
+         data-apellido-paterno-personal="<?php echo htmlspecialchars((string) $fila['Apellido_paterno'], ENT_QUOTES); ?>"
+         data-apellido-materno-personal="<?php echo htmlspecialchars((string) $fila['Apellido_materno'], ENT_QUOTES); ?>"
+         data-celular-personal="<?php echo htmlspecialchars((string) $fila['Celular'], ENT_QUOTES); ?>"
+         data-direccion-personal="<?php echo htmlspecialchars((string) $fila['Direccion'], ENT_QUOTES); ?>"
+         data-id-cargo-personal="<?php echo htmlspecialchars((string) $fila['ID_cargo'], ENT_QUOTES); ?>"
+         data-estado-personal="<?php echo htmlspecialchars((string) $fila['Estado'] == 'Activo' ? 1 : 0, ENT_QUOTES); ?>"
      <?php endif; ?>
 >
     <div class="custom-modal-content">
         <div class="custom-modal-header">
-            <h5 class="custom-modal-title">Edicion Personal</h5>
+            <h5 class="custom-modal-title">Edición Personal</h5>
             <span class="close" onclick="closeModal('editarModalPersonal<?php echo isset($id_personal) ? $id_personal : ''; ?>')">&times;</span>
         </div>
         <div class="custom-modal-body">
             <form id="editarFormPersonal<?php echo isset($id_personal) ? $id_personal : ''; ?>"
                   action="<?php echo $URL; ?>/app/controllers/personal/editar.php" method="post">
                 <input type="hidden" name="id_personal" value="<?php echo isset($id_personal) ? $id_personal : ''; ?>">
-
+                
                 <div class="form-group">
-                    <label for="nombre-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Nombre Personal</label>
-                    <input type="text" class="form-control" id="nombre-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="nombre-reg" value="<?php echo isset($fila['Nombre']) ? htmlspecialchars($fila['Nombre']) : ''; ?>" required>
+                    <label for="dni-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">DNI</label>
+                    <input type="text" class="form-control" id="dni-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="dni-reg" value="<?php echo isset($fila['Dni']) ? htmlspecialchars((string) $fila['Dni'], ENT_QUOTES) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="apellido-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Apellido</label>
-                    <input type="text" class="form-control" id="apellido-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="apellido-reg" value="<?php echo isset($fila['Apellido']) ? htmlspecialchars($fila['Apellido']) : ''; ?>" required>
+                    <label for="nombre-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Nombre Personal</label>
+                    <input type="text" class="form-control" id="nombre-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="nombre-reg" value="<?php echo isset($fila['Nombre']) ? htmlspecialchars((string) $fila['Nombre'], ENT_QUOTES) : ''; ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="apellido-paterno-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Apellido Paterno</label>
+                    <input type="text" class="form-control" id="apellido-paterno-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="apellido-paterno-reg" value="<?php echo isset($fila['Apellido_paterno']) ? htmlspecialchars((string) $fila['Apellido_paterno'], ENT_QUOTES) : ''; ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="apellido-materno-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Apellido Materno</label>
+                    <input type="text" class="form-control" id="apellido-materno-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="apellido-materno-reg" value="<?php echo isset($fila['Apellido_materno']) ? htmlspecialchars((string) $fila['Apellido_materno'], ENT_QUOTES) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="celular-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Celular</label>
-                    <input type="text" class="form-control" id="celular-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="celular-reg" value="<?php echo isset($fila['Celular']) ? htmlspecialchars($fila['Celular']) : ''; ?>" required>
+                    <input type="text" class="form-control" id="celular-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="celular-reg" value="<?php echo isset($fila['Celular']) ? htmlspecialchars((string) $fila['Celular'], ENT_QUOTES) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="dni-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">DNI</label>
-                    <input type="text" class="form-control" id="dni-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="dni-reg" value="<?php echo isset($fila['Dni']) ? htmlspecialchars($fila['Dni']) : ''; ?>" required>
+                    <label for="direccion-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Direccion</label>
+                    <input type="text" class="form-control" id="direccion-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="direccion-reg" value="<?php echo isset($fila['Direccion']) ? htmlspecialchars((string) $fila['Direccion'], ENT_QUOTES) : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="estado-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Estado</label>
-                    <select class="form-control" id="estado-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="estado-reg">
-                        <option value="1" <?php echo (isset($fila['Estado']) && $fila['Estado'] == 1) ? 'selected' : ''; ?>>Activo</option>
-                        <option value="0" <?php echo (isset($fila['Estado']) && $fila['Estado'] == 0) ? 'selected' : ''; ?>>Inactivo</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="cargo-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Cargo</label>
-                    <select class="form-control" id="cargo-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="cargo-reg">
+                    <label for="id-cargo-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Cargo</label>
+                    <select class="form-control" id="id-cargo-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="id-cargo-reg">
                         <?php
                         try {
                             $consulta = $pdo->query("SELECT * FROM cargo");
@@ -67,6 +70,13 @@
                         ?>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="estado-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Estado</label>
+                    <select class="form-control" id="estado-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="estado-reg">
+                        <option value="1" <?php echo (isset($fila['Estado']) && $fila['Estado'] == 1) ? 'selected' : ''; ?>><?php echo (isset($fila['Estado']) && $fila['Estado'] == 1) ? 'Activo' : 'Inactivo'; ?></option>
+                        <option value="0" <?php echo (isset($fila['Estado']) && $fila['Estado'] == 0) ? 'selected' : ''; ?>><?php echo (isset($fila['Estado']) && $fila['Estado'] == 0) ? 'Inactivo' : 'Activo'; ?></option>
+                    </select>
+                </div>
 
                 <button type="submit" class="btn btn-success">Guardar Cambios</button>
             </form>
@@ -81,11 +91,23 @@
             <span class="close" onclick="closeErrorModal('errorModal')">&times;</span>
         </div>
         <div class="custom-modal-body">
-            <p><?php echo isset($_GET['error']) ? htmlspecialchars($_GET['error']) : ''; ?></p>
+            <p><?php echo isset($_GET['error']) ? htmlspecialchars((string) $_GET['error'], ENT_QUOTES) : ''; ?></p>
         </div>
         <div class="custom-modal-footer">
             <button class="btn btn-secondary" onclick="closeErrorModal('errorModal')">Cerrar</button>
         </div>
     </div>
 </div>
+
+<script>
+function closeModal(modalId) {
+    var modal = document.getElementById(modalId);
+    modal.style.display = "none";
+}
+
+function closeErrorModal(modalId) {
+    var modal = document.getElementById(modalId);
+    modal.style.display = "none";
+}
+</script>
 

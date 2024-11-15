@@ -103,10 +103,10 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                        
                         <td>
                             <?php 
-                                $query2 = "SELECT Nombre, Apellido, Dni FROM personal WHERE ID_personal = ".$fila['id_personal'];
+                                $query2 = "SELECT Nombre, Apellido_paterno, Apellido_materno, Dni FROM personal WHERE ID_personal = ".$fila['id_personal'];
                                 $personal = $pdo->query($query2);
                                 foreach ($personal as $fila2) {
-                                    echo $fila2['Nombre']." ".$fila2['Apellido']." (DNI: ".$fila2['Dni']." )";
+                                    echo $fila2['Nombre']." ".$fila2['Apellido_paterno']." ".$fila2['Apellido_materno']." (DNI: ".$fila2['Dni']." )";
                                 }
                             ?>
                         </td>
