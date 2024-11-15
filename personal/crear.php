@@ -23,7 +23,7 @@ include ('../layout/parte1.php');
             <h3 class="panel-title"><i class="zmdi zmdi-plus"></i> &nbsp; NUEVO PERSONAL</h3>
         </div>
         <div class="panel-body">
-            <form action="<?php echo $URL; ?>/app/controllers/personal/crear.php" method="post" style="background-color: #E0E0E0; padding: 15px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
+            <form action="<?php echo $URL; ?>/app/controllers/personal/crear.php" method="post" autocomplete="off" style="background-color: #E0E0E0; padding: 15px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
                 <fieldset>
                     <legend style="color: #2196F3;"><i class="zmdi zmdi-account-box"></i> &nbsp; Información personal</legend>
                     <div class="container-fluid">
@@ -94,4 +94,5 @@ include ('../layout/parte1.php');
         </div>
     </div>
 </div>
+
 
