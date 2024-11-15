@@ -21,13 +21,10 @@ include ('../../layout/parte1.php');
                     <div class="form-group label-floating">
                         <label class="control-label">Nombre *</label>
                         <input 
-                            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,10}" 
                             class="form-control" 
                             type="text" 
                             name="nombre-reg" 
                             required 
-                            maxlength="10"
-                            title="Ingrese solo letras y espacios (hasta 10 caracteres)."
                         >
                     </div>
                 </div>
