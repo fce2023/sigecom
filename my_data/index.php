@@ -36,35 +36,42 @@ include ('../app/controllers/my_data/datos_perfil.php');
                 <div class="col-xs-12">
                     <div class="form-group label-floating">
                         <label class="control-label">DNI/CEDULA *</label>
-                        <input pattern="[0-9-]{1,30}" class="form-control" type="text" name="dni-up" required maxlength="30" 
+                        <input pattern="[0-9-]{1,10}" class="form-control" type="text" name="dni-up" required maxlength="10" 
                             value="<?php echo htmlspecialchars($usuario['Dni']); ?>">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group label-floating">
                         <label class="control-label">Nombres *</label>
-                        <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}" class="form-control" type="text" name="nombre-up" required maxlength="30" 
+                        <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,100}" class="form-control" type="text" name="nombre-up" required maxlength="100" 
                             value="<?php echo htmlspecialchars($usuario['Nombre_personal']); ?>">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group label-floating">
-                        <label class="control-label">Apellidos *</label>
-                        <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,30}" class="form-control" type="text" name="apellido-up" required maxlength="30" 
-                            value="<?php echo htmlspecialchars($usuario['Apellido']); ?>">
+                        <label class="control-label">Apellido paterno *</label>
+                        <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,100}" class="form-control" type="text" name="apellido_paterno-up" required maxlength="100" 
+                            value="<?php echo htmlspecialchars($usuario['Apellido_paterno']); ?>">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <div class="form-group label-floating">
+                        <label class="control-label">Apellido materno *</label>
+                        <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,250}" class="form-control" type="text" name="apellido_materno-up" required maxlength="250" 
+                            value="<?php echo htmlspecialchars($usuario['Apellido_materno']); ?>">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group label-floating">
                         <label class="control-label">Teléfono</label>
-                        <input pattern="[0-9+]{1,15}" class="form-control" type="text" name="telefono-up" maxlength="15" 
+                        <input pattern="[0-9+]{1,11}" class="form-control" type="text" name="celular-up" maxlength="11" 
                             value="<?php echo htmlspecialchars($usuario['Celular']); ?>">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group label-floating">
                         <label class="control-label">Cargo *</label>
-                        <select class="form-control" name="cargo-up" required>
+                        <select class="form-control" name="id_cargo-up" required>
                             
                             <?php foreach ($cargos as $cargo) { ?>
                                 <option value="<?php echo $cargo['ID_cargo']; ?>" <?php echo (isset($id_cargo_sesion) && $id_cargo_sesion == $cargo['ID_cargo']) ? 'selected' : ''; ?>>
@@ -80,7 +87,7 @@ include ('../app/controllers/my_data/datos_perfil.php');
                 <div class="col-xs-12">
                     <div class="form-group label-floating">
                         <label class="control-label">Dirección *</label>
-                        <textarea name="direccion-up" class="form-control" rows="2" maxlength="100" required><?php echo htmlspecialchars($usuario['Direccion']); ?></textarea>
+                        <textarea name="direccion-up" class="form-control" rows="2" maxlength="250" required><?php echo htmlspecialchars($usuario['Direccion']); ?></textarea>
                     </div>
                 </div>
             </div>

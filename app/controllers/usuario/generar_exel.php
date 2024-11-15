@@ -13,7 +13,10 @@ if (!isset($pdo) || !$pdo instanceof PDO) {
 }
 
 // Obtener todos los usuarios desde la base de datos
-$query = "SELECT * FROM usuario";
+$query = "SELECT u.ID_usuario, u.Nombre_usuario, u.Correo, u.Contraseña, u.ID_tipousuario, u.id_personal, u.Estado, p.Dni, p.Nombre, p.Apellido_paterno, p.Apellido_materno, p.Celular, p.Direccion, c.Nom_cargo
+          FROM usuario u
+          INNER JOIN personal p ON u.id_personal = p.ID_personal
+          INNER JOIN cargo c ON p.ID_cargo = c.ID_cargo";
 $stmt = $pdo->prepare($query);
 $stmt->execute();
 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -25,39 +28,35 @@ if (!empty($usuarios)) {
     $sheet = $spreadsheet->getActiveSheet();
 
     // Títulos de las columnas
-    $contador = 1;
-    $sheet->setCellValue('A1', $contador);
-    $sheet->setCellValue('B1', 'ID Personal');
-    $sheet->setCellValue('C1', 'Nombre Usuario');
-    $sheet->setCellValue('D1', 'Correo');
-    $sheet->setCellValue('E1', 'Contraseña');
-    $sheet->setCellValue('F1', 'ID Tipo Usuario');
-    $sheet->setCellValue('G1', 'Estado');
+    $sheet->setCellValue('A1', 'ID');
+    $sheet->setCellValue('B1', 'DNI');
+    $sheet->setCellValue('C1', 'Nombre Personal');
+    $sheet->setCellValue('D1', 'Apellido Paterno');
+    $sheet->setCellValue('E1', 'Apellido Materno');
+    $sheet->setCellValue('F1', 'Celular');
+    $sheet->setCellValue('G1', 'Dirección');
+    $sheet->setCellValue('H1', 'Nombre Usuario');
+    $sheet->setCellValue('I1', 'Correo');
+    $sheet->setCellValue('J1', 'Contraseña');
+    $sheet->setCellValue('K1', 'ID Tipo Usuario');
+    $sheet->setCellValue('L1', 'Estado');
 
     // Itera sobre el array de usuarios y agrega cada uno a la hoja
     $row = 2; // Comenzamos a escribir desde la segunda fila
     foreach ($usuarios as $usuario) {
         $sheet->setCellValue('A' . $row, $usuario['ID_usuario']);
-        $query = "SELECT Nombre, Apellido FROM personal WHERE ID_personal = " . $usuario['id_personal'];
-        $personalStmt = $pdo->query($query);
-        $nombreCompleto = 'No disponible';
-        if ($personalStmt) {
-            $personalData = $personalStmt->fetch(PDO::FETCH_ASSOC);
-            if ($personalData) {
-                $nombreCompleto = $personalData['Nombre'] . ' ' . $personalData['Apellido'];
-            }
-        }
-        $sheet->setCellValue('B' . $row, $nombreCompleto);
-        $sheet->setCellValue('C' . $row, $usuario['Nombre_usuario']);
-        $sheet->setCellValue('D' . $row, isset($usuario['Correo']) ? $usuario['Correo'] : 'No disponible');
-        $sheet->setCellValue('E' . $row, $usuario['Contraseña']);
-        $query2 = "SELECT Nombre_tipousuario FROM tipo_usuario WHERE ID_tipousuario = " . $usuario['ID_tipousuario'];
-        $stmt2 = $pdo->prepare($query2);
-        $stmt2->execute();
-        $tipo_usuario = $stmt2->fetch(PDO::FETCH_ASSOC);
-        $sheet->setCellValue('F' . $row, isset($tipo_usuario['Nombre_tipousuario']) ? $tipo_usuario['Nombre_tipousuario'] : 'No disponible');
-        $estado = isset($usuario['Estado']) && $usuario['Estado'] == 1 ? 'Activo' : 'Inactivo';
-        $sheet->setCellValue('G' . $row, $estado);
+        $sheet->setCellValue('B' . $row, $usuario['Dni']);
+        $sheet->setCellValue('C' . $row, $usuario['Nombre']);
+        $sheet->setCellValue('D' . $row, $usuario['Apellido_paterno']);
+        $sheet->setCellValue('E' . $row, $usuario['Apellido_materno']);
+        $sheet->setCellValue('F' . $row, $usuario['Celular']);
+        $sheet->setCellValue('G' . $row, $usuario['Direccion']);
+        $sheet->setCellValue('H' . $row, $usuario['Nombre_usuario']);
+        $sheet->setCellValue('I' . $row, $usuario['Correo']);
+        $sheet->setCellValue('J' . $row, $usuario['Contraseña']);
+        $sheet->setCellValue('K' . $row, $usuario['ID_tipousuario']);
+        $estado = $usuario['Estado'] == 1 ? 'Activo' : 'Inactivo';
+        $sheet->setCellValue('L' . $row, $estado);
         $row++; // Incrementa la fila
     }
 

@@ -78,13 +78,13 @@ if (!empty($usuarios)) {
         $html .= '<tr>';
         $contador = isset($contador) ? $contador + 1 : 1;
         $html .= "<td>" . $contador . "</td>";
-        $query2 = "SELECT Nombre, Apellido FROM personal WHERE ID_personal = " . $usuario['id_personal'];
+        $query2 = "SELECT Dni, Nombre, Apellido_paterno, Apellido_materno FROM personal WHERE ID_personal = " . $usuario['id_personal'];
         $stmt2 = $pdo->prepare($query2);
         $stmt2->execute();
         $personalData = $stmt2->fetch(PDO::FETCH_ASSOC);
         $nombreCompleto = 'No disponible';
         if ($personalData) {
-            $nombreCompleto = $personalData['Nombre'] . ' ' . $personalData['Apellido'];
+            $nombreCompleto = $personalData['Nombre'] . ' ' . $personalData['Apellido_paterno'] . ' ' . $personalData['Apellido_materno'];
         }
         $html .= "<td>" . $nombreCompleto . "</td>";
         $html .= "<td>" . (isset($usuario['Nombre_usuario']) ? $usuario['Nombre_usuario'] : 'No disponible') . "</td>";

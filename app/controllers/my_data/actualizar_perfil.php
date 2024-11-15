@@ -16,32 +16,33 @@ if (isset($_SESSION['sesion_usuario'])) {
         $id_usuario_sesion = $usuario['ID_usuario'];
         $nombres_sesion = $usuario['Nombre_usuario'];
         $rol_sesion = $usuario['rol'];
-        $id_personal_sesion = $usuario['id_personal'];  // Asegúrate de obtener el id_personal
+        $id_personal_sesion = $usuario['id_personal'];
     }
 
-    if (isset($_POST['dni-up'], $_POST['nombre-up'], $_POST['apellido-up'], $_POST['telefono-up'], $_POST['cargo-up'], $_POST['direccion-up'])) {
+    if (isset($_POST['dni-up'], $_POST['nombre-up'], $_POST['apellido_paterno-up'], $_POST['apellido_materno-up'], $_POST['celular-up'], $_POST['direccion-up'], $_POST['id_cargo-up'])) {
         $dni = htmlspecialchars($_POST['dni-up']);
         $nombre = htmlspecialchars($_POST['nombre-up']);
-        $apellido = htmlspecialchars($_POST['apellido-up']);
-        $telefono = htmlspecialchars($_POST['telefono-up']);
-        $cargo = htmlspecialchars($_POST['cargo-up']);
+        $apellido_paterno = htmlspecialchars($_POST['apellido_paterno-up']);
+        $apellido_materno = htmlspecialchars($_POST['apellido_materno-up']);
+        $celular = htmlspecialchars($_POST['celular-up']);
         $direccion = htmlspecialchars($_POST['direccion-up']);
+        $id_cargo = htmlspecialchars($_POST['id_cargo-up']);
 
-        if (!empty($dni) && !empty($nombre) && !empty($apellido) && !empty($direccion)) {
-            // Realiza la actualización en la base de datos
+        if (!empty($dni) && !empty($nombre) && !empty($apellido_paterno) && !empty($apellido_materno) && !empty($direccion)) {
             $sql_update = "UPDATE personal 
-                           SET Dni = :dni, Nombre = :nombre, Apellido = :apellido, Celular = :telefono, ID_cargo = :cargo, `Direccion` = :direccion
+                           SET Dni = :dni, Nombre = :nombre, Apellido_paterno = :apellido_paterno, Apellido_materno = :apellido_materno, Celular = :celular, Direccion = :direccion, ID_cargo = :id_cargo
                            WHERE ID_personal = :id_personal";
 
             $query_update = $pdo->prepare($sql_update);
             $params = [
                 'dni' => $dni,
                 'nombre' => $nombre,
-                'apellido' => $apellido,
-                'telefono' => $telefono,
+                'apellido_paterno' => $apellido_paterno,
+                'apellido_materno' => $apellido_materno,
+                'celular' => $celular,
                 'direccion' => $direccion,
-                'cargo' => $cargo,
-                'id_personal' => $id_personal_sesion // Asegúrate de que este valor sea el correcto
+                'id_cargo' => $id_cargo,
+                'id_personal' => $id_personal_sesion
             ];
 
             try {
@@ -56,7 +57,6 @@ if (isset($_SESSION['sesion_usuario'])) {
                                 <div class="modal-body">
                                     <p>Los datos se han actualizado correctamente.</p>
                                 </div>
-
                             </div>
                           </div>';
                     echo '<script>setTimeout(function() { window.location.href = "' . $URL . '/my_data"; }, 1000);</script>';
@@ -123,23 +123,20 @@ if (isset($_SESSION['sesion_usuario'])) {
 }
 ?>
 
-<!-- Estilos CSS para la ventana modal -->
 <style>
-/* Estilo del fondo del modal */
 .modal {
-    display: block; /* Mostrar la ventana modal */
+    display: block;
     position: fixed;
-    z-index: 1; /* Asegúrate de que esté por encima del contenido */
+    z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* Hacer que la ventana modal sea desplazable si es necesario */
-    background-color: rgba(0, 0, 0, 0.4); /* Fondo oscuro para la superposición */
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
     padding: 20px;
 }
 
-/* Estilo del contenido del modal */
 #customConfirmModal .modal-content {
     background-color: white;
     margin: 0 auto;
@@ -151,7 +148,6 @@ if (isset($_SESSION['sesion_usuario'])) {
     border-radius: 5px;
 }
 
-/* Estilo del título */
 #customConfirmModal .modal-header h2 {
     margin: 0;
     font-size: 24px;
@@ -159,7 +155,6 @@ if (isset($_SESSION['sesion_usuario'])) {
     font-weight: bold;
 }
 
-/* Estilo de los botones */
 #customConfirmModal .modal-footer button {
     padding: 10px 20px;
     font-size: 16px;
@@ -192,7 +187,6 @@ if (isset($_SESSION['sesion_usuario'])) {
 }
 </style>
 
-<!-- Script JavaScript para cerrar la ventana modal -->
 <script>
 function closeModal() {
     var modal = document.getElementById("customConfirmModal");

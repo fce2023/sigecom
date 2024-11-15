@@ -13,7 +13,7 @@ if (!isset($pdo) || !$pdo instanceof PDO) {
 }
 
 // Obtener todos los empleados desde la base de datos
-$query = "SELECT * FROM personal";
+$query = "SELECT p.ID_personal, p.Dni, p.Nombre, p.Apellido_paterno, p.Apellido_materno, p.Celular, p.Direccion, c.Nom_cargo, p.Estado FROM personal p INNER JOIN cargo c ON p.ID_cargo = c.ID_cargo";
 $stmt = $pdo->prepare($query);
 $stmt->execute();
 $personal = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -62,7 +62,8 @@ if (!empty($personal)) {
                 <tr>
                     <th>DNI</th>
                     <th>Nombre</th>
-                    <th>Apellido</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
                     <th>Celular</th>
                     <th>Dirección</th>
                     <th>Cargo</th>
@@ -76,18 +77,11 @@ if (!empty($personal)) {
         $html .= '<tr>';
         $html .= "<td>" . (isset($empleado['Dni']) ? $empleado['Dni'] : 'No disponible') . "</td>";
         $html .= "<td>" . (isset($empleado['Nombre']) ? $empleado['Nombre'] : 'No disponible') . "</td>";
-        $html .= "<td>" . (isset($empleado['Apellido']) ? $empleado['Apellido'] : 'No disponible') . "</td>";
+        $html .= "<td>" . (isset($empleado['Apellido_paterno']) ? $empleado['Apellido_paterno'] : 'No disponible') . "</td>";
+        $html .= "<td>" . (isset($empleado['Apellido_materno']) ? $empleado['Apellido_materno'] : 'No disponible') . "</td>";
         $html .= "<td>" . (isset($empleado['Celular']) ? $empleado['Celular'] : 'No disponible') . "</td>";
         $html .= "<td>" . (isset($empleado['Direccion']) ? $empleado['Direccion'] : 'No disponible') . "</td>";
-
-        // Obtener el nombre del cargo de la base de datos
-        $query2 = "SELECT Nom_cargo FROM cargo WHERE ID_cargo = " . $empleado['ID_cargo'];
-        $stmt2 = $pdo->prepare($query2);
-        $stmt2->execute();
-        $cargo = $stmt2->fetch(PDO::FETCH_ASSOC);
-        $html .= "<td>" . (isset($cargo['Nom_cargo']) ? $cargo['Nom_cargo'] : 'No disponible') . "</td>";
-
-        // Estado (Activo/Inactivo)
+        $html .= "<td>" . (isset($empleado['Nom_cargo']) ? $empleado['Nom_cargo'] : 'No disponible') . "</td>";
         $html .= "<td>" . (isset($empleado['Estado']) && $empleado['Estado'] == 1 ? 'Activo' : 'Inactivo') . "</td>";
         $html .= '</tr>';
     }
@@ -121,3 +115,4 @@ $dompdf->render();
 // Muestra el PDF en el navegador
 $dompdf->stream("ficha_personal.pdf", array("Attachment" => false));
 ?>
+

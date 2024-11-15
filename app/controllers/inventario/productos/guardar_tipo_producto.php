@@ -14,7 +14,7 @@ try {
         $query = "INSERT INTO tipo_producto (Nom_producto, Estado) 
                   VALUES (:nombre, 1)";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
+        $stmt->bindParam(':nombre', $nombre);
         $stmt->execute();
 
         echo json_encode(['success' => true, 'message' => 'Tipo de producto guardado correctamente.']);
@@ -25,5 +25,4 @@ try {
     error_log("Error en guardar.php: " . $e->getMessage(), 3, __DIR__ . '/error_log.txt');
     echo json_encode(['success' => false, 'error' => 'Error interno del servidor. ' . $e->getMessage()]);
 }
-
 

@@ -13,7 +13,7 @@ if (!isset($pdo) || !$pdo instanceof PDO) {
 }
 
 // Obtener todos los empleados desde la base de datos
-$query = "SELECT * FROM personal";
+$query = "SELECT p.ID_personal, p.Dni, p.Nombre, p.Apellido_paterno, p.Apellido_materno, p.Celular, p.Direccion, c.Nom_cargo, p.Estado FROM personal p INNER JOIN cargo c ON p.ID_cargo = c.ID_cargo";
 $stmt = $pdo->prepare($query);
 $stmt->execute();
 $personal = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -27,31 +27,24 @@ if (!empty($personal)) {
     // Títulos de las columnas
     $sheet->setCellValue('A1', 'DNI');
     $sheet->setCellValue('B1', 'Nombre');
-    $sheet->setCellValue('C1', 'Apellido');
-    $sheet->setCellValue('D1', 'Celular');
-    $sheet->setCellValue('E1', 'Dirección');
-    $sheet->setCellValue('F1', 'Cargo');
-    $sheet->setCellValue('G1', 'Estado');
+    $sheet->setCellValue('C1', 'Apellido paterno');
+    $sheet->setCellValue('D1', 'Apellido materno');
+    $sheet->setCellValue('E1', 'Celular');
+    $sheet->setCellValue('F1', 'Dirección');
+    $sheet->setCellValue('G1', 'Cargo');
+    $sheet->setCellValue('H1', 'Estado');
 
     // Itera sobre el array de empleados y agrega cada uno a la hoja
     $row = 2; // Comenzamos a escribir desde la segunda fila
     foreach ($personal as $empleado) {
-        $sheet->setCellValue('A' . $row, isset($empleado['Dni']) ? $empleado['Dni'] : 'No disponible');
-        $sheet->setCellValue('B' . $row, isset($empleado['Nombre']) ? $empleado['Nombre'] : 'No disponible');
-        $sheet->setCellValue('C' . $row, isset($empleado['Apellido']) ? $empleado['Apellido'] : 'No disponible');
-        $sheet->setCellValue('D' . $row, isset($empleado['Celular']) ? $empleado['Celular'] : 'No disponible');
-        $sheet->setCellValue('E' . $row, isset($empleado['Direccion']) ? $empleado['Direccion'] : 'No disponible');
-
-        // Obtener el nombre del cargo de la base de datos
-        $query2 = "SELECT Nom_cargo FROM cargo WHERE ID_cargo = " . $empleado['ID_cargo'];
-        $stmt2 = $pdo->prepare($query2);
-        $stmt2->execute();
-        $cargo = $stmt2->fetch(PDO::FETCH_ASSOC);
-        $sheet->setCellValue('F' . $row, isset($cargo['Nom_cargo']) ? $cargo['Nom_cargo'] : 'No disponible');
-
-        // Estado (Activo/Inactivo)
-        $estado = isset($empleado['Estado']) && $empleado['Estado'] == 1 ? 'Activo' : 'Inactivo';
-        $sheet->setCellValue('G' . $row, $estado);
+        $sheet->setCellValue('A' . $row, $empleado['Dni']);
+        $sheet->setCellValue('B' . $row, $empleado['Nombre']);
+        $sheet->setCellValue('C' . $row, $empleado['Apellido_paterno']);
+        $sheet->setCellValue('D' . $row, $empleado['Apellido_materno']);
+        $sheet->setCellValue('E' . $row, $empleado['Celular']);
+        $sheet->setCellValue('F' . $row, $empleado['Direccion']);
+        $sheet->setCellValue('G' . $row, $empleado['Nom_cargo']);
+        $sheet->setCellValue('H' . $row, $empleado['Estado'] == 1 ? 'Activo' : 'Inactivo');
 
         $row++; // Incrementa la fila
     }
@@ -73,3 +66,4 @@ if (!empty($personal)) {
     echo 'No se encontraron empleados.';
 }
 ?>
+
