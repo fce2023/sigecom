@@ -1,0 +1,1 @@
+Error en guardar_salida.php: La cantidad de salida es mayor a la cantidad de entrada.Error en guardar_salida.php: El id del técnico, id del producto, fecha de retiro y cantidad son obligatorios.Error en guardar_salida.php: El id del técnico, id del producto, fecha de retiro y cantidad son obligatorios.

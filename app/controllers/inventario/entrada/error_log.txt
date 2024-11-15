@@ -1,0 +1,1 @@
+Error en eliminar_entrada.php: El ID del detalle de producto proveedor es obligatorio.

@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute([$nombre_proveedor, $direccion_proveedor, $telefono_proveedor, $estado_proveedor, $id_proveedor]);
 
     if ($stmt) {
-        header("Location: " . $URL . "/proveedor?success=true");
+        header("Location: " . $URL . "/proveedor?success=datos actualizados");
     } else {
         header("Location: " . $URL . "/proveedor?error=Error al actualizar");
     }

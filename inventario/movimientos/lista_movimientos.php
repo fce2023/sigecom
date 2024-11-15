@@ -27,14 +27,15 @@ include ('../../layout/parte1.php');
 					<table class="table table-hover text-center">
 						<thead>
 							<tr>
-								<th class="text-center">#</th>
-								<th class="text-center">ID DETALLE</th>
+								<th class="text-center">N°</th>
 								<th class="text-center">TIPO</th>
 								<th class="text-center">NOMBRE PRODUCTO</th>
 								<th class="text-center">FECHA</th>
 								<th class="text-center">CANTIDAD</th>
 								<th class="text-center">OBSERVACIÓN</th>
 								<th class="text-center">ESTADO</th>
+								
+
 							</tr>
 						</thead>
 						<tbody>
@@ -52,29 +53,52 @@ include ('../../layout/parte1.php');
 							           JOIN productos p ON dtp.ID_producto = p.id_producto";
 
 							if ($filtroTipo == 'Entrada') {
-							    $query = "SELECT * FROM (" . $query . ") AS movimientos WHERE tipo = 'Entrada'";
+								$query = "SELECT * FROM (" . $query . ") AS movimientos WHERE tipo = 'Entrada'";
 							} elseif ($filtroTipo == 'Salida') {
-							    $query = "SELECT * FROM (" . $query . ") AS movimientos WHERE tipo = 'Salida'";
+								$query = "SELECT * FROM (" . $query . ") AS movimientos WHERE tipo = 'Salida'";
 							}
 
 							$stmt = $pdo->query($query, PDO::FETCH_ASSOC);
 							$num = 1;
 							while ($row = $stmt->fetch()) {
-								echo "<tr>
-									<td>" . $num . "</td>
-									<td>" . $row['id_detalle'] . "</td>
-									<td style='color: " . (($row['tipo'] == 'Entrada') ? 'green' : 'red') . ";'>" . $row['tipo'] . "</td>
-									<td>" . $row['nombre_producto'] . "</td>
-									<td>" . $row['fecha'] . "</td>
-									<td>" . $row['Cantidad'] . "</td>
-									<td>" . $row['Observación'] . "</td>
-									<td>" . $row['Estado'] . "</td>
-								</tr>";
+
+								$id_detalle = $row['id_detalle'];
+								$tipo = $row['tipo'];
+								$nomre_producto = $row['nombre_producto'];
+								$fecha = $row['fecha'];
+								$cantidad = $row['Cantidad'];
+								$observación = $row['Observación'];
+								$estado = $row['Estado'];
+								?>
+
+								<tr>
+									<td><?php echo $num; ?></td>
+									<td style='color: <?php echo ($row['tipo'] == 'Entrada') ? 'green' : 'red'; ?>;'><?php echo $row['tipo']; ?></td>
+									<td><?php echo $row['nombre_producto']; ?></td>
+									<td><?php echo $row['fecha']; ?></td>
+									<td><?php echo $row['Cantidad']; ?></td>
+									<td><?php echo $row['Observación']; ?></td>
+									<td><?php echo $row['Estado']; ?></td>
+						
+								</tr>
+
+								<?php
 								$num++;
 							}
 							?>
 						</tbody>
 					</table>
+
+
+
+					
+
+
+
+
+
+
+
 				</div>
 			</div>
 		</div>
@@ -91,39 +115,40 @@ include ('../../layout/parte1.php');
 					</ul>
 	</nav>
 
-	<!-- Panel stock de productos -->
-	<div class="container-fluid">
-		<div class="panel panel-info">
-			<div class="panel-heading">
-				<h3 class="panel-title"><i class="zmdi zmdi-chart"></i> &nbsp; STOCK DE PRODUCTOS</h3>
-			</div>
-			<div class="panel-body">
-				<div class="table-responsive">
-					<table class="table table-hover text-center">
-						<thead>
-							<tr>
-								<th class="text-center">NOMBRE PRODUCTO</th>
-								<th class="text-center">STOCK</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php
-							$query = "SELECT p.nombre, SUM(dpp.Cantidad) - SUM(dtp.Cantidad) AS stock
-							          FROM productos p
-							          LEFT JOIN detalle_producto_proveedor dpp ON p.id_producto = dpp.ID_producto
-							          LEFT JOIN detalle_tecnico_producto dtp ON p.id_producto = dtp.ID_producto
-							          GROUP BY p.id_producto";
-							$stmt = $pdo->query($query);
-							while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-								echo "<tr>
-									<td>" . $row['nombre'] . "</td>
-									<td>" . $row['stock'] . "</td>
-								</tr>";
-							}
-							?>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
+	    <!-- Panel stock de productos -->
+    <div class="container-fluid">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="zmdi zmdi-chart"></i> &nbsp; STOCK DE PRODUCTOS</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover text-center">
+                        <thead>
+                            <tr>
+                                <th class="text-center">NOMBRE PRODUCTO</th>
+                                <th class="text-center">STOCK</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $query = "SELECT p.nombre, 
+                                      COALESCE((SELECT SUM(dpp.cantidad) FROM detalle_producto_proveedor dpp WHERE dpp.ID_producto = p.id_producto), 0) - 
+                                      COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto), 0) AS stock
+                                      FROM productos p
+                                      GROUP BY p.id_producto";
+                            $stmt = $pdo->query($query);
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                echo "<tr>
+                                    <td>" . htmlspecialchars($row['nombre']) . "</td>
+                                    <td>" . htmlspecialchars($row['stock']) . "</td>
+                                </tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
