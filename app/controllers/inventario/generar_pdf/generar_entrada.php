@@ -10,10 +10,11 @@ if (!isset($pdo) || !$pdo instanceof PDO) {
     die("No se pudo conectar a la base de datos.");
 }
 
-$query = "SELECT dpp.Id_det_producto_proveedor, p.Nombre AS producto, pr.Nombre AS proveedor, dpp.Fecha_abastecimiento, dpp.cantidad, dpp.Observación, dpp.Estado 
+$query = "SELECT dpp.Id_det_producto_proveedor, p.Nombre AS producto, pr.Nombre AS proveedor, u.Nombre_usuario AS usuario, dpp.Fecha_abastecimiento, dpp.cantidad, dpp.Observación, dpp.Estado 
           FROM detalle_producto_proveedor dpp
           LEFT JOIN productos p ON dpp.ID_producto = p.id_producto
-          LEFT JOIN proveedor pr ON dpp.ID_proveedor = pr.ID_proveedor";
+          LEFT JOIN proveedor pr ON dpp.ID_proveedor = pr.ID_proveedor
+          INNER JOIN usuario u ON dpp.ID_usuario = u.ID_usuario";
 $stmt = $pdo->prepare($query);
 $stmt->execute();
 $entradas = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -62,6 +63,7 @@ if (!empty($entradas)) {
                 <tr>
                     <th>ID Detalle</th>
                     <th>Producto</th>
+                    <th>Usuario que registró</th>
                     <th>Proveedor</th>
                     <th>Fecha Abastecimiento</th>
                     <th>Cantidad</th>
@@ -71,18 +73,18 @@ if (!empty($entradas)) {
               </thead>';
     $html .= '<tbody>';
     
-    foreach ($entradas as $key => $entrada) {
+    foreach ($entradas as $entrada) {
         $html .= '<tr>';
-        $html .= "<td>" . ($key + 1) . "</td>";
-        $html .= "<td>" . (isset($entrada['producto']) ? $entrada['producto'] : 'No disponible') . "</td>";
-        $html .= "<td>" . (isset($entrada['proveedor']) ? $entrada['proveedor'] : 'No disponible') . "</td>";
-        $html .= "<td>" . (isset($entrada['Fecha_abastecimiento']) ? $entrada['Fecha_abastecimiento'] : 'No disponible') . "</td>";
-        $html .= "<td>" . (isset($entrada['cantidad']) ? $entrada['cantidad'] : 'No disponible') . "</td>";
-        $html .= "<td>" . (isset($entrada['Observación']) ? $entrada['Observación'] : 'No disponible') . "</td>";
-        $html .= "<td>" . (isset($entrada['Estado']) && $entrada['Estado'] == 1 ? 'Activo' : 'Inactivo') . "</td>";
+        $html .= "<td>" . $entrada['Id_det_producto_proveedor'] . "</td>";
+        $html .= "<td>" . $entrada['producto'] . "</td>";
+        $html .= "<td>" . $entrada['usuario'] . "</td>";
+        $html .= "<td>" . $entrada['proveedor'] . "</td>";
+        $html .= "<td>" . $entrada['Fecha_abastecimiento'] . "</td>";
+        $html .= "<td>" . $entrada['cantidad'] . "</td>";
+        $html .= "<td>" . $entrada['Observación'] . "</td>";
+        $html .= "<td>" . ($entrada['Estado'] == 1 ? 'Activo' : 'Inactivo') . "</td>";
         $html .= '</tr>';
     }
-
     $html .= '</tbody>';
     $html .= '</table>';
     $html .= '<p style="text-align:right">Fecha de la consulta: ' . date('d/m/Y H:i:s') . '</p>';

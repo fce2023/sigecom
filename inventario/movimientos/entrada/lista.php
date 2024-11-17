@@ -14,6 +14,7 @@
 							<tr>
 								<th class="text-center">#</th>
 								<th class="text-center">NOMBRE PROVEEDOR</th>
+								<th class="text-center">USUARIO QUE REGISTRÓ</th>
 								<th class="text-center">NOMBRE PRODUCTO</th>
 								<th class="text-center">FECHA ABASTECIMIENTO</th>
 								<th class="text-center">CANTIDAD</th>
@@ -28,16 +29,19 @@
 								$limit = 5;
 								$page = (isset($_GET['page'])) ? $_GET['page'] : 1;
 								$offset = ($page - 1) * $limit;
-								$query = "SELECT dpp.Id_det_producto_proveedor, p.Nombre, dp.nombre as Nom_producto, dpp.Fecha_abastecimiento, dpp.cantidad, dpp.Observación, dpp.Estado
+								$query = "SELECT dpp.Id_det_producto_proveedor, p.Nombre, dp.nombre as Nom_producto, dpp.Fecha_abastecimiento, dpp.cantidad, dpp.Observación, dpp.Estado, u.Nombre_usuario
 								FROM detalle_producto_proveedor dpp
 								INNER JOIN proveedor p ON dpp.ID_proveedor = p.ID_proveedor
 								INNER JOIN productos dp ON dpp.ID_producto = dp.id_producto
+								INNER JOIN usuario u ON dpp.ID_usuario = u.ID_usuario
+								ORDER BY dpp.Id_det_producto_proveedor DESC
 								LIMIT $limit OFFSET $offset";
 								$stmt = $pdo->query($query);
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
 									<tr>
 										<td><?php echo htmlspecialchars($row['Id_det_producto_proveedor']); ?></td>
 										<td><?php echo htmlspecialchars($row['Nombre']); ?></td>
+										<td><?php echo htmlspecialchars($row['Nombre_usuario']); ?></td>
 										<td><?php echo htmlspecialchars($row['Nom_producto']); ?></td>
 										<td><?php echo htmlspecialchars($row['Fecha_abastecimiento']); ?></td>
 										<td><?php echo htmlspecialchars($row['cantidad']); ?></td>

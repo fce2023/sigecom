@@ -257,6 +257,23 @@ function confirmacionCerrarSesion(e) {
 					</ul>
 				</li>
 
+				<li>
+					<a href="#!" class="btn-sideBar-SubMenu">
+						<i class="zmdi zmdi-comment-more zmdi-hc-fw"></i> Atencion al cliente<i class="zmdi zmdi-caret-down pull-right"></i>
+					</a>
+					<ul class="list-unstyled full-box">
+						<li>
+							<a href="<?php echo $URL; ?>/atencion_cliente/pedidos/crear_pedido.php"><i class="zmdi zmdi-comment-more zmdi-hc-fw"></i> Registrar pedido</a>
+						</li>
+						<li>
+							<a href="<?php echo $URL; ?>/atencion_cliente/clientes/designar_mecanico.php"><i class="zmdi zmdi-comment-alt-text zmdi-hc-fw"></i> Designar tecnico</a>
+						</li>
+						<li>
+							<a href="<?php echo $URL; ?>/atencion_cliente/clientes/historial.php"><i class="zmdi zmdi-comment-alt-text zmdi-hc-fw"></i> Historial</a>
+						</li>
+					</ul>
+				</li>
+
 
 			</ul>
 		</div>

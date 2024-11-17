@@ -13,10 +13,11 @@ if (!isset($pdo) || !$pdo instanceof PDO) {
 }
 
 // Obtener todos los productos desde la base de datos
-$query = "SELECT dpp.Id_det_producto_proveedor, p.Nombre AS producto, pr.Nombre AS proveedor, dpp.Fecha_abastecimiento, dpp.cantidad, dpp.Observación, dpp.Estado AS estado_entrada
+$query = "SELECT dpp.Id_det_producto_proveedor, p.Nombre AS producto, u.Nombre_usuario AS usuario, pr.Nombre AS proveedor, dpp.Fecha_abastecimiento, dpp.cantidad, dpp.Observación, dpp.Estado AS estado_entrada
 FROM detalle_producto_proveedor dpp
-LEFT JOIN proveedor pr ON dpp.ID_proveedor = pr.ID_proveedor
-LEFT JOIN productos p ON dpp.ID_producto = p.id_producto";
+LEFT JOIN usuario u ON dpp.ID_usuario = u.ID_usuario
+LEFT JOIN productos p ON dpp.ID_producto = p.id_producto
+LEFT JOIN proveedor pr ON dpp.ID_proveedor = pr.ID_proveedor";
 $stmt = $pdo->prepare($query);
 $stmt->execute();
 $entradas = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -30,25 +31,27 @@ if (!empty($entradas)) {
     // Títulos de las columnas
     $sheet->setCellValue('A1', 'ID');
     $sheet->setCellValue('B1', 'Producto');
-    $sheet->setCellValue('C1', 'Proveedor');
-    $sheet->setCellValue('D1', 'Fecha de abastecimiento');
-    $sheet->setCellValue('E1', 'Cantidad');
-    $sheet->setCellValue('F1', 'Observación');
-    $sheet->setCellValue('G1', 'Estado');
+    $sheet->setCellValue('C1', 'Usuario');
+    $sheet->setCellValue('D1', 'Proveedor');
+    $sheet->setCellValue('E1', 'Fecha de abastecimiento');
+    $sheet->setCellValue('F1', 'Cantidad');
+    $sheet->setCellValue('G1', 'Observación');
+    $sheet->setCellValue('H1', 'Estado');
 
     // Itera sobre el array de productos y agrega cada uno a la hoja
     $row = 2; // Comenzamos a escribir desde la segunda fila
     foreach ($entradas as $entrada) {
         $sheet->setCellValue('A' . $row, $entrada['Id_det_producto_proveedor']);
         $sheet->setCellValue('B' . $row, $entrada['producto']);
-        $sheet->setCellValue('C' . $row, $entrada['proveedor']);
-        $sheet->setCellValue('D' . $row, $entrada['Fecha_abastecimiento']);
-        $sheet->setCellValue('E' . $row, $entrada['cantidad']);
-        $sheet->setCellValue('F' . $row, $entrada['Observación']);
+        $sheet->setCellValue('C' . $row, $entrada['usuario']);
+        $sheet->setCellValue('D' . $row, $entrada['proveedor']);
+        $sheet->setCellValue('E' . $row, $entrada['Fecha_abastecimiento']);
+        $sheet->setCellValue('F' . $row, $entrada['cantidad']);
+        $sheet->setCellValue('G' . $row, $entrada['Observación']);
 
         // Estado (Activo/Inactivo)
         $estado = $entrada['estado_entrada'] == 1 ? 'Activo' : 'Inactivo';
-        $sheet->setCellValue('G' . $row, $estado);
+        $sheet->setCellValue('H' . $row, $estado);
 
         $row++; // Incrementa la fila
     }

@@ -10,11 +10,15 @@ if (!isset($pdo) || !$pdo instanceof PDO) {
     die("No se pudo conectar a la base de datos.");
 }
 
-$query = "SELECT dtp.Id_det_tecnico_producto, t.Nombre AS tecnico, p.Nombre AS producto, dtp.Fecha_retiro, dtp.cantidad, dtp.Observación, dtp.Estado FROM detalle_tecnico_producto dtp LEFT JOIN tecnico t ON dtp.ID_tecnico = t.ID_tecnico LEFT JOIN productos p ON dtp.ID_producto = p.id_producto";
+$query = "SELECT dtp.Id_det_tecnico_producto, CONCAT(p.Nombre, ' ', p.Apellido_paterno, ' ', p.Apellido_materno) AS tecnico, u.Nombre_usuario AS usuario, prod.Nombre AS producto, dtp.Fecha_retiro, dtp.cantidad, dtp.Observación, dtp.Estado 
+          FROM detalle_tecnico_producto dtp 
+          LEFT JOIN tecnico t ON dtp.ID_tecnico = t.ID_tecnico 
+          LEFT JOIN personal p ON t.id_personal = p.ID_personal
+          LEFT JOIN productos prod ON dtp.ID_producto = prod.id_producto
+          LEFT JOIN usuario u ON dtp.ID_usuario = u.ID_usuario";
 $stmt = $pdo->prepare($query);
 $stmt->execute();
 $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 if (!empty($productos)) {
     $html = '
     <style>
@@ -59,6 +63,7 @@ if (!empty($productos)) {
                 <tr>
                     <th>ID Salida</th>
                     <th>Tecnico</th>
+                    <th>Usuario que registró</th>
                     <th>Producto</th>
                     <th>Fecha de Retiro</th>
                     <th>Cantidad</th>
@@ -72,6 +77,7 @@ if (!empty($productos)) {
         $html .= '<tr>';
         $html .= "<td>" . ($key + 1) . "</td>";
         $html .= "<td>" . (isset($producto['tecnico']) ? $producto['tecnico'] : 'No disponible') . "</td>";
+        $html .= "<td>" . (isset($producto['usuario']) ? $producto['usuario'] : 'No disponible') . "</td>";
         $html .= "<td>" . (isset($producto['producto']) ? $producto['producto'] : 'No disponible') . "</td>";
         $html .= "<td>" . (isset($producto['Fecha_retiro']) ? $producto['Fecha_retiro'] : 'No disponible') . "</td>";
         $html .= "<td>" . (isset($producto['cantidad']) ? $producto['cantidad'] : 'No disponible') . "</td>";

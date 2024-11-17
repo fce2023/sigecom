@@ -28,7 +28,7 @@ include ('../app/controllers/my_data/datos_perfil.php');
 				</div>
 				<div class="panel-body">
 
-                <form action="<?php echo $URL; ?>/app/controllers/my_data/actualizar_perfil.php" method="post">
+                <form action="<?php echo $URL; ?>/app/controllers/my_data/actualizar_perfil.php" autocomplete="off" method="post">
     <fieldset>
         <legend><i class="zmdi zmdi-account-box"></i> &nbsp; Información personal</legend>
         <div class="container-fluid">

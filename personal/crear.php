@@ -31,37 +31,37 @@ include ('../layout/parte1.php');
                             <div class="col-xs-12">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">DNI/CEDULA *</label>
-                                    <input pattern="[0-9-]{1,10}" class="form-control" type="text" name="dni-reg" required="" maxlength="10">
+                                    <input pattern="[0-9-]{1,10}" class="form-control" type="text" name="dni-reg" required="" maxlength="10" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-6">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Nombres *</label>
-                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,100}" class="form-control" type="text" name="nombre-reg" required="" maxlength="100">
+                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,100}" class="form-control" type="text" name="nombre-reg" required="" maxlength="100" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-6">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Apellido Paterno *</label>
-                                    <input class="form-control" type="text" name="apellido-paterno-reg" required="">
+                                    <input class="form-control" type="text" name="apellido-paterno-reg" required="" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-6">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Apellido Materno *</label>
-                                    <input class="form-control" type="text" name="apellido_materno-reg" required="">
+                                    <input class="form-control" type="text" name="apellido_materno-reg" required="" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-6">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Celular</label>
-                                    <input pattern="[0-9+]{1,11}" class="form-control" type="text" name="celular-reg" maxlength="11">
+                                    <input pattern="[0-9+]{1,11}" class="form-control" type="text" name="celular-reg" maxlength="11" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-6">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Dirección</label>
-                                    <input type="text" class="form-control" name="direccion-reg" maxlength="250">
+                                    <input type="text" class="form-control" name="direccion-reg" maxlength="250" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
                                 </div>
                             </div>
                             <div class="col-xs-12">

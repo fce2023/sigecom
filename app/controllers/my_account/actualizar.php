@@ -50,7 +50,7 @@ if (!$usuario_data) {
     exit();
 }
 
-if ($password != $usuario_data['Contraseña']) {
+if ($password != $usuario_data['password']) {
     $mensaje = 'Contraseña actual incorrecta';
     $_SESSION['mensaje'] = $mensaje;
     header('Location: ' . $URL . '/my_account/index.php'); // Redirigir al formulario
@@ -68,7 +68,7 @@ if (!empty($newPassword1)) {
 try {
     $updateQuery = "UPDATE usuario 
                     SET Nombre_usuario = :usuario, Correo = :email ";
-    $updateQuery .= !empty($newPassword1) ? ", Contraseña = :password " : "";
+    $updateQuery .= !empty($newPassword1) ? ", password = :password " : "";
     $updateQuery .= " WHERE Nombre_usuario = :usuario";  // Modifiqué el WHERE a Nombre_usuario para coincidir con la consulta anterior
 
     $stmt = $pdo->prepare($updateQuery);

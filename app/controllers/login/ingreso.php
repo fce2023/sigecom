@@ -4,7 +4,7 @@ include('../../config.php');
 
 // Se obtienen los datos del formulario
 $nombre_usuario = $_POST['username'];
-$contrasena = $_POST['password'];
+$password = $_POST['password'];
 
 // Se verifica si el usuario existe en la base de datos
 $sql = "SELECT * FROM usuario WHERE Nombre_usuario = :nombre_usuario LIMIT 1";
@@ -18,7 +18,7 @@ if ($stmt->rowCount() === 1) {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Verificar la contraseña
-    if ($contrasena === $user['Contraseña']) {
+    if ($password === $user['password']) {
         // Si los datos son correctos, se inicia la sesión y se redirige al index
         session_start();
         $_SESSION['sesion_usuario'] = $user['Nombre_usuario'];

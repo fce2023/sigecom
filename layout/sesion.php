@@ -26,6 +26,7 @@ if (isset($_SESSION['sesion_usuario'])) {
     // Obtener el cargo del usuario desde la consulta
     foreach ($usuarios as $usuario) {
         
+        $id_usuario_sesion = $usuario['ID_usuario']; // Aquí estamos agregando el ID del usuario
         $nombres_sesion = $usuario['Nombre_usuario'];
         $rol_sesion = $usuario['rol'];
         $id_cargo_sesion = $usuario['ID_cargo']; // Aquí estamos agregando el cargo

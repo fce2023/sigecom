@@ -10,6 +10,7 @@ try {
         $fecha_retiro = $_POST['fecha-retiro-reg'] ?? null;
         $cantidad = $_POST['cantidad-reg'] ?? null;
         $observacion = $_POST['observacion-reg'] ?? null;
+        $id_usuario_sesion = $_POST['id_usuario_sesion'] ?? null;
 
         if (empty($id_tecnico) || empty($id_producto) || empty($fecha_retiro) || empty($cantidad)) {
             throw new Exception('El id del técnico, id del producto, fecha de retiro y cantidad son obligatorios.');
@@ -25,11 +26,12 @@ try {
             throw new Exception('La cantidad de salida es mayor a la cantidad de entrada.');
         }
 
-        $query = "INSERT INTO detalle_tecnico_producto (ID_tecnico, ID_producto, Fecha_retiro, cantidad, Observación, Estado) 
-                  VALUES (:id_tecnico, :id_producto, :fecha_retiro, :cantidad, :observacion, 1)";
+        $query = "INSERT INTO detalle_tecnico_producto (ID_tecnico, ID_producto, ID_usuario, Fecha_retiro, cantidad, Observación, Estado) 
+                  VALUES (:id_tecnico, :id_producto, :id_usuario_sesion, :fecha_retiro, :cantidad, :observacion, 1)";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':id_tecnico', $id_tecnico, PDO::PARAM_INT);
         $stmt->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
+        $stmt->bindParam(':id_usuario_sesion', $id_usuario_sesion, PDO::PARAM_INT);
         $stmt->bindParam(':fecha_retiro', $fecha_retiro, PDO::PARAM_STR);
         $stmt->bindParam(':cantidad', $cantidad, PDO::PARAM_INT);
         $stmt->bindParam(':observacion', $observacion, PDO::PARAM_STR);

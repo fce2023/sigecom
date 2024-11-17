@@ -20,19 +20,19 @@
                 <p style="color: red;"><?php echo htmlspecialchars($_GET['error']); ?></p>
             <?php endif; ?>
             
-            <form action="../app/controllers/login/ingreso.php" method="POST">
+            <form action="../app/controllers/login/ingreso.php" method="POST" autocomplete="off">
                 <!-- Mantener el nombre de usuario si existe en la URL -->
                 <input type="text" name="username" placeholder="Usuario" 
-                       value="<?php echo isset($_GET['username']) ? htmlspecialchars($_GET['username']) : ''; ?>" required>
+                       value="<?php echo isset($_GET['username']) ? htmlspecialchars($_GET['username']) : ''; ?>" required autocomplete="off">
                 
                 <div class="password-container">
-                    <input type="password" name="password" id="password" placeholder="Contraseña" required>
-                    <span id="togglePassword" onclick="togglePasswordVisibility()">
+                    <input type="password" name="password" id="password" placeholder="password" required autocomplete="off">
+                    <span id="togglePassword" onclick="togglePasswordVisibility()" autocomplete="off">
                         <i class="fas fa-eye-slash"></i> <!-- Ícono de ojo para mostrar/ocultar contraseña -->
                     </span>
                 </div>
-                <button type="submit">Iniciar sesión</button>
-                <p class="forgot-password"><a href="#">¿Olvidaste tu contraseña?</a></p>
+                <button type="submit" autocomplete="off">Iniciar sesión</button>
+                <p class="forgot-password"><a href="#" autocomplete="off">¿Olvidaste tu contraseña?</a></p>
             </form>
         </div>
     </div>
@@ -54,3 +54,4 @@
     </script>
 </body>
 </html>
+

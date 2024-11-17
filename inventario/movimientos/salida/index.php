@@ -18,7 +18,7 @@ include ('../../../layout/parte1.php');
             <h3 class="panel-title"><i class="zmdi zmdi-plus"></i> &nbsp; NUEVA SALIDA DE PRODUCTO</h3>
         </div>
         <div class="panel-body">
-        <form id="nuevaSalidaProductoForm">
+        <form id="nuevaSalidaProductoForm" autocomplete="off">
     <fieldset>
         <legend><i class="zmdi zmdi-assignment-o"></i> &nbsp; Información de la salida del producto</legend>
         <div class="container-fluid">
@@ -29,7 +29,7 @@ include ('../../../layout/parte1.php');
                         <select class="form-control" name="tecnico-reg" required title="Seleccione un técnico.">
                             <option value="">Seleccione una opción</option>
                             <?php
-                            $query = "SELECT ID_tecnico, nombre FROM tecnico ORDER BY nombre";
+                            $query = "SELECT t.ID_tecnico, p.nombre FROM tecnico t INNER JOIN personal p ON t.id_personal = p.ID_personal ORDER BY p.nombre";
                             $stmt = $pdo->query($query);
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 echo "<option value='" . $row['ID_tecnico'] . "'>" . $row['nombre'] . "</option>";
@@ -71,6 +71,8 @@ include ('../../../layout/parte1.php');
                         <textarea class="form-control" name="observacion-reg" rows="1" maxlength="250" title="Puede agregar una observación breve (máximo 250 caracteres)."></textarea>
                     </div>
                 </div>
+                <input type="hidden" name="id_usuario_sesion" value="<?php echo $id_usuario_sesion; ?>">
+                
             </div>
         </div>
     </fieldset>

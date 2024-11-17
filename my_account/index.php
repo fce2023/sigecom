@@ -38,7 +38,7 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
 				<div class="panel-body">
 
 
-<form action="<?php echo $URL; ?>/app/controllers/my_account/actualizar.php" method="POST">
+<form action="<?php echo $URL; ?>/app/controllers/my_account/actualizar.php" atocomplete="off" method="POST">
     <fieldset>
         <legend><i class="zmdi zmdi-key"></i> &nbsp; Datos de la cuenta</legend>
         <div class="container-fluid">
@@ -245,3 +245,5 @@ function confirmacionEliminar(e, form) {
         </div>
     </div>
 </div>
+
+

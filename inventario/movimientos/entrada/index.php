@@ -16,7 +16,8 @@ include ('../../../layout/parte1.php');
             <h3 class="panel-title"><i class="zmdi zmdi-plus"></i> &nbsp; NUEVA ENTRADA DE PRODUCTO</h3>
         </div>
         <div class="panel-body">
-        <form id="nuevaEntradaProductoForm">
+        <form id="nuevaEntradaProductoForm" autocomplete="off">
+            
     <fieldset>
         <legend><i class="zmdi zmdi-assignment-o"></i> &nbsp; Información de la entrada del producto</legend>
         <div class="container-fluid">
@@ -68,6 +69,7 @@ include ('../../../layout/parte1.php');
                         <label class="control-label">Observación</label>
                         <textarea class="form-control" name="observacion-reg" rows="1" maxlength="250" title="Puede agregar una observación breve (máximo 250 caracteres)."></textarea>
                     </div>
+                    <input type="hidden" name="id_usuario_sesion" value="<?php echo $id_usuario_sesion; ?>">
                 </div>
             </div>
         </div>
@@ -176,3 +178,4 @@ include ('../../../layout/parte1.php');
         }
     }
 </script>
+

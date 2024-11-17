@@ -24,17 +24,16 @@ include ('../layout/parte1.php');
                     <legend style="color: #2196F3;"><i class="zmdi zmdi-account-box"></i> &nbsp; Información del Tipo de Usuario</legend>
                     <div class="container-fluid">
                         <div class="row">
-
                             <div class="col-xs-12">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Nombre del Tipo de Usuario *</label>
-                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,100}" class="form-control" type="text" name="nombre-tipo-usuario" required="" maxlength="100">
+                                    <input pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,100}" class="form-control" type="text" name="nombre-tipo-usuario" required="" maxlength="100" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                                 </div>
                             </div>
                             <div class="col-xs-12">
                                 <div class="form-group label-floating">
                                     <label class="control-label" style="color: #2196F3;">Estado del Tipo de Usuario</label>
-                                    <select class="form-control" name="estado-tipo-usuario">
+                                    <select class="form-control" name="estado-tipo-usuario" autocomplete="off">
                                         <option value="Activo">Activo</option>
                                         <option value="Inactivo">Inactivo</option>
                                     </select>

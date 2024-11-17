@@ -12,6 +12,7 @@
 							<tr>
 								<th class="text-center">#</th>
 								<th class="text-center">NOMBRE TECNICO</th>
+								<th class="text-center">USUARIO QUE REGISTRÓ</th>
 								<th class="text-center">NOMBRE PRODUCTO</th>
 								<th class="text-center">FECHA RETIRO</th>
 								<th class="text-center">CANTIDAD</th>
@@ -23,26 +24,48 @@
 						</thead>
 						<tbody>
 							<?php
+								
 								$limit = 5;
 								$page = (isset($_GET['page'])) ? $_GET['page'] : 1;
 								$offset = ($page - 1) * $limit;
-								$query = "SELECT dtp.Id_det_tecnico_producto, t.Nombre, dp.nombre as Nom_producto, dtp.Fecha_retiro, dtp.cantidad, dtp.Observación, dtp.Estado
-								FROM detalle_tecnico_producto dtp
+								
+								$query = "
+								SELECT 
+									dtp.Id_det_tecnico_producto, 
+									CONCAT(p.Nombre, ' ', p.Apellido_paterno, ' ', p.Apellido_materno) AS tecnico, 
+									dp.Nombre AS Nom_producto, 
+									dtp.Fecha_retiro, 
+									dtp.cantidad, 
+									dtp.Observación, 
+									dtp.Estado, 
+									u.Nombre_usuario
+								FROM 
+									detalle_tecnico_producto dtp
 								INNER JOIN tecnico t ON dtp.ID_tecnico = t.ID_tecnico
+								INNER JOIN personal p ON t.id_personal = p.ID_personal
 								INNER JOIN productos dp ON dtp.ID_producto = dp.id_producto
-								LIMIT $limit OFFSET $offset";
-								$stmt = $pdo->query($query);
+								INNER JOIN usuario u ON dtp.ID_usuario = u.ID_usuario
+								ORDER BY 
+									dtp.Id_det_tecnico_producto DESC
+								LIMIT $limit OFFSET $offset
+								";
+								
+								$stmt = $pdo->prepare($query);
+								$stmt->execute();
+								
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
-									<tr>
-										<td><?php echo htmlspecialchars($row['Id_det_tecnico_producto']); ?></td>
-										<td><?php echo htmlspecialchars($row['Nombre']); ?></td>
-										<td><?php echo htmlspecialchars($row['Nom_producto']); ?></td>
-										<td><?php echo htmlspecialchars($row['Fecha_retiro']); ?></td>
-										<td><?php echo htmlspecialchars($row['cantidad']); ?></td>
-										<td><?php echo htmlspecialchars($row['Observación']); ?></td>
-										<td>
-											<?php echo htmlspecialchars($row['Estado'] ? 'Activo' : 'Inactivo'); ?>
-										</td>
+								<tr>
+									<td><?php echo htmlspecialchars($row['Id_det_tecnico_producto']); ?></td>
+									<td><?php echo htmlspecialchars($row['tecnico']); ?></td>
+									<td><?php echo htmlspecialchars($row['Nombre_usuario']); ?></td>
+									<td><?php echo htmlspecialchars($row['Nom_producto']); ?></td>
+									<td><?php echo htmlspecialchars($row['Fecha_retiro']); ?></td>
+									<td><?php echo htmlspecialchars($row['cantidad']); ?></td>
+									<td><?php echo htmlspecialchars($row['Observación']); ?></td>
+									<td>
+										<?php echo htmlspecialchars($row['Estado'] ? 'Activo' : 'Inactivo'); ?>
+									</td>
+								
 										<td>
 											<button type="button" class="btn btn-primary btn-raised btn-xs" onclick="window.location.href = 'editar.php?Id_det_tecnico_producto=<?php echo $row['Id_det_tecnico_producto']; ?>'">
 												<i class="zmdi zmdi-edit"></i>

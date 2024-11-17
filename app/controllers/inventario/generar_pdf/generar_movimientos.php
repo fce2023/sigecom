@@ -10,16 +10,16 @@ if (!isset($pdo) || !$pdo instanceof PDO) {
     die("No se pudo conectar a la base de datos.");
 }
 
-$query = "SELECT dpp.Id_det_producto_proveedor, 'Entrada' AS tipo, pr.Nombre AS proveedor, p.Nombre AS producto, dpp.Fecha_abastecimiento, dpp.cantidad, dpp.Observación, dpp.Estado AS estado_entrada
+$query = "SELECT dpp.Id_det_producto_proveedor, 'Entrada' AS tipo, p.Nombre AS producto, dpp.Fecha_abastecimiento, dpp.cantidad, dpp.Observación, dpp.Estado AS estado_entrada, u.Nombre_usuario AS usuario_registra_entrada
           FROM detalle_producto_proveedor dpp
-          LEFT JOIN proveedor pr ON dpp.ID_proveedor = pr.ID_proveedor
           LEFT JOIN productos p ON dpp.ID_producto = p.id_producto
+          LEFT JOIN usuario u ON dpp.ID_usuario = u.ID_usuario
           WHERE dpp.Estado = 1
           UNION
-          SELECT dtp.Id_det_tecnico_producto, 'Salida' AS tipo, t.Nombre AS tecnico, p.Nombre AS producto, dtp.Fecha_retiro, dtp.cantidad AS cantidad_salida, dtp.Observación AS observacion_salida, dtp.Estado AS estado_salida
+          SELECT dtp.Id_det_tecnico_producto, 'Salida' AS tipo, p.Nombre AS producto, dtp.Fecha_retiro, dtp.cantidad AS cantidad_salida, dtp.Observación AS observacion_salida, dtp.Estado AS estado_salida, u.Nombre_usuario AS usuario_registra_salida
           FROM detalle_tecnico_producto dtp
-          LEFT JOIN tecnico t ON dtp.ID_tecnico = t.ID_tecnico
           LEFT JOIN productos p ON dtp.ID_producto = p.id_producto
+          LEFT JOIN usuario u ON dtp.ID_usuario = u.ID_usuario
           WHERE dtp.Estado = 1";
 $stmt = $pdo->prepare($query);
 $stmt->execute();
@@ -69,8 +69,8 @@ if (!empty($movimientos)) {
                 <tr>
                     <th>N°</th>
                     <th>TIPO</th>
+                    <th>USUARIO QUE REGISTRA</th>
                     <th>NOMBRE PRODUCTO</th>
-                    <th>NOMBRE PROVEEDOR</th>
                     <th>FECHA</th>
                     <th>CANTIDAD</th>
                     <th>OBSERVACIÓN</th>
@@ -83,13 +83,12 @@ if (!empty($movimientos)) {
         $html .= '<tr>';
         $html .= "<td>" . ($key + 1) . "</td>";
         $html .= "<td>" . (isset($movimiento['tipo']) ? $movimiento['tipo'] : 'No disponible') . "</td>";
+        $html .= "<td>" . (isset($movimiento['usuario_registra_entrada']) ? $movimiento['usuario_registra_entrada'] : (isset($movimiento['usuario_registra_salida']) ? $movimiento['usuario_registra_salida'] : 'No disponible')) . "</td>";
         $html .= "<td>" . (isset($movimiento['producto']) ? $movimiento['producto'] : 'No disponible') . "</td>";
-        $html .= "<td>" . (isset($movimiento['proveedor']) ? $movimiento['proveedor'] : 'No disponible') . "</td>";
-        
-        $html .= "<td>" . (isset($movimiento['Fecha_abastecimiento']) ? $movimiento['Fecha_abastecimiento'] : 'No disponible') . "</td>";
+        $html .= "<td>" . (isset($movimiento['Fecha_abastecimiento']) ? $movimiento['Fecha_abastecimiento'] : (isset($movimiento['Fecha_retiro']) ? $movimiento['Fecha_retiro'] : 'No disponible')) . "</td>";
         $html .= "<td>" . (isset($movimiento['cantidad']) ? $movimiento['cantidad'] : 'No disponible') . "</td>";
         $html .= "<td>" . (isset($movimiento['Observación']) ? $movimiento['Observación'] : 'No disponible') . "</td>";
-        $html .= "<td>" . (isset($movimiento['estado_entrada']) && $movimiento['estado_entrada'] == 1 ? 'Activo' : 'Inactivo') . "</td>";
+        $html .= "<td>" . ((isset($movimiento['estado_entrada']) && $movimiento['estado_entrada'] == 1) || (isset($movimiento['estado_salida']) && $movimiento['estado_salida'] == 1) ? 'Activo' : 'Inactivo') . "</td>";
         $html .= '</tr>';
     }
 
@@ -119,4 +118,5 @@ $dompdf->render();
 
 $dompdf->stream("ficha_movimiento.pdf", array("Attachment" => false));
 ?>
+
 
