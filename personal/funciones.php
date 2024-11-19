@@ -70,11 +70,25 @@
                         ?>
                     </select>
                 </div>
+
+                <?php
+                try {
+                    $consulta_estado = $pdo->prepare("SELECT Estado FROM personal WHERE ID_personal = :id_personal");
+                    $consulta_estado->execute(['id_personal' => $id_personal]);
+                    $estado = $consulta_estado->fetchColumn();
+                } catch (PDOException $e) {
+                    echo "Error al conectar a la base de datos";
+                }
+                
+                
+              
+
+                ?>
                 <div class="form-group">
-                    <label for="estado-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>">Estado</label>
-                    <select class="form-control" id="estado-personal-<?php echo isset($id_personal) ? $id_personal : ''; ?>" name="estado-reg">
-                        <option value="1" <?php echo (isset($fila['Estado']) && $fila['Estado'] == 1) ? 'selected' : ''; ?>><?php echo (isset($fila['Estado']) && $fila['Estado'] == 1) ? 'Activo' : 'Inactivo'; ?></option>
-                        <option value="0" <?php echo (isset($fila['Estado']) && $fila['Estado'] == 0) ? 'selected' : ''; ?>><?php echo (isset($fila['Estado']) && $fila['Estado'] == 0) ? 'Inactivo' : 'Activo'; ?></option>
+                    <label">Estado</label>
+                    <select class="form-control" name="estado-reg">
+                        <option value="<?php echo $estado; ?>" selected><?php echo $estado == 1 ? 'Activo' : 'Inactivo'; ?></option>
+                        <option value="<?php echo $estado == 0 ? 1 : 0; ?>"><?php echo $estado == 0 ? 'Activo' : 'Inactivo'; ?></option>
                     </select>
                 </div>
 

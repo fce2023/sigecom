@@ -33,37 +33,8 @@ $estado = $fila_pedido['estado'];
 
 <div class="container-fluid">
 <?php include ('../../layout/cliente.php');?>
-<style>
-    #mensajeModal .modal-header {
-        padding: 0;
-        border: 0;
-        background-color: green;
-        color: white;
-    }
-    #mensajeModal .modal-header .close {
-        display: none;
-    }
-    #mensajeModal .modal-body {
-        padding: 20px;
-        background-color: green;
-        color: white;
-    }
-    #mensajeModal .modal-footer {
-        padding: 0;
-        border: 0;
-        background-color: green;
-        color: white;
-    }
-</style>
 
-<div id="mensajeModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <div class="row">
     <?php
@@ -123,6 +94,7 @@ $estado = $fila_pedido['estado'];
 <div class="form-group">
         <label for="detalle-cliente-tecnico-<?php echo $id; ?>">Tecnico encargado</label>
         <select class="form-control" id="detalle-cliente-tecnico-<?php echo $id; ?>" name="id_detalle_cliente_tecnico-reg">
+            <option value="">Tecnico todavía no asignado</option>
             <?php
             $consulta_detalle_cliente_tecnico = $pdo->prepare("SELECT d.Id_det_cliente_tecnico, t.ID_tecnico, p.Nombre, p.Dni FROM detalle_cliente_tecnico d INNER JOIN tecnico t ON d.ID_tecnico = t.ID_tecnico INNER JOIN personal p ON t.id_personal = p.ID_personal ORDER BY d.Id_det_cliente_tecnico");
             $consulta_detalle_cliente_tecnico->execute();
@@ -143,19 +115,19 @@ $estado = $fila_pedido['estado'];
         <input type="text" class="form-control" id="codigo-operacion-<?php echo $id; ?>" name="codigo-operacion-reg" value="<?php echo htmlspecialchars($Codigo_Operacion); ?>" readonly onfocus="mostrarAviso('No se puede modificar el código de la operación');">
     </div>
 
-    <script>
-        function mostrarAviso(mensaje) {
-            var datos = { "mensaje": mensaje };
-            $.post('<?php echo $URL; ?>atencion_cliente/avisos.php', datos, function(response) {
-                $('#mensajeModal .modal-body').html(response.message);
-                $('#mensajeModal').modal('show');
-                setTimeout(function() {
-                    $('#mensajeModal').modal('hide');
-                }, 1500);
-            }, 'json');
-        }
-    </script>
+ 
     <div class="form-group">
+        <div id="mensajeModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div style="background-color: #dc3545;" class="modal-content">
+                    <div class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+        <div class="form-group">
         <label for="fecha-creacion-<?php echo $id; ?>">Fecha Creación</label>
         <input type="text" class="form-control" id="fecha-creacion-<?php echo $id; ?>" name="fecha-creacion-reg" value="<?php echo date('Y-m-d', strtotime($fecha_creacion)); ?>" readonly onfocus="mostrarAviso('No se puede modificar la fecha de creación');">
     </div>
@@ -295,3 +267,55 @@ include ('../../layout/parte2.php');
 
 
 </footer>
+
+
+
+
+<style>
+    #mensajeModal .modal-header {
+        padding: 0;
+        border: 0;
+        background-color: white;
+        color: black;
+        border: 1px solid #333;
+    }
+    #mensajeModal .modal-header .close {
+        display: none;
+    }
+    #mensajeModal .modal-body {
+        padding: 20px;
+        background-color: white;
+        color: black;
+        border: 1px solid #333;
+    }
+    #mensajeModal .modal-footer {
+        padding: 0;
+        border: 0;
+        background-color: white;
+        color: black;
+        border: 1px solid #333;
+    }
+</style>
+
+
+
+
+<script>
+        function mostrarAviso(mensaje) {
+            var datos = { "mensaje": mensaje };
+            $.post('<?php echo $URL; ?>atencion_cliente/avisos.php', datos, function(response) {
+                var texto = response.message;
+                if (response.success) {
+                    texto = '<span style="color: green;">' + texto + '</span>';
+                } else {
+                    texto = '<span style="color: red;">' + texto + '</span>';
+                }
+                $('#mensajeModal .modal-body').html(texto).css('text-align', 'center');
+                $('#mensajeModal').modal('show');
+                setTimeout(function() {
+                    $('#mensajeModal').modal('hide');
+                }, 1500);
+            }, 'json');
+        }
+    </script>
+

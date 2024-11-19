@@ -10,14 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_detalle_producto_p
     $fecha_abastecimiento = $_POST['Fecha_abastecimiento'] ?? null;
     $cantidad = $_POST['cantidad'] ?? null;
     $observacion = $_POST['Observación'] ?? null;
-    $estado = $_POST['Estado'] ?? null;
-
+    $estado = isset($_POST['Estado']) ? (int)$_POST['Estado'] : 0;
     // Validar que los campos obligatorios no estén vacíos
-    if (!$id_proveedor || !$id_producto || !$fecha_abastecimiento || !$cantidad || !$estado) {
+    if (!$id_proveedor || !$id_producto || !$fecha_abastecimiento || !$cantidad || !in_array($estado, [0, 1])) {
         echo json_encode(['success' => false, 'error' => 'Todos los campos obligatorios deben ser completados.']);
         exit;
     }
-
     try {
         // Preparar la consulta para actualizar
         $query = "UPDATE detalle_producto_proveedor 

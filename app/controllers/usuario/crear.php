@@ -28,7 +28,7 @@ try {
         } else {
             // Si el usuario no existe, insertar en la tabla `usuario`
             $sentencia = $pdo->prepare("INSERT INTO usuario 
-                (id_personal, Nombre_usuario, Contraseña, ID_tipousuario, Estado) 
+                (id_personal, Nombre_usuario, password, ID_tipousuario, Estado) 
                 VALUES (:id_personal, :nombre_usuario, :contrasena, :id_tipousuario, :estado_usuario)");
 
             $sentencia->execute([

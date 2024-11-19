@@ -56,7 +56,8 @@ if (!$fila) {
 </style>
 
 <div class="container-fluid">
-    <form id="editarFormDetalleProductoProveedor" action="<?php echo $URL; ?>/app/controllers/inventario/entrada/editar_entrada.php" method="post">
+<!-- <form id="" action="<?php echo $URL; ?>/app/controllers/inventario/entrada/editar_entrada.php" method="post"> -->
+    <form id="editarFormDetalleProductoProveedor">
         <input type="hidden" name="id_detalle_producto_proveedor" value="<?php echo $id_detalle_producto_proveedor; ?>">
         
         <div class="form-group">
@@ -65,10 +66,14 @@ if (!$fila) {
                 <?php
                 $consulta_producto = $pdo->prepare("SELECT ID_producto, nombre FROM productos WHERE estado = 1 ORDER BY nombre");
                 $consulta_producto->execute();
-                while ($fila_producto = $consulta_producto->fetch(PDO::FETCH_ASSOC)) {
-                    echo "<option value='{$fila_producto['ID_producto']}'" . 
-                         ($fila_producto['ID_producto'] == $fila['ID_producto'] ? ' selected' : '') . 
-                         ">{$fila_producto['nombre']}</option>";
+                if ($consulta_producto->rowCount() > 0) {
+                    while ($fila_producto = $consulta_producto->fetch(PDO::FETCH_ASSOC)) {
+                        echo "<option value='{$fila_producto['ID_producto']}'" . 
+                             ($fila_producto['ID_producto'] == $fila['ID_producto'] ? ' selected' : '') . 
+                             ">{$fila_producto['nombre']}</option>";
+                    }
+                } else {
+                    echo "<option>No hay ningun producto disponible o está en estado inactivo</option>";
                 }
                 ?>
             </select>
@@ -109,8 +114,8 @@ if (!$fila) {
         <div class="form-group">
             <label for="estado">Estado</label>
             <select class="form-control" id="estado" name="Estado">
-                <option value="Activo" <?php echo $fila['Estado'] === 'Activo' ? 'selected' : ''; ?>>Activo</option>
-                <option value="Inactivo" <?php echo $fila['Estado'] === 'Inactivo' ? 'selected' : ''; ?>>Inactivo</option>
+                <option value="1" <?php echo $fila['Estado'] == 1 ? 'selected' : ''; ?>>Activo</option>
+                <option value="0" <?php echo $fila['Estado'] == 0 ? 'selected' : ''; ?>>Inactivo</option>
             </select>
         </div>
 
@@ -119,10 +124,21 @@ if (!$fila) {
     </form>
 </div>
 
+
 <script>
     document.getElementById('editarFormDetalleProductoProveedor').addEventListener('submit', function(event) {
         event.preventDefault();
         var form = this;
+        var camposInvalidos = validarCampos(form); // Validar campos vacíos
+
+        // Si hay campos vacíos, mostrar un modal con los campos faltantes
+        if (camposInvalidos.length > 0) {
+            var mensaje = 'Por favor, complete los siguientes campos requeridos:<br>';
+            mensaje += camposInvalidos.map(campo => `- ${campo}`).join('<br>');
+            showModal(mensaje, 'danger');
+            return;
+        }
+
         var formData = new FormData(form);
 
         var xhr = new XMLHttpRequest();
@@ -132,9 +148,9 @@ if (!$fila) {
                 if (xhr.status === 200) {
                     var data = JSON.parse(xhr.responseText);
                     if (data.success) {
-                        showModal('Entrada de producto guardada exitosamente.', 'success', true);
+                        showModal('Detalle proveedor del producto guardado exitosamente.', 'success', true);
                     } else {
-                        showModal('Error: ' + (data.error || 'No se pudo guardar la entrada del producto.'), 'danger');
+                        showModal('Error: ' + (data.error || 'No se pudo guardar el detalle proveedor del producto.'), 'danger');
                     }
                 } else {
                     showModal('Error en la conexión al servidor. Código de estado: ' + xhr.status, 'danger');
@@ -151,7 +167,28 @@ if (!$fila) {
         xhr.send(formData);
     });
 
+    // Función para validar campos vacíos
+    function validarCampos(form) {
+        var camposInvalidos = [];
+        Array.from(form.elements).forEach(function(campo) {
+            if (campo.required && !campo.value.trim()) {
+                camposInvalidos.push(campo.name || campo.placeholder || 'Campo sin nombre');
+                campo.classList.add('is-invalid'); // Resaltar el campo vacío
+            } else {
+                campo.classList.remove('is-invalid'); // Remover el resaltado si el campo está completo
+            }
+        });
+        return camposInvalidos;
+    }
+
+    // Función para mostrar el modal
     function showModal(message, type, showButtons = false) {
+        // Eliminar cualquier modal existente
+        var existingModal = document.getElementById('mensajeModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
         var modalContent = `
             <div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -164,27 +201,27 @@ if (!$fila) {
                         </div>
                         <div class="modal-footer">
                             ${showButtons ? `
-                                <button id="nuevaEntradaProductoBtn" class="btn btn-primary btn-sm">Seguir editando</button>
-                                <button id="listaEntradasBtn" class="btn btn-secondary btn-sm">Ir a la lista</button>
+                                <button id="seguirEditandoBtn" class="btn btn-primary btn-sm">Seguir editando</button>
+                                <button id="listaSalidasBtn" class="btn btn-secondary btn-sm">Ir a la lista</button>
                             ` : ''}
                         </div>
                     </div>
                 </div>
             </div>`;
-        
+
         document.body.insertAdjacentHTML('beforeend', modalContent);
         $('#mensajeModal').modal('show');
 
         if (showButtons) {
-            document.getElementById('nuevaEntradaProductoBtn').addEventListener('click', function() {
-                document.getElementById('nuevaEntradaProductoForm').reset();
-                $('#mensajeModal').modal('hide');
+            document.getElementById('seguirEditandoBtn').addEventListener('click', function() {
+                location.reload();
             });
-            document.getElementById('listaEntradasBtn').addEventListener('click', function() {
+            document.getElementById('listaSalidasBtn').addEventListener('click', function() {
                 window.location.href = '<?php echo $URL; ?>inventario/movimientos/entrada/index.php';
             });
         }
     }
 </script>
+
 
 

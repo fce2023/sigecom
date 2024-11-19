@@ -14,7 +14,14 @@ try {
         }
 
         $stmt = $pdo->prepare("DELETE FROM productos WHERE id_producto = :id_producto");
-        $stmt->execute(['id_producto' => $id_producto]);
+        try {
+            $stmt->execute(['id_producto' => $id_producto]);
+        } catch (PDOException $e) {
+            if ($e->getCode() === '23000') {
+                throw new Exception('Error al eliminar el producto. Debe eliminar primero las entradas de este producto en la ventana "Entradas de productos".');
+            }
+            throw $e;
+        }
 
         echo json_encode(['success' => true, 'message' => 'Producto eliminado correctamente.']);
     } else {
@@ -22,6 +29,5 @@ try {
     }
 } catch (Exception $e) {
     error_log("Error en eliminar.php: " . $e->getMessage(), 3, __DIR__ . '/error_log.txt');
-    echo json_encode(['success' => false, 'error' => 'Error interno del servidor. ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
-

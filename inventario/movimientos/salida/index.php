@@ -77,116 +77,110 @@ include ('../../../layout/parte1.php');
         </div>
     </fieldset>
     <p class="text-center" style="margin-top: 20px;">
-        <button type="button" id="guardarBtn" class="btn btn-info btn-raised btn-sm">
+        <button type="submit" id="guardarBtn" class="btn btn-info btn-raised btn-sm">
             <i class="zmdi zmdi-floppy"></i> Guardar
         </button>
     </p>
 </form>
 
+
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var form = document.getElementById('nuevaSalidaProductoForm');
-        var guardarBtn = document.getElementById('guardarBtn');
-        var camposModificados = false;
+    document.getElementById('nuevaSalidaProductoForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var form = this;
+        var camposInvalidos = validarCampos(form); // Validar campos vacíos
 
-        // Detectar cambios en los campos del formulario
-        Array.from(form.elements).forEach(function (campo) {
-            campo.addEventListener('input', function () {
-                camposModificados = true;
-            });
-        });
+        // Si hay campos vacíos, mostrar un modal con los campos faltantes
+        if (camposInvalidos.length > 0) {
+            var mensaje = 'Por favor, complete los siguientes campos requeridos:<br>';
+            mensaje += camposInvalidos.map(campo => `- ${campo}`).join('<br>');
+            showModal(mensaje, 'danger');
+            return;
+        }
 
-        // Manejar el clic del botón Guardar
-        guardarBtn.addEventListener('click', function () {
-            // Validar que los campos requeridos estén completos
-            if (!form.checkValidity()) {
-                showModal('Por favor, complete correctamente todos los campos requeridos.', 'danger');
-                return;
-            }
+        var formData = new FormData(form);
 
-            // Verificar si se han realizado cambios en los campos
-            if (!camposModificados) {
-                showModal('No se han detectado cambios en los campos. No se guardó la salida de producto.', 'warning');
-                return;
-            }
-
-            // Recorrer los campos y recopilar datos actualizados
-            var formData = new FormData();
-            Array.from(form.elements).forEach(function (campo) {
-                if (campo.name) {
-                    formData.append(campo.name, campo.value);
-                }
-            });
-
-            // Enviar datos al servidor
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '../../../app/controllers/inventario/salida/guardar_salida.php', true);
-            xhr.onload = function () {
-                try {
-                    if (xhr.status === 200) {
-                        var data = JSON.parse(xhr.responseText);
-                        if (data.success) {
-                            showModal('Salida de producto guardada exitosamente.', 'success', true);
-                        } else {
-                            showModal('Error: ' + (data.error || 'No se pudo guardar la salida del producto.'), 'danger');
-                        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '../../../app/controllers/inventario/salida/guardar_salida.php', true);
+        xhr.onload = function() {
+            try {
+                if (xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    if (data.success) {
+                        showModal('la salida fue guardada exitosamente.', 'success', true);
                     } else {
-                        showModal('Error en la conexión al servidor. Código de estado: ' + xhr.status, 'danger');
+                        showModal('Error: ' + (data.error || 'No se pudo guardar el detalle técnico del producto.'), 'danger');
                     }
-                } catch (error) {
-                    showModal('Error al procesar la respuesta del servidor: ' + error, 'danger');
+                } else {
+                    showModal('Error en la conexión al servidor. Código de estado: ' + xhr.status, 'danger');
                 }
-            };
-
-            xhr.onerror = function () {
-                showModal('Error al enviar la solicitud. Verifique su conexión.', 'danger');
-            };
-
-            xhr.send(formData);
-        });
-
-        // Mostrar modal
-        function showModal(message, type, showButtons = false) {
-            // Eliminar cualquier modal existente
-            var existingModal = document.getElementById('mensajeModal');
-            if (existingModal) {
-                existingModal.remove();
+            } catch (error) {
+                showModal('Error al procesar la respuesta del servidor: ' + error, 'danger');
             }
+        };
 
-            var modalContent = `
-                <div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="mensajeModalLabel">${type === 'success' ? 'Éxito' : 'Error'}</h5>
-                            </div>
-                            <div class="modal-body">
-                                ${message}
-                            </div>
-                            <div class="modal-footer">
-                                ${showButtons ? `
-                                    <button id="nuevaSalidaProductoBtn" class="btn btn-primary btn-sm">Agregar nueva salida de producto</button>
-                                    <button id="listaSalidasBtn" class="btn btn-secondary btn-sm">Ir a la lista</button>
-                                ` : ''}
-                            </div>
+        xhr.onerror = function() {
+            showModal('Error al enviar la solicitud. Verifique su conexión.', 'danger');
+        };
+
+        xhr.send(formData);
+    });
+
+    // Función para validar campos vacíos
+    function validarCampos(form) {
+        var camposInvalidos = [];
+        Array.from(form.elements).forEach(function(campo) {
+            if (campo.required && !campo.value.trim()) {
+                camposInvalidos.push(campo.name || campo.placeholder || 'Campo sin nombre');
+                campo.classList.add('is-invalid'); // Resaltar el campo vacío
+            } else {
+                campo.classList.remove('is-invalid'); // Remover el resaltado si el campo está completo
+            }
+        });
+        return camposInvalidos;
+    }
+
+    // Función para mostrar el modal
+    function showModal(message, type, showButtons = false) {
+        // Eliminar cualquier modal existente
+        var existingModal = document.getElementById('mensajeModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        var modalContent = `
+            <div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="mensajeModalLabel">${type === 'success' ? 'Éxito' : 'Error'}</h5>
+                        </div>
+                        <div class="modal-body">
+                            ${message}
+                        </div>
+                        <div class="modal-footer">
+                            ${showButtons ? `
+                                <button id="seguirEditandoBtn" class="btn btn-primary btn-sm">Agregar otra salida</button>
+                                <button id="listaSalidasBtn" class="btn btn-secondary btn-sm">Ir a la lista</button>
+                            ` : ''}
                         </div>
                     </div>
-                </div>`;
+                </div>
+            </div>`;
 
-            document.body.insertAdjacentHTML('beforeend', modalContent);
-            $('#mensajeModal').modal('show');
+        document.body.insertAdjacentHTML('beforeend', modalContent);
+        $('#mensajeModal').modal('show');
 
-            if (showButtons) {
-                document.getElementById('nuevaSalidaProductoBtn').addEventListener('click', function () {
-                    form.reset();
-                    camposModificados = false;
-                    $('#mensajeModal').modal('hide');
-                });
-                document.getElementById('listaSalidasBtn').addEventListener('click', function () {
-                    window.location.href = '<?php echo $URL; ?>inventario/movimientos/salida/index.php';
-                });
-            }
+        if (showButtons) {
+            document.getElementById('seguirEditandoBtn').addEventListener('click', function() {
+                document.getElementById('nuevaSalidaProductoForm').reset();
+                $('#mensajeModal').modal('hide');
+            });
+            document.getElementById('listaSalidasBtn').addEventListener('click', function() {
+                window.location.href = '<?php echo $URL; ?>inventario/movimientos/salida/index.php';
+            });
         }
-    });
+    }
 </script>
 

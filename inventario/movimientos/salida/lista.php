@@ -2,7 +2,7 @@
 <div class="container-fluid">
        
 		<div class="panel panel-success">
-			<div class="panel-heading">
+			<div class="panel-heading" style="background-color: #d9534f; color: #fff;">
 				<h3 class="panel-title"><i class="zmdi zmdi-format-list-bulleted"></i> &nbsp; LISTA DE SALIDAS</h3>
 			</div>
 			<div class="panel-body">
@@ -55,7 +55,7 @@
 								
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
 								<tr>
-									<td><?php echo htmlspecialchars($row['Id_det_tecnico_producto']); ?></td>
+									<td><?php echo htmlspecialchars($contador = $offset + 1); ?></td>
 									<td><?php echo htmlspecialchars($row['tecnico']); ?></td>
 									<td><?php echo htmlspecialchars($row['Nombre_usuario']); ?></td>
 									<td><?php echo htmlspecialchars($row['Nom_producto']); ?></td>

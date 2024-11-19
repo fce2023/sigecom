@@ -16,25 +16,28 @@ $fila = $consulta_cliente->fetch(PDO::FETCH_ASSOC);
 <div class="container-fluid">
 <?php include ('../../layout/cliente.php');?>
 <style>
+    #mensajeModal .modal-dialog {
+        margin: 0 auto;
+        text-align: center;
+        width: 300px;
+    }
+    #mensajeModal .modal-content {
+        background-color: green;
+        color: white;
+    }
     #mensajeModal .modal-header {
         padding: 0;
         border: 0;
-        background-color: green;
-        color: white;
     }
     #mensajeModal .modal-header .close {
         display: none;
     }
     #mensajeModal .modal-body {
         padding: 20px;
-        background-color: green;
-        color: white;
     }
     #mensajeModal .modal-footer {
         padding: 0;
         border: 0;
-        background-color: green;
-        color: white;
     }
 </style>
 

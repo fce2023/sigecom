@@ -2,7 +2,31 @@
 
 include '../../../config.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_detalle_tecnico_producto'])) {
+
+
+
+
+
+
+/* if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_detalle_tecnico_producto = $_POST['id_detalle_tecnico_producto'] ?? null;
+    $id_tecnico = $_POST['ID_tecnico'] ?? null;
+    $id_producto = $_POST['ID_producto'] ?? null;
+    $fecha_retiro = $_POST['Fecha_retiro'] ?? null;
+    $cantidad = $_POST['cantidad'] ?? null;
+    $observacion = $_POST['Observación'] ?? null;
+    $estado = $_POST['Estado'] ?? null;
+    
+    echo "id_detalle_tecnico_producto: $id_detalle_tecnico_producto <br>";
+    echo "id_tecnico: $id_tecnico <br>";
+    echo "id_producto: $id_producto <br>";
+    echo "fecha_retiro: $fecha_retiro <br>";
+    echo "cantidad: $cantidad <br>";
+    echo "observacion: $observacion <br>";
+    echo "estado: $estado <br>";
+    
+} */
+ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_detalle_tecnico_producto'])) {
     // Recibir datos del formulario
     $id_detalle_tecnico_producto = $_POST['id_detalle_tecnico_producto'];
     $id_tecnico = $_POST['ID_tecnico'] ?? null;
@@ -12,11 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_detalle_tecnico_pr
     $observacion = $_POST['Observación'] ?? null;
     $estado = $_POST['Estado'] ?? null;
 
+   
     // Validar que los campos obligatorios no estén vacíos
-    if (!$id_tecnico || !$id_producto || !$fecha_retiro || !$cantidad || !$estado) {
-        echo json_encode(['success' => false, 'error' => 'Todos los campos obligatorios deben ser completados.']);
-        exit;
-    }
+  
 
     try {
         // Preparar la consulta para actualizar
@@ -26,11 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_detalle_tecnico_pr
                       Fecha_retiro = :fecha_retiro, 
                       cantidad = :cantidad, 
                       Observación = :observacion, 
-                      Estado = :estado 
+                      Estado = CASE WHEN :estado = 1 THEN 1 ELSE 0 END 
                   WHERE Id_det_tecnico_producto = :id_detalle_tecnico_producto";
 
         $stmt = $pdo->prepare($query);
-
         // Asignar parámetros
         $stmt->bindParam(':id_detalle_tecnico_producto', $id_detalle_tecnico_producto, PDO::PARAM_INT);
         $stmt->bindParam(':id_tecnico', $id_tecnico, PDO::PARAM_INT);

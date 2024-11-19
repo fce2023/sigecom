@@ -11,7 +11,7 @@ try {
     // para actualizar en la tabla atencion_cliente
     $id_pedido = $_POST['id_pedido-reg'] ?? 0;
     $id_tipo_servicio = trim($_POST['id_tipo_servicio-reg'] ?? '');
-    $id_detalle_cliente_tecnico = trim($_POST['id_detalle_cliente_tecnico-reg'] ?? '');
+    $id_detalle_cliente_tecnico = !empty($_POST['id_detalle_cliente_tecnico-reg']) ? trim($_POST['id_detalle_cliente_tecnico-reg']) : null;
     $codigo_operacion = trim($_POST['codigo-operacion-reg'] ?? '');
     $estado = trim($_POST['estado-reg'] ?? '');
 

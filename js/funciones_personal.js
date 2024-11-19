@@ -22,8 +22,14 @@ function openModal(modalId) {
     if (celularInput !== null) celularInput.value = modal.dataset.celularPersonal || '';
     if (direccionInput !== null) direccionInput.value = modal.dataset.direccionPersonal || '';
     if (cargoInput !== null) cargoInput.value = modal.dataset.idcargoPersonal || '';
-    if (estadoInput !== null) estadoInput.value = modal.dataset.estadoPersonal || '';
-    
+    if (estadoInput !== null) {
+        for (var i = 0; i < estadoInput.options.length; i++) {
+            if (estadoInput.options[i].value === modal.dataset.estadoPersonal) {
+                estadoInput.options[i].selected = true;
+                break;
+            }
+        }
+    }
     // Mostrar el modal
     modal.style.display = "block";
 }

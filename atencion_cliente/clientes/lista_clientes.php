@@ -16,7 +16,7 @@ include ('../../layout/cliente.php');
 ?>
 
     <div class="panel panel-primary">
-        <div class="panel-heading">
+        <div class="panel-heading" style="background-color: #2ecc71; color: white;">
             <h3 class="panel-title"><i class="zmdi zmdi-format-list-bulleted"></i> &nbsp; LISTA DE CLIENTES</h3>
         </div>
         <div class="panel-body" style="background-color: #F5F5F5;">
@@ -56,7 +56,7 @@ include ('../../layout/cliente.php');
                                     <td><?php echo htmlspecialchars($row['Dirección']); ?></td>
                                     <td><?php echo htmlspecialchars($row['Celular']); ?></td>
                                     <td><?php echo htmlspecialchars($row['Correo_Electronico']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['Estado']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['Estado'] == 1 ? 'Activo' : 'Inactivo'); ?></td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-raised btn-xs" onclick="window.location.href = 'editar_cliente.php?ID_cliente=<?php echo $row['ID_cliente']; ?>'">
                                             <i class="zmdi zmdi-edit"></i>

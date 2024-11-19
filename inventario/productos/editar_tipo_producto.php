@@ -9,6 +9,17 @@ include ('../../layout/parte1.php');
 <div class="container-fluid">
 <?php include ('layout/parte1.php');?>
 <style>
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #mensajeModal {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
     #mensajeModal .modal-header {
         padding: 0;
         border: 0;

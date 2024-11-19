@@ -4,7 +4,7 @@
 <div class="container-fluid">
        
 		<div class="panel panel-success">
-			<div class="panel-heading">
+			<div class="panel-heading" style="background-color: #00b6ff;">
 				<h3 class="panel-title"><i class="zmdi zmdi-format-list-bulleted"></i> &nbsp; LISTA DE ENTRADAS</h3>
 			</div>
 			<div class="panel-body">
@@ -39,7 +39,7 @@
 								$stmt = $pdo->query($query);
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
 									<tr>
-										<td><?php echo htmlspecialchars($row['Id_det_producto_proveedor']); ?></td>
+										<td><?php echo htmlspecialchars($contador = (isset($contador) ? ++$contador : 1)); ?></td>
 										<td><?php echo htmlspecialchars($row['Nombre']); ?></td>
 										<td><?php echo htmlspecialchars($row['Nombre_usuario']); ?></td>
 										<td><?php echo htmlspecialchars($row['Nom_producto']); ?></td>

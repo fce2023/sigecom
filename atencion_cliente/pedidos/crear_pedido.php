@@ -8,14 +8,14 @@ include ('../../layout/parte1.php');
 <div class="container-fluid">
     <h1><i class="zmdi zmdi-male-alt zmdi-hc-fw"></i> Atención al Clientes</h1>
     <?php include ('../../layout/cliente.php'); ?>
-    <div class="panel panel-info">
-        <div class="panel-heading">
+    <div class="panel panel-primary">
+    <div class="panel-heading">
             <h3 class="panel-title"><i class="zmdi zmdi-plus"></i> &nbsp; NUEVO PEDIDO</h3>
         </div>
         <div class="panel-body">
             <form id="nuevoPedidoForm">
                 <fieldset>
-                    <legend style="color: blue;"><i class="zmdi zmdi-assignment-o"></i> &nbsp; Información del Pedido</legend>
+                    <legend style="color: black;"><i class="zmdi zmdi-assignment-o"></i> &nbsp; Información del Pedido</legend>
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-xs-12 col-sm-6">
