@@ -178,69 +178,79 @@
                       </div>
                     </div>
 
-
                     <!-- /.progress-group -->
                     <div class="progress-group">
-                      <span class="progress-text">Visit Premium Page</span>
-                      <span class="float-right"><b>480</b>/800</span>
+                      <?php
+                      $query = "SELECT COUNT(*) as total FROM historial_atencion_cliente";
+                      $stmt = $pdo->query($query);
+                      $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+                      $total_historial = $fila['total'];
+                      ?>
+                      <span class="progress-text">Historial</span>
+                      <span class="float-right"><b><?php echo $total_historial; ?></b></span>
                       <div class="progress progress-sm">
-                        <div class="progress-bar bg-success" style="width: 60%"></div>
+                        <div class="progress-bar bg-success" style="width: <?php echo ($total_historial / 800) * 100; ?>%"></div>
                       </div>
                     </div>
 
                     <!-- /.progress-group -->
-                    <div class="progress-group">
+                   <!--  <div class="progress-group">
                       Send Inquiries
                       <span class="float-right"><b>250</b>/500</span>
                       <div class="progress progress-sm">
                         <div class="progress-bar bg-warning" style="width: 50%"></div>
                       </div>
                     </div>
-
+ -->
                     
                   <!-- /.col -->
-                </div>
+                <!-- </div> -->
                 <!-- /.row -->
               </div>
               <!-- ./card-body -->
-              <div class="card-footer">
+              <!-- <div class="card-footer">
                 <div class="row">
                   <div class="col-sm-3 col-6">
                     <div class="description-block border-right">
                       <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 17%</span>
                       <h5 class="description-header">$35,210.43</h5>
                       <span class="description-text">TOTAL REVENUE</span>
-                    </div>
+                    </div> -->
                     <!-- /.description-block -->
                   </div>
                   <!-- /.col -->
                   <div class="col-sm-3 col-6">
                     <div class="description-block border-right">
+                      <?php
+                      $query = "SELECT SUM(precio) as total FROM productos";
+                      $stmt = $pdo->query($query);
+                      $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+                      ?>
                       <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
-                      <h5 class="description-header">$10,390.90</h5>
+                      <h5 class="description-header"><?php echo number_format($fila['total'], 2); ?></h5>
                       <span class="description-text">TOTAL COST</span>
                     </div>
                     <!-- /.description-block -->
                   </div>
                   <!-- /.col -->
-                  <div class="col-sm-3 col-6">
+                  <!-- <div class="col-sm-3 col-6">
                     <div class="description-block border-right">
                       <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span>
                       <h5 class="description-header">$24,813.53</h5>
                       <span class="description-text">TOTAL PROFIT</span>
-                    </div>
+                    </div> -->
                     <!-- /.description-block -->
-                  </div>
+                 <!--  </div> -->
                   <!-- /.col -->
-                  <div class="col-sm-3 col-6">
+                  <!-- <div class="col-sm-3 col-6">
                     <div class="description-block">
                       <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> 18%</span>
                       <h5 class="description-header">1200</h5>
                       <span class="description-text">GOAL COMPLETIONS</span>
-                    </div>
+                    </div> -->
                     <!-- /.description-block -->
-                  </div>
-                </div>
+                 <!--  </div>
+                </div> -->
                 <!-- /.row -->
               </div>
               <!-- /.card-footer -->
