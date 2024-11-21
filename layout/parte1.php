@@ -257,7 +257,7 @@ function confirmacionCerrarSesion(e) {
 							<a href="<?php echo $URL; ?>/tecnico/designar_tecnico.php"><i class="zmdi zmdi-comment-alt-text zmdi-hc-fw"></i> Designar tecnico</a>
 						</li>
 						<li>
-							<a href="<?php echo $URL; ?>/atencion_cliente/clientes/historial.php"><i class="zmdi zmdi-comment-alt-text zmdi-hc-fw"></i> Historial</a>
+							<a href="<?php echo $URL; ?>/atencion_cliente/historial.php"><i class="zmdi zmdi-comment-alt-text zmdi-hc-fw"></i> Historial</a>
 						</li>
 					</ul>
 				</li>

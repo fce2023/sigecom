@@ -64,7 +64,6 @@ $nombre_producto = $consulta_producto->fetchColumn(); // Mostrar el nombre del p
 
 
 
-
 ?>
 
 
@@ -87,6 +86,9 @@ $nombre_producto = $consulta_producto->fetchColumn(); // Mostrar el nombre del p
 </style>
 <div class="content">
 <div class="container-fluid">
+
+
+
 <!-- form id="editar" action="<?php echo $URL; ?>/app/controllers/inventario/salida/editar_salida.php" method="post"> -->
     <form id="editarFormDetalleTecnicoProducto">    
         <input type="hidden" name="id_detalle_tecnico_producto" value="<?php echo $id_detalle_tecnico_producto; ?>">
@@ -103,6 +105,8 @@ $nombre_producto = $consulta_producto->fetchColumn(); // Mostrar el nombre del p
                 }
                 ?>
             </select>
+
+            <?php echo "este es el id del tecnico: ".$id_tecnico;?>
         </div>
         <div class="form-group">
             <label for="nombre-producto">Nombre del producto</label>

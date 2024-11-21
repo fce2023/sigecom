@@ -10,12 +10,21 @@ include ('../layout/tecnico.php');
 
 
 
+
+ 
+
+
 <!-- Panel nuevo cliente -->
 <div class="container-fluid">
-    
+
+
+
     <div class="panel panel-primary">
     <H1>DESIGNAR T&Eacute;CNICO</H1>
+
         <div class="panel-body">
+
+        
         <!-- <form id="nuevoTecnicoForm"> -->
             <form  method="post" action="../app/controllers/designar_tecnico/guardar.php">
                 <fieldset>

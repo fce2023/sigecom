@@ -15,7 +15,6 @@ $consulta_pedido = $pdo->prepare("SELECT ac.ID, ac.ID_usuario, ac.id_cliente, ac
                                    WHERE ac.ID = :id_pedido");
 $consulta_pedido->execute([':id_pedido' => $id_pedido]);
 $fila_pedido = $consulta_pedido->fetch(PDO::FETCH_ASSOC);
-
 if (!$fila_pedido) {
     header('Location: ' . $URL . '/atencion_cliente/pedidos/lista_pedidos.php');
     exit;
@@ -27,7 +26,6 @@ $id_tipo_servicio = $fila_pedido['ID_tipo_servicio'];
 $Codigo_Operacion = $fila_pedido['Codigo_Operacion'];
 $fecha_creacion = $fila_pedido['fecha_creacion'];
 $estado = $fila_pedido['estado'];
-$id_detalle_cliente_tecnico = isset($fila_pedido['ID_atencion_cliente']) ? $fila_pedido['ID_atencion_cliente'] : null;
 
 ?>
 <div class="container-fluid">
@@ -89,23 +87,88 @@ $id_detalle_cliente_tecnico = isset($fila_pedido['ID_atencion_cliente']) ? $fila
 
 
 
-<div class="form-group">
-    <label for="detalle-cliente-tecnico-<?php echo $id; ?>">Técnico encargado</label>
-    <input type="text" class="form-control" id="detalle-cliente-tecnico-<?php echo $id; ?>" name="id_detalle_cliente_tecnico-reg" value="<?php
-        $stmt4 = $pdo->prepare("SELECT t.ID_tecnico, p.ID_personal, p.Dni, p.Nombre, p.Apellido_paterno, p.Apellido_materno
-                                FROM tecnico t
-                                INNER JOIN personal p ON t.id_personal = p.ID_personal
-                                WHERE t.ID_tecnico = :id_tecnico");
-        $stmt4->bindParam(':id_tecnico', $id_detalle_cliente_tecnico, PDO::PARAM_INT);
-        $stmt4->execute();
-        $personal = $stmt4->fetch(PDO::FETCH_ASSOC);
-        if ($personal && is_array($personal)) {
-            echo htmlspecialchars("{$personal['Dni']} {$personal['Nombre']} {$personal['Apellido_paterno']} {$personal['Apellido_materno']}");
-        }
-    ?>" readonly>
-</div>
+<?php
+// Consultar a la tabla detalle_cliente_tecnico y traer el ID_tecnico
+$stmt3 = $pdo->prepare("SELECT ID_tecnico FROM detalle_cliente_tecnico WHERE ID_atencion_cliente = :ID_atencion_cliente");
+$stmt3->bindParam(':ID_atencion_cliente', $id, PDO::PARAM_INT);
+$stmt3->execute();
+$fila_detalle_cliente_tecnico = $stmt3->fetch(PDO::FETCH_ASSOC);
+$id_tecnico = isset($fila_detalle_cliente_tecnico['ID_tecnico']) ? $fila_detalle_cliente_tecnico['ID_tecnico'] : null;
+
+if ($id_tecnico) {
+    $stmt4 = $pdo->prepare("SELECT Dni, Nombre FROM personal WHERE ID_personal = (SELECT id_personal FROM tecnico WHERE ID_tecnico = :id)");
+    $stmt4->bindParam(':id', $id_tecnico, PDO::PARAM_INT);
+    $stmt4->execute();
+    $fila_tecnico = $stmt4->fetch(PDO::FETCH_ASSOC);
+    $id_tecnico = isset($fila_tecnico['Dni']) && isset($fila_tecnico['Nombre']) ? $fila_tecnico['Dni'] . ' ' . $fila_tecnico['Nombre'] : null;
+}
+?>
+
+
+
+
+<?php if ($id_tecnico == null || $id_tecnico == 0): ?>
+    <div class="form-group" style="display: none;">
+        <label for="detalle-cliente-tecnico-<?php echo $id; ?>">Técnico encargado</label>
+        <select class="form-control" id="id_atencion_cliente-reg <?php echo $id; ?>" name="id_atencion_cliente-reg">
+            <?php if ($id_tecnico): ?>
+                <option value="<?php echo $id_tecnico; ?>" selected><?php echo htmlspecialchars($id_tecnico); ?></option>
+            <?php else: ?>
+                <option value="Tecnico no asignado" selected>Técnico no asignado</option>
+            <?php endif; ?>
+            <?php
+            $stmt4 = $pdo->prepare("SELECT t.ID_tecnico, p.Dni, p.Nombre FROM tecnico t
+                                    INNER JOIN personal p ON t.id_personal = p.ID_personal
+                                    ORDER BY p.Dni, p.Nombre");
+            $stmt4->execute();
+            while ($fila_tecnico = $stmt4->fetch(PDO::FETCH_ASSOC)) {
+                if ($fila_tecnico['ID_tecnico'] != $id_tecnico) {
+                    ?>
+                    <option value="<?php echo $fila_tecnico['ID_tecnico']; ?>">
+                        <?php echo htmlspecialchars("{$fila_tecnico['Dni']} {$fila_tecnico['Nombre']}"); ?>
+                    </option>
+                    <?php
+                }
+            }
+            ?>
+        </select>
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-primary" onclick="window.location.href='<?php echo $URL; ?>tecnico/designar_tecnico.php?id_cliente=<?php echo $id_cliente = $fila_pedido['id_cliente'];; ?>'">Asignar Técnico Encargado</button>
+    </div>
+<?php else: ?>
+
+
 
     <div class="form-group">
+        <label for="detalle-cliente-tecnico-<?php echo $id; ?>">Técnico encargado</label>
+        <select class="form-control" id="id_atencion_cliente-reg <?php echo $id; ?>" name="id_atencion_cliente-reg">
+            <?php if ($id_tecnico): ?>
+                <option value="<?php echo $id_tecnico; ?>" selected><?php echo htmlspecialchars($id_tecnico); ?></option>
+            <?php else: ?>
+                <option value="Tecnico no asignado" selected>Técnico no asignado</option>
+            <?php endif; ?>
+            <?php
+            $stmt4 = $pdo->prepare("SELECT t.ID_tecnico, p.Dni, p.Nombre FROM tecnico t
+                                    INNER JOIN personal p ON t.id_personal = p.ID_personal
+                                    ORDER BY p.Dni, p.Nombre");
+            $stmt4->execute();
+            while ($fila_tecnico = $stmt4->fetch(PDO::FETCH_ASSOC)) {
+                if ($fila_tecnico['ID_tecnico'] != $id_tecnico) {
+                    ?>
+                    <option value="<?php echo $fila_tecnico['ID_tecnico']; ?>">
+                        <?php echo htmlspecialchars("{$fila_tecnico['Dni']} {$fila_tecnico['Nombre']}"); ?>
+                    </option>
+                    <?php
+                }
+            }
+            ?>
+        </select>
+    </div>
+<?php endif; ?>
+
+
+<div class="form-group">
         <label for="codigo-operacion-<?php echo $id; ?>">Código Operación</label>
         <input type="text" class="form-control" id="codigo-operacion-<?php echo $id; ?>" name="codigo-operacion-reg" value="<?php echo htmlspecialchars($Codigo_Operacion); ?>" readonly onfocus="mostrarAviso('No se puede modificar el código de la operación');">
     </div>

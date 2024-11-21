@@ -12,7 +12,7 @@ try {
 
     // Inicializar variables
     $id_usuario = isset($id_usuario_sesion) ? $id_usuario_sesion : null;
-    $id_detalle_cliente_tecnico = null; // Siempre null por defecto
+   
     $id_cliente = trim($_POST['id_cliente-reg'] ?? '');
     $id_tipo_servicio = trim($_POST['ID_tipo_servicio-reg'] ?? '');
     $codigo_operacion = trim($_POST['Codigo_Operacion-reg'] ?? '');
@@ -43,12 +43,11 @@ try {
 
     // Primera inserción: atencion_cliente
     $query1 = "INSERT INTO atencion_cliente 
-                (ID_usuario, ID_detalle_cliente_tecnico, id_cliente, ID_tipo_servicio, Codigo_Operacion, fecha_creacion, estado) 
+                (ID_usuario, id_cliente, ID_tipo_servicio, Codigo_Operacion, fecha_creacion, estado) 
                VALUES 
-                (:id_usuario, :id_detalle_cliente_tecnico, :id_cliente, :id_tipo_servicio, :codigo_operacion, :fecha_creacion, :estado)";
+                (:id_usuario, :id_cliente, :id_tipo_servicio, :codigo_operacion, :fecha_creacion, :estado)";
     $stmt1 = $pdo->prepare($query1);
     $stmt1->bindValue(':id_usuario', $id_usuario, PDO::PARAM_INT);
-    $stmt1->bindValue(':id_detalle_cliente_tecnico', $id_detalle_cliente_tecnico, PDO::PARAM_NULL);
     $stmt1->bindValue(':id_cliente', $id_cliente, PDO::PARAM_INT);
     $stmt1->bindValue(':id_tipo_servicio', $id_tipo_servicio, PDO::PARAM_INT);
     $stmt1->bindValue(':codigo_operacion', $codigo_operacion, PDO::PARAM_STR);

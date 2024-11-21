@@ -18,7 +18,7 @@ include ('../../../layout/parte1.php');
             <h3 class="panel-title"><i class="zmdi zmdi-plus"></i> &nbsp; NUEVA SALIDA DE PRODUCTO</h3>
         </div>
         <div class="panel-body">
-        <form id="nuevaSalidaProductoForm">
+        <form  action="../../../app/controllers/inventario/salida/guardar_salida.php" method="post">
     <fieldset>
         <legend><i class="zmdi zmdi-assignment-o"></i> &nbsp; Información de la salida del producto</legend>
         <div class="container-fluid">
@@ -58,34 +58,41 @@ include ('../../../layout/parte1.php');
         function filtrarClientesPorTecnico(idTecnico) {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var respuesta = xhr.responseText;
-                    try {
-                        var clientes = JSON.parse(respuesta);
-                        var listaClientes = document.getElementById('listaClientes');
-                        listaClientes.innerHTML = "<option value=''>Seleccione Cliente</option>";
-                        if (clientes.length > 0) {
-                            clientes.forEach(function(cliente) {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        var respuesta = xhr.responseText;
+                        try {
+                            var clientes = JSON.parse(respuesta);
+                            var listaClientes = document.getElementById('listaClientes');
+                            listaClientes.innerHTML = "<option value=''>Seleccione Cliente</option>";
+                            if (clientes.error) {
+                                alert(clientes.error);
+                            } else if (clientes.length > 0) {
+                                clientes.forEach(function(cliente) {
+                                    var option = document.createElement('option');
+                                    option.value = cliente.ID_cliente;
+                                    option.text = cliente.Dni + " - " + cliente.Nombre + " " + cliente.Apellido_paterno + " " + cliente.Apellido_materno;
+                                    listaClientes.add(option);
+                                });
+                            } else {
                                 var option = document.createElement('option');
-                                option.value = cliente.ID_cliente;
-                                option.text = cliente.Dni + " - " + cliente.Nombre + " " + cliente.Apellido_paterno + " " + cliente.Apellido_materno;
+                                option.value = '';
+                                option.text = 'No hay cliente relacionado';
+                                option.disabled = true;
                                 listaClientes.add(option);
-                            });
-                        } else {
-                            var option = document.createElement('option');
-                            option.value = '';
-                            option.text = 'No hay cliente relacionado';
-                            option.disabled = true;
-                            listaClientes.add(option);
+                            }
+                        } catch (e) {
+                            alert("Error al recibir respuesta del servidor: " + e.message);
                         }
-                    } catch (e) {
-                        alert("Error al recibir respuesta del servidor: " + e.message);
+                    } else {
+                        alert("Error al conectar con el servidor: " + xhr.statusText);
                     }
                 }
             };
             xhr.open("GET", "obtener_clientes_por_tecnico.php?id_tecnico=" + idTecnico, true);
             xhr.send();
         }
+
         </script>
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group label-floating">
@@ -168,6 +175,7 @@ include ('../../../layout/parte1.php');
 
         xhr.send(formData);
     });
+
 
     // Función para validar campos vacíos
     function validarCampos(form) {
