@@ -14,6 +14,13 @@ try {
             throw new Exception('El nombre y el precio son obligatorios.');
         }
 
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM productos WHERE nombre = :nombre");
+        $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
+        $stmt->execute();
+        if ($stmt->fetchColumn() > 0) {
+            throw new Exception('El producto ya existe.');
+        }
+
         $query = "INSERT INTO productos (nombre, descripcion, id_tipo_producto, precio, fecha_registro, estado) 
                   VALUES (:nombre, :descripcion, :id_tipo_producto, :precio, CURRENT_TIMESTAMP, 1)";
         $stmt = $pdo->prepare($query);
@@ -31,4 +38,3 @@ try {
     error_log("Error en guardar.php: " . $e->getMessage(), 3, __DIR__ . '/error_log.txt');
     echo json_encode(['success' => false, 'error' => 'Error interno del servidor. ' . $e->getMessage()]);
 }
-

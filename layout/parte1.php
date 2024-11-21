@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -229,19 +230,6 @@ function confirmacionCerrarSesion(e) {
 				</li>
 
 				
-				<li>
-					<a href="#!" class="btn-sideBar-SubMenu">
-						<i class="zmdi zmdi-case-download zmdi-hc-fw"></i> Inventario <i class="zmdi zmdi-caret-down pull-right"></i>
-					</a>
-					<ul class="list-unstyled full-box">
-						<li>
-							<a href="<?php echo $URL; ?>/inventario/productos/crear.php"><i class="zmdi zmdi-case-download zmdi-hc-fw"></i> Productos</a>
-						</li>
-						<li>
-							<a href="<?php echo $URL; ?>inventario/movimientos/entrada/"><i class="zmdi zmdi-plus zmdi-hc-fw"></i> Movimientos</a>
-						</li>
-					</ul>
-				</li>
 
 				<li>
 					<a href="#!" class="btn-sideBar-SubMenu">
@@ -273,6 +261,22 @@ function confirmacionCerrarSesion(e) {
 						</li>
 					</ul>
 				</li>
+
+
+				<li>
+					<a href="#!" class="btn-sideBar-SubMenu">
+						<i class="zmdi zmdi-case-download zmdi-hc-fw"></i> Inventario <i class="zmdi zmdi-caret-down pull-right"></i>
+					</a>
+					<ul class="list-unstyled full-box">
+						<li>
+							<a href="<?php echo $URL; ?>/inventario/productos/crear.php"><i class="zmdi zmdi-case-download zmdi-hc-fw"></i> Productos</a>
+						</li>
+						<li>
+							<a href="<?php echo $URL; ?>inventario/movimientos/entrada/"><i class="zmdi zmdi-plus zmdi-hc-fw"></i> Movimientos</a>
+						</li>
+					</ul>
+				</li>
+
 
 
 			</ul>

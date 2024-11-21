@@ -52,3 +52,12 @@ include ('../layout/parte1.php');
     </div>
 </div>
 
+<?php
+    if (isset($_SESSION['mensaje'])) {
+        echo "<div class='alert " . ($_SESSION['mensaje'] === 'El tipo de usuario ya existe, no se puede registrar' ? 'alert-danger' : 'alert-success') . "'>
+            " . $_SESSION['mensaje'] . "
+        </div>";
+        unset($_SESSION['mensaje']);
+    }
+?>
+

@@ -17,6 +17,7 @@ include ('../layout/parte1.php');
     <div class="panel panel-primary">
 
         <div class="panel-body">
+            <h1>Agregar Tecnico</h1>
         <form id="nuevoTecnicoForm">
             <!-- <form  method="post" action="../app/controllers/tecnico/guardar_tecnico.php"> -->
                 <fieldset>
@@ -215,7 +216,7 @@ include ('../layout/parte1.php');
                 location.reload();
             });
             document.getElementById('listaClientesBtn').addEventListener('click', function() {
-                window.location.href = '<?php echo $URL; ?>atencion_cliente/tecnico/lista_tecnicos.php';
+                window.location.href = '<?php echo $URL; ?>tecnico/lista_tecnicos.php';
             });
         }
     }

@@ -18,26 +18,75 @@ include ('../../../layout/parte1.php');
             <h3 class="panel-title"><i class="zmdi zmdi-plus"></i> &nbsp; NUEVA SALIDA DE PRODUCTO</h3>
         </div>
         <div class="panel-body">
-        <form id="nuevaSalidaProductoForm" autocomplete="off">
+        <form id="nuevaSalidaProductoForm">
     <fieldset>
         <legend><i class="zmdi zmdi-assignment-o"></i> &nbsp; Información de la salida del producto</legend>
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="form-group label-floating">
-                        <label class="control-label">Técnico *</label>
-                        <select class="form-control" name="tecnico-reg" required title="Seleccione un técnico.">
-                            <option value="">Seleccione una opción</option>
-                            <?php
-                            $query = "SELECT t.ID_tecnico, p.nombre FROM tecnico t INNER JOIN personal p ON t.id_personal = p.ID_personal ORDER BY p.nombre";
-                            $stmt = $pdo->query($query);
-                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                echo "<option value='" . $row['ID_tecnico'] . "'>" . $row['nombre'] . "</option>";
-                            }
-                            ?>
-                        </select>
+                <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group label-floating">
+                                <label class="control-label">Técnico *</label>
+                                <select class="form-control" name="tecnico-reg" id="listaTecnicos" required title="Seleccione un técnico." onchange="filtrarClientesPorTecnico(this.value)">
+                                    <option value="">Seleccione una opción</option>
+                                    <?php
+                                    $query = "SELECT t.ID_tecnico, p.nombre FROM tecnico t INNER JOIN personal p ON t.id_personal = p.ID_personal ORDER BY p.nombre";
+                                    $stmt = $pdo->query($query);
+                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        echo "<option value='" . $row['ID_tecnico'] . "'>" . $row['nombre'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="form-group label-floating">
+                                <label class="control-label">Cliente *</label>
+                                <input type="text" class="form-control" id="buscarCliente" onkeyup="buscarClientes(this.value)" placeholder="Buscar por nombre, apellido o dni">
+                                <select class="form-control" name="id_cliente-reg" id="listaClientes" required>
+                                    <option value="" disabled selected>Clientes relacionados al técnico</option>
+                                </select>
+                                <div id="clienteNoExiste" style="color: red; display: none;">Cliente aún no existe</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </fieldset>
+
+
+        <script>
+        function filtrarClientesPorTecnico(idTecnico) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var respuesta = xhr.responseText;
+                    try {
+                        var clientes = JSON.parse(respuesta);
+                        var listaClientes = document.getElementById('listaClientes');
+                        listaClientes.innerHTML = "<option value=''>Seleccione Cliente</option>";
+                        if (clientes.length > 0) {
+                            clientes.forEach(function(cliente) {
+                                var option = document.createElement('option');
+                                option.value = cliente.ID_cliente;
+                                option.text = cliente.Dni + " - " + cliente.Nombre + " " + cliente.Apellido_paterno + " " + cliente.Apellido_materno;
+                                listaClientes.add(option);
+                            });
+                        } else {
+                            var option = document.createElement('option');
+                            option.value = '';
+                            option.text = 'No hay cliente relacionado';
+                            option.disabled = true;
+                            listaClientes.add(option);
+                        }
+                    } catch (e) {
+                        alert("Error al recibir respuesta del servidor: " + e.message);
+                    }
+                }
+            };
+            xhr.open("GET", "obtener_clientes_por_tecnico.php?id_tecnico=" + idTecnico, true);
+            xhr.send();
+        }
+        </script>
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group label-floating">
                         <label class="control-label">Producto *</label>
@@ -83,15 +132,12 @@ include ('../../../layout/parte1.php');
     </p>
 </form>
 
-
-
 <script>
     document.getElementById('nuevaSalidaProductoForm').addEventListener('submit', function(event) {
         event.preventDefault();
         var form = this;
-        var camposInvalidos = validarCampos(form); // Validar campos vacíos
+        var camposInvalidos = validarCampos(form);
 
-        // Si hay campos vacíos, mostrar un modal con los campos faltantes
         if (camposInvalidos.length > 0) {
             var mensaje = 'Por favor, complete los siguientes campos requeridos:<br>';
             mensaje += camposInvalidos.map(campo => `- ${campo}`).join('<br>');
@@ -105,18 +151,14 @@ include ('../../../layout/parte1.php');
         xhr.open('POST', '../../../app/controllers/inventario/salida/guardar_salida.php', true);
         xhr.onload = function() {
             try {
-                if (xhr.status === 200) {
-                    var data = JSON.parse(xhr.responseText);
-                    if (data.success) {
-                        showModal('la salida fue guardada exitosamente.', 'success', true);
-                    } else {
-                        showModal('Error: ' + (data.error || 'No se pudo guardar el detalle técnico del producto.'), 'danger');
-                    }
+                var data = JSON.parse(xhr.responseText);
+                if (data.success) {
+                    showModal(data.message, 'success', true);
                 } else {
-                    showModal('Error en la conexión al servidor. Código de estado: ' + xhr.status, 'danger');
+                    showModal(data.message || 'No se pudo guardar el detalle técnico del producto.', 'danger');
                 }
             } catch (error) {
-                showModal('Error al procesar la respuesta del servidor: ' + error, 'danger');
+                showModal('Error al procesar la respuesta del servidor: ' + (error.message.indexOf('Unexpected token') > -1 ? 'La respuesta del servidor no es un JSON válido.' : error.message), 'danger');
             }
         };
 

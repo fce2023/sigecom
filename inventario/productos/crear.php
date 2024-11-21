@@ -84,18 +84,22 @@ include ('../../layout/parte1.php');
         </div>
     </fieldset>
     <p class="text-center" style="margin-top: 20px;">
-        <button type="button" id="guardarBtn" class="btn btn-info btn-raised btn-sm">
+        <button type="submit" id="guardarBtn" class="btn btn-info btn-raised btn-sm">
             <i class="zmdi zmdi-floppy"></i> Guardar
         </button>
     </p>
 </form>
 
 <script>
-    document.getElementById('guardarBtn').addEventListener('click', function() {
-        var form = document.getElementById('nuevoProductoForm');
+    document.getElementById('nuevoProductoForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var form = this;
+        var camposInvalidos = validarCampos(form);
 
-        if (!form.checkValidity()) {
-            showModal('Por favor, complete correctamente todos los campos requeridos.', 'danger');
+        if (camposInvalidos.length > 0) {
+            var mensaje = 'Por favor, complete los siguientes campos requeridos:<br>';
+            mensaje += camposInvalidos.map(campo => `- ${campo}`).join('<br>');
+            showModal(mensaje, 'danger');
             return;
         }
 
@@ -108,9 +112,9 @@ include ('../../layout/parte1.php');
                 if (xhr.status === 200) {
                     var data = JSON.parse(xhr.responseText);
                     if (data.success) {
-                        showModal('Producto guardado exitosamente.', 'success', true);
+                        showModal(data.message, 'success', true); // Show server message
                     } else {
-                        showModal('Error: ' + (data.error || 'No se pudo guardar el producto.'), 'danger');
+                        showModal('Error: ' + (data.message || 'No se pudo guardar el producto.'), 'danger');
                     }
                 } else {
                     showModal('Error en la conexión al servidor. Código de estado: ' + xhr.status, 'danger');
@@ -127,7 +131,28 @@ include ('../../layout/parte1.php');
         xhr.send(formData);
     });
 
+    // Función para validar campos vacíos
+    function validarCampos(form) {
+        var camposInvalidos = [];
+        Array.from(form.elements).forEach(function(campo) {
+            if (campo.required && !campo.value.trim()) {
+                camposInvalidos.push(campo.name || campo.placeholder || 'Campo sin nombre');
+                campo.classList.add('is-invalid'); // Resaltar el campo vacío
+            } else {
+                campo.classList.remove('is-invalid'); // Remover el resaltado si el campo está completo
+            }
+        });
+        return camposInvalidos;
+    }
+
+    // Función para mostrar el modal
     function showModal(message, type, showButtons = false) {
+        // Eliminar cualquier modal existente
+        var existingModal = document.getElementById('mensajeModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
         var modalContent = `
             <div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -140,24 +165,24 @@ include ('../../layout/parte1.php');
                         </div>
                         <div class="modal-footer">
                             ${showButtons ? `
-                                <button id="nuevoProductoBtn" class="btn btn-primary btn-sm">Agregar nuevo producto</button>
+                                <button id="seguirEditandoBtn" class="btn btn-primary btn-sm">Agregar otro producto</button>
                                 <button id="listaProductosBtn" class="btn btn-secondary btn-sm">Ir a la lista</button>
                             ` : ''}
                         </div>
                     </div>
                 </div>
             </div>`;
-        
+
         document.body.insertAdjacentHTML('beforeend', modalContent);
         $('#mensajeModal').modal('show');
 
         if (showButtons) {
-            document.getElementById('nuevoProductoBtn').addEventListener('click', function() {
+            document.getElementById('seguirEditandoBtn').addEventListener('click', function() {
                 document.getElementById('nuevoProductoForm').reset();
                 $('#mensajeModal').modal('hide');
             });
             document.getElementById('listaProductosBtn').addEventListener('click', function() {
-                window.location.href = '<?php echo $URL; ?>inventario/productos/lista.php';
+                window.location.href = '<?php echo $URL; ?>/inventario/productos/lista.php';
             });
         }
     }

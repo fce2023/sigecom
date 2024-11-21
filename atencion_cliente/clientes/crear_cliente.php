@@ -30,8 +30,7 @@ include ('../../layout/parte1.php');
         </div>
         <div class="panel-body">
 
-
-        <form id="nuevoClienteForm" autocomplete="off">
+<form id="nuevoClienteForm">
     <fieldset>
         <legend style="color: black;"><i class="zmdi zmdi-assignment-o"></i> &nbsp; Información del cliente</legend>
         <div class="container-fluid">
@@ -134,20 +133,18 @@ include ('../../layout/parte1.php');
                 <div class="col-xs-12 col-sm-6">
                     <div class="form-group label-floating">
                         <label class="control-label">Estado</label>
-                        <input 
-                            class="form-control" 
-                            type="text" 
-                            name="estado-reg" 
-                            maxlength="50"
-                            title="Ingrese el estado (hasta 50 caracteres)."
-                        >
+                        <select class="form-control" name="estado-reg" title="Seleccione un estado.">
+                            
+                            <option value="1" selected>Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
     </fieldset>
     <p class="text-center" style="margin-top: 20px;">
-        <button type="button" id="guardarBtn" class="btn btn-info btn-raised btn-sm">
+        <button type="submit" id="guardarBtn" class="btn btn-info btn-raised btn-sm">
             <i class="zmdi zmdi-floppy"></i> Guardar
         </button>
     </p>
@@ -165,11 +162,12 @@ include ('../../layout/parte1.php');
 </style>
 
 <script>
-    document.getElementById('guardarBtn').addEventListener('click', function() {
+    document.getElementById('guardarBtn').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
         var form = document.getElementById('nuevoClienteForm');
         var camposInvalidos = validarCampos(form); // Validar campos vacíos
 
-        // Si hay campos vacíos, mostrar un modal con los campos faltantes
         if (camposInvalidos.length > 0) {
             var mensaje = 'Por favor, complete los siguientes campos requeridos:<br>';
             mensaje += camposInvalidos.map(campo => `- ${campo}`).join('<br>');
@@ -205,23 +203,20 @@ include ('../../layout/parte1.php');
         xhr.send(formData);
     });
 
-    // Función para validar campos vacíos
     function validarCampos(form) {
         var camposInvalidos = [];
         Array.from(form.elements).forEach(function(campo) {
             if (campo.required && !campo.value.trim()) {
                 camposInvalidos.push(campo.name || campo.placeholder || 'Campo sin nombre');
-                campo.classList.add('is-invalid'); // Resaltar el campo vacío
+                campo.classList.add('is-invalid');
             } else {
-                campo.classList.remove('is-invalid'); // Remover el resaltado si el campo está completo
+                campo.classList.remove('is-invalid');
             }
         });
         return camposInvalidos;
     }
 
-    // Función para mostrar el modal
     function showModal(message, type, showButtons = false) {
-        // Eliminar cualquier modal existente
         var existingModal = document.getElementById('mensajeModal');
         if (existingModal) {
             existingModal.remove();
@@ -255,11 +250,13 @@ include ('../../layout/parte1.php');
 
         if (showButtons) {
             document.getElementById('nuevoClienteBtn').addEventListener('click', function() {
-                document.getElementById('nuevoClienteForm').reset();
+                var form = document.getElementById('nuevoClienteForm');
+                form.reset();
                 $('#mensajeModal').modal('hide');
+                location.reload();
             });
             document.getElementById('listaClientesBtn').addEventListener('click', function() {
-                window.location.href = '<?php echo $URL; ?>atencion_cliente/clientes/crear_cliente.php';
+                window.location.href = '<?php echo $URL; ?>atencion_cliente/clientes/lista_clientes.php';
             });
         }
     }

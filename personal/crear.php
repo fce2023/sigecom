@@ -1,4 +1,3 @@
-
 <?php
 
 include ('../app/config.php');
@@ -7,14 +6,11 @@ include ('../layout/sesion.php');
 include ('../layout/parte1.php');
 ?>
 
-
-		<div class="container-fluid">
-			<div class="page-header">
-			  <h1 class="text-titles"><i class="zmdi zmdi-account zmdi-hc-fw"></i> Registrar <small>Personal</small></h1>
-			</div>
-			<!-- <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse voluptas reiciendis tempora voluptatum eius porro ipsa quae voluptates officiis sapiente sunt dolorem, velit quos a qui nobis sed, dignissimos possimus!</p> -->
-		</div>
-
+<div class="container-fluid">
+    <div class="page-header">
+        <h1 class="text-titles"><i class="zmdi zmdi-account zmdi-hc-fw"></i> Registrar <small>Personal</small></h1>
+    </div>
+</div>
 
 <!-- Panel nuevo personal -->
 <div class="container-fluid">
@@ -23,7 +19,7 @@ include ('../layout/parte1.php');
             <h3 class="panel-title"><i class="zmdi zmdi-plus"></i> &nbsp; NUEVO PERSONAL</h3>
         </div>
         <div class="panel-body">
-            <form action="<?php echo $URL; ?>/app/controllers/personal/crear.php" method="post" autocomplete="off" style="background-color: #E0E0E0; padding: 15px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
+            <form id="nuevoPersonal">
                 <fieldset>
                     <legend style="color: #2196F3;"><i class="zmdi zmdi-account-box"></i> &nbsp; Información personal</legend>
                     <div class="container-fluid">
@@ -69,7 +65,6 @@ include ('../layout/parte1.php');
                                     <label class="control-label" style="color: #2196F3;">Cargo</label>
                                     <?php
                                     try {
-                                        
                                         $consulta = $pdo->query("SELECT * FROM cargo");
                                         $consulta->execute();
                                         $filas = $consulta->fetchAll();
@@ -86,19 +81,125 @@ include ('../layout/parte1.php');
                                     </select>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                     <p>Si no hay cargo en la lista, ve y <a href="<?php echo $URL; ?>/cargo/crear.php">agrega uno en la sección de Administrar Cargo</a></p>
                 </fieldset>
                 <br>
-				
+
                 <p class="text-center" style="margin-top: 20px;">
-                    <button type="submit" class="btn btn-primary btn-raised btn-sm"><i class="zmdi zmdi-floppy"></i> Guardar</button>
+                    <button type="submit" id="guardarBtn" class="btn btn-primary btn-raised btn-sm"><i class="zmdi zmdi-floppy"></i> Guardar</button>
                 </p>
             </form>
         </div>
     </div>
 </div>
 
+<style>
+    p.alert {
+        position: fixed;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+    }
+</style>
+
+<script>
+    document.getElementById('nuevoPersonal').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var form = this;
+        var camposInvalidos = validarCampos(form);
+
+        if (camposInvalidos.length > 0) {
+            var mensaje = 'Por favor, complete los siguientes campos requeridos:<br>';
+            mensaje += camposInvalidos.map(campo => `- ${campo}`).join('<br>');
+            showModal(mensaje, 'danger');
+            return;
+        }
+
+        var formData = new FormData(form);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '../app/controllers/personal/crear.php', true);
+        xhr.onload = function() {
+            try {
+                if (xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    if (data.success) {
+                        showModal(data.message, 'success', true); // Show server message
+                    } else {
+                        showModal('Error: ' + (data.message || 'No se pudo guardar el personal.'), 'danger');
+                    }
+                } else {
+                    showModal('Error en la conexión al servidor. Código de estado: ' + xhr.status, 'danger');
+                }
+            } catch (error) {
+                showModal('Error al procesar la respuesta del servidor: ' + error, 'danger');
+            }
+        };
+
+        xhr.onerror = function() {
+            showModal('Error al enviar la solicitud. Verifique su conexión.', 'danger');
+        };
+
+        xhr.send(formData);
+    });
+
+    // Función para validar campos vacíos
+    function validarCampos(form) {
+        var camposInvalidos = [];
+        Array.from(form.elements).forEach(function(campo) {
+            if (campo.required && !campo.value.trim()) {
+                camposInvalidos.push(campo.name || campo.placeholder || 'Campo sin nombre');
+                campo.classList.add('is-invalid'); // Resaltar el campo vacío
+            } else {
+                campo.classList.remove('is-invalid'); // Remover el resaltado si el campo está completo
+            }
+        });
+        return camposInvalidos;
+    }
+
+    // Función para mostrar el modal
+    function showModal(message, type, showButtons = false) {
+        // Eliminar cualquier modal existente
+        var existingModal = document.getElementById('mensajeModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        var modalContent = `
+            <div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="mensajeModalLabel">${type === 'success' ? 'Éxito' : 'Error'}</h5>
+                        </div>
+                        <div class="modal-body">
+                            ${message}
+                        </div>
+                        <div class="modal-footer">
+                            ${showButtons ? `
+                                <button id="seguirEditandoBtn" class="btn btn-primary btn-sm">Agregar otro personal</button>
+                                <button id="listaPersonalesBtn" class="btn btn-secondary btn-sm">Ir a la lista</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+        document.body.insertAdjacentHTML('beforeend', modalContent);
+        $('#mensajeModal').modal('show');
+
+        if (showButtons) {
+            document.getElementById('seguirEditandoBtn').addEventListener('click', function() {
+                document.getElementById('nuevoPersonal').reset();
+                $('#mensajeModal').modal('hide');
+            });
+            document.getElementById('listaPersonalesBtn').addEventListener('click', function() {
+                window.location.href = '<?php echo $URL; ?>/personal/index.php';
+            });
+        }
+    }
+</script>
 

@@ -59,21 +59,26 @@ include ('../../layout/cliente.php');
                                     $user = $stmt2->fetch(PDO::FETCH_ASSOC);
                                     ?>
                                     <td><?php echo htmlspecialchars("{$user['Nombre_usuario']} - {$user['Dni']} {$user['Nombre']} {$user['Apellido_paterno']} {$user['Apellido_materno']}"); ?></td>
+                                    
                                     <?php
-                                    if (is_null($row['ID_detalle_cliente_tecnico'])) {
-                                        echo '<td>No designado</td>';
-                                    } else {
-                                        $stmt3 = $pdo->prepare("SELECT t.id_personal FROM detalle_cliente_tecnico d INNER JOIN tecnico t ON d.ID_tecnico = t.ID_tecnico WHERE Id_det_cliente_tecnico = :id");
-                                        $stmt3->bindParam(':id', $row['ID_detalle_cliente_tecnico'], PDO::PARAM_INT);
-                                        $stmt3->execute();
-                                        $detalle = $stmt3->fetch(PDO::FETCH_ASSOC);
-                                        $stmt4 = $pdo->prepare("SELECT Dni, Nombre FROM personal WHERE ID_personal = :id");
-                                        $stmt4->bindParam(':id', $detalle['id_personal'], PDO::PARAM_INT);
+                                    $stmt3 = $pdo->prepare("SELECT ID_tecnico FROM detalle_cliente_tecnico WHERE ID_atencion_cliente = :id");
+                                    $stmt3->bindParam(':id', $row['ID'], PDO::PARAM_INT);
+                                    $stmt3->execute();
+                                    $detalle = $stmt3->fetch(PDO::FETCH_ASSOC);
+                                    $id_tecnico = $detalle ? $detalle['ID_tecnico'] : 'Tecnico no asignado';
+                                    if ($id_tecnico != 'Tecnico no asignado') {
+                                        $stmt4 = $pdo->prepare("SELECT id_personal FROM tecnico WHERE ID_tecnico = :id");
+                                        $stmt4->bindParam(':id', $id_tecnico, PDO::PARAM_INT);
                                         $stmt4->execute();
                                         $tecnico = $stmt4->fetch(PDO::FETCH_ASSOC);
-                                        echo '<td>' . htmlspecialchars("{$detalle['id_personal']} - {$tecnico['Dni']} {$tecnico['Nombre']}") . '</td>';
+                                        $stmt5 = $pdo->prepare("SELECT Dni, Nombre, Apellido_paterno, Apellido_materno FROM personal WHERE ID_personal = :id");
+                                        $stmt5->bindParam(':id', $tecnico['id_personal'], PDO::PARAM_INT);
+                                        $stmt5->execute();
+                                        $personal = $stmt5->fetch(PDO::FETCH_ASSOC);
+                                        $id_tecnico = htmlspecialchars("{$personal['Dni']} {$personal['Nombre']} {$personal['Apellido_paterno']} {$personal['Apellido_materno']}");
                                     }
                                     ?>
+                                    <td><?php echo htmlspecialchars($id_tecnico); ?></td>
                                     <?php
                                     $stmt2 = $pdo->prepare("SELECT Dni, Nombre FROM cliente WHERE ID_cliente = :id");
                                     $stmt2->bindParam(':id', $row['id_cliente'], PDO::PARAM_INT);

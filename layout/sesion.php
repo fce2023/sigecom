@@ -6,6 +6,8 @@
  * Time: 15:02
  */
 
+ @include '../plant/control/veri.php';
+
 session_start();
 if (isset($_SESSION['sesion_usuario'])) {
     // Obtener el nombre de usuario y el ID del usuario de la sesión

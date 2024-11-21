@@ -46,3 +46,9 @@ include ('../layout/parte1.php');
     </div>
 </div>
 
+<?php
+if (isset($_SESSION['mensaje'])) {
+    echo "<p class='alert alert-danger'>{$_SESSION['mensaje']}</p>";
+    unset($_SESSION['mensaje']);
+}
+?>

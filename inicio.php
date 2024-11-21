@@ -1,3 +1,8 @@
+<?php
+
+	@include 'plant/control/veri.php';
+   
+    ?>
 
 <!DOCTYPE html>
 <html lang="es">

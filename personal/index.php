@@ -1,10 +1,13 @@
 <?php
 
+
+
+
 include ('../app/config.php');
 include ('../layout/sesion.php');
 include ('../layout/parte1.php');
 include ('../app/controllers/personal/listado_de_personal.php');
-
+@include '../plant/control/veri.php';
 
 ?>
 

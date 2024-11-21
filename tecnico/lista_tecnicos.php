@@ -69,10 +69,11 @@ try {
 											</button>
 										</td>
 										<td>
-											<button type="button" class="btn btn-danger btn-raised btn-xs" onclick="deleteTecnicoUnique(<?php echo htmlspecialchars($tecnico['ID_tecnico']); ?>);">
+											<button type="button" class="btn btn-danger btn-raised btn-xs" onclick="deleteTecnico(<?php echo ($tecnico['ID_tecnico']); ?>);">
 												<i class="zmdi zmdi-delete"></i>
 											</button>
 										</td>
+
 									</tr>
 								<?php endforeach; ?>
 						</tbody>
@@ -101,91 +102,88 @@ try {
 					</ul>
 	</nav>
 
-
-<script>
-
-
-function deleteTecnico(Id_tecnico) {
-	showConfirmModal('¿Está seguro de que desea eliminar a este técnico?', function() {
-		var xhr = new XMLHttpRequest();
-		xhr.open('POST', '<?php echo $URL; ?>/app/controllers/tecnico/eliminar_tecnico.php', true);
-		xhr.setRequestHeader('Content-Type', 'application/json');
-		xhr.onload = function() {
-			try {
-				if (xhr.status === 200) {
-					var data = JSON.parse(xhr.responseText);
-					if (data.success) {
-						showModal('<span style="color:green;">' + data.message + '</span>', 'success');
-						setTimeout(function() {
-							window.location.reload(true);
-						}, 1000);
+	<script>
+	function deleteTecnico(ID_tecnico) {
+		showConfirmModalUnique('¿Está seguro de que desea eliminar este técnico?', function() {
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', '<?php echo $URL; ?>/app/controllers/tecnico/eliminar_tecnico.php', true);
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.onload = function() {
+				try {
+					if (xhr.status === 200) {
+						var data = JSON.parse(xhr.responseText);
+						if (data.success) {
+							showModalUnique('<span style="color:green;">' + data.message + '</span>', 'success');
+							setTimeout(function() {
+								window.location.reload(true);
+							}, 1000);
+						} else {
+							showModalUnique('<span style="color:red;">' + (data.error || 'No se pudo eliminar el técnico.') + '</span>', 'danger');
+						}
 					} else {
-						showModal('<span style="color:red;">' + (data.error || 'No se pudo eliminar al técnico.') + '</span>', 'danger');
+						showModalUnique('<span style="color:red;">Error en la conexión al servidor. Código de estado: ' + xhr.status + '</span>', 'danger');
 					}
-				} else {
-					showModal('<span style="color:red;">Error en la conexión al servidor. Código de estado: ' + xhr.status + '</span>', 'danger');
+				} catch (error) {
+					showModalUnique('<span style="color:red;">Error al procesar la respuesta del servidor: ' + error.message + '</span>', 'danger');
 				}
-			} catch (error) {
-				showModal('<span style="color:red;">Error al procesar la respuesta del servidor: ' + error.message + '</span>', 'danger');
-			}
-		};
-		xhr.onerror = function() {
-			showModal('<span style="color:red;">Error al enviar la solicitud. Verifique su conexión.</span>', 'danger');
-		};
-		xhr.send(JSON.stringify({ Id_tecnico: Id_tecnico }));
-	});
-}
-function showConfirmModal(message, onConfirm) {
-	var modalContent = `
-		<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="confirmModalLabel">Confirmar Eliminación</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						${message}
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-						<button type="button" class="btn btn-primary" id="confirmBtn">Sí</button>
+			};
+			xhr.onerror = function() {
+				showModalUnique('<span style="color:red;">Error al enviar la solicitud. Verifique su conexión.</span>', 'danger');
+			};
+			xhr.send(JSON.stringify({ ID_tecnico: ID_tecnico }));
+		});
+	}
+	function showConfirmModalUnique(message, onConfirm) {
+		var modalContent = `
+			<div class="modal fade" id="confirmModalUnique" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabelUnique" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="confirmModalLabelUnique">Confirmar Eliminación</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							${message}
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+							<button type="button" class="btn btn-primary" id="confirmBtnUnique">Sí</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	`;
-	document.body.insertAdjacentHTML('beforeend', modalContent);
-	$('#confirmModal').modal('show');
-	document.getElementById('confirmBtn').addEventListener('click', function() {
-		onConfirm();
-		$('#confirmModal').modal('hide');
-	});
-}
-function showModal(message, type) {
-	var modalContent = `
-		<div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="mensajeModalLabel">${type === 'success' ? '<span style="color:green;">Éxito</span>' : '<span style="color:red;">Error</span>'}</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						${message}
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+		`;
+		document.body.insertAdjacentHTML('beforeend', modalContent);
+		$('#confirmModalUnique').modal('show');
+		document.getElementById('confirmBtnUnique').addEventListener('click', function() {
+			onConfirm();
+			$('#confirmModalUnique').modal('hide');
+		});
+	}
+	function showModalUnique(message, type) {
+		var modalContent = `
+			<div class="modal fade" id="mensajeModalUnique" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabelUnique" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="mensajeModalLabelUnique">${type === 'success' ? '<span style="color:green;">Éxito</span>' : '<span style="color:red;">Error</span>'}</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							${message}
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	`;
-	document.body.insertAdjacentHTML('beforeend', modalContent);
-	$('#mensajeModal').modal('show');
-}
-
+		`;
+		document.body.insertAdjacentHTML('beforeend', modalContent);
+		$('#mensajeModalUnique').modal('show');
+	}
+</script>

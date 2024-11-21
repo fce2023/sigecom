@@ -8,7 +8,7 @@
          data-celular-personal="<?php echo htmlspecialchars((string) $fila['Celular'], ENT_QUOTES); ?>"
          data-direccion-personal="<?php echo htmlspecialchars((string) $fila['Direccion'], ENT_QUOTES); ?>"
          data-id-cargo-personal="<?php echo htmlspecialchars((string) $fila['ID_cargo'], ENT_QUOTES); ?>"
-         data-estado-personal="<?php echo htmlspecialchars((string) $fila['Estado'] == 'Activo' ? 1 : 0, ENT_QUOTES); ?>"
+         data-estado-personal="<?php echo htmlspecialchars((string) $fila['Estado'], ENT_QUOTES); ?>"
      <?php endif; ?>
 >
     <div class="custom-modal-content">
@@ -85,10 +85,10 @@
 
                 ?>
                 <div class="form-group">
-                    <label">Estado</label>
+                    <label>Estado</label>
                     <select class="form-control" name="estado-reg">
-                        <option value="<?php echo $estado; ?>" selected><?php echo $estado == 1 ? 'Activo' : 'Inactivo'; ?></option>
-                        <option value="<?php echo $estado == 0 ? 1 : 0; ?>"><?php echo $estado == 0 ? 'Activo' : 'Inactivo'; ?></option>
+                        <option value="1" <?php echo htmlspecialchars((string) $estado, ENT_QUOTES) == 1 ? 'selected' : ''; ?>>Activo</option>
+                        <option value="0" <?php echo htmlspecialchars((string) $estado, ENT_QUOTES) == 0 ? 'selected' : ''; ?>>Inactivo</option>
                     </select>
                 </div>
 

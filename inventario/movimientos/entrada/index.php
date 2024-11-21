@@ -16,7 +16,7 @@ include ('../../../layout/parte1.php');
             <h3 class="panel-title"><i class="zmdi zmdi-plus"></i> &nbsp; NUEVA ENTRADA DE PRODUCTO</h3>
         </div>
         <div class="panel-body">
-        <form id="nuevaEntradaProductoForm" autocomplete="off">
+        <form id="nuevaEntradaProductoForm" action="../../../app/controllers/inventario/entrada/guardar_entrada.php" method="post" autocomplete="off">
             
     <fieldset>
         <legend><i class="zmdi zmdi-assignment-o"></i> &nbsp; Información de la entrada del producto</legend>

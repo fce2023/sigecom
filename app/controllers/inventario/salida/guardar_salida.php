@@ -1,29 +1,34 @@
 <?php
 include '../../../config.php';
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=UTF-8');
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id_tecnico = $_POST['tecnico-reg'] ?? null;
+        $id_cliente = $_POST['id_cliente-reg'] ?? null;
         $id_producto = $_POST['producto-reg'] ?? null;
         $fecha_retiro = $_POST['fecha-retiro-reg'] ?? null;
         $cantidad = $_POST['cantidad-reg'] ?? null;
         $observacion = $_POST['observacion-reg'] ?? null;
         $id_usuario_sesion = $_POST['id_usuario_sesion'] ?? null;
 
-        if (empty($id_tecnico) || empty($id_producto) || empty($fecha_retiro) || empty($cantidad)) {
-            throw new Exception('El id del técnico, id del producto, fecha de retiro y cantidad son obligatorios.');
+        if (!$id_tecnico || !$id_cliente || !$id_producto || !$fecha_retiro || !$cantidad || !$id_usuario_sesion) {
+            throw new Exception('Todos los campos son obligatorios.');
         }
 
-        // Consultar cantidad de entrada
-        $stmt = $pdo->prepare("SELECT SUM(cantidad) AS cantidad_entrada FROM detalle_producto_proveedor WHERE ID_producto = :id_producto");
-        $stmt->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
+        $stmt = $pdo->prepare("
+            SELECT Id_det_cliente_tecnico 
+            FROM detalle_cliente_tecnico 
+            WHERE ID_cliente = :id_cliente
+            AND Estado = 1
+        ");
+        $stmt->bindParam(':id_cliente', $id_cliente, PDO::PARAM_INT);
         $stmt->execute();
-        $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+        $id_det_cliente_tecnico = $stmt->fetchColumn();
 
-        if ($fila['cantidad_entrada'] < $cantidad) {
-            throw new Exception('La cantidad de salida es mayor a la cantidad de entrada.');
+        if (!$id_det_cliente_tecnico) {
+            throw new Exception('No se encontró un detalle cliente técnico activo para el ID de cliente proporcionado.');
         }
 
         $query = "INSERT INTO detalle_tecnico_producto (ID_tecnico, ID_producto, ID_usuario, Fecha_retiro, cantidad, Observación, Estado) 

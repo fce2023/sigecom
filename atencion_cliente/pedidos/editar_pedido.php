@@ -10,7 +10,9 @@ if (isset($_GET['ID'])) {
     $id_pedido = $_GET['ID'];
 }
 
-$consulta_pedido = $pdo->prepare("SELECT ac.ID, ac.ID_usuario, ac.ID_detalle_cliente_tecnico, ac.id_cliente, ac.ID_tipo_servicio, ac.Codigo_Operacion, ac.fecha_creacion, ac.estado FROM atencion_cliente ac WHERE ac.ID = :id_pedido");
+$consulta_pedido = $pdo->prepare("SELECT ac.ID, ac.ID_usuario, ac.id_cliente, ac.ID_tipo_servicio, ac.Codigo_Operacion, ac.fecha_creacion, ac.estado
+                                   FROM atencion_cliente ac
+                                   WHERE ac.ID = :id_pedido");
 $consulta_pedido->execute([':id_pedido' => $id_pedido]);
 $fila_pedido = $consulta_pedido->fetch(PDO::FETCH_ASSOC);
 
@@ -18,22 +20,18 @@ if (!$fila_pedido) {
     header('Location: ' . $URL . '/atencion_cliente/pedidos/lista_pedidos.php');
     exit;
 }
-
 $id = $fila_pedido['ID'];
 $id_usuario = $fila_pedido['ID_usuario'];
 $id_cliente = $fila_pedido['id_cliente'];
 $id_tipo_servicio = $fila_pedido['ID_tipo_servicio'];
-$id_detalle_cliente_tecnico = $fila_pedido['ID_detalle_cliente_tecnico'];
-
 $Codigo_Operacion = $fila_pedido['Codigo_Operacion'];
 $fecha_creacion = $fila_pedido['fecha_creacion'];
 $estado = $fila_pedido['estado'];
+$id_detalle_cliente_tecnico = isset($fila_pedido['ID_atencion_cliente']) ? $fila_pedido['ID_atencion_cliente'] : null;
 
 ?>
-
 <div class="container-fluid">
 <?php include ('../../layout/cliente.php');?>
-
 
 
 <div class="row">
@@ -92,24 +90,21 @@ $estado = $fila_pedido['estado'];
 
 
 <div class="form-group">
-        <label for="detalle-cliente-tecnico-<?php echo $id; ?>">Tecnico encargado</label>
-        <select class="form-control" id="detalle-cliente-tecnico-<?php echo $id; ?>" name="id_detalle_cliente_tecnico-reg">
-            <option value="">Tecnico todavía no asignado</option>
-            <?php
-            $consulta_detalle_cliente_tecnico = $pdo->prepare("SELECT d.Id_det_cliente_tecnico, t.ID_tecnico, p.Nombre, p.Dni FROM detalle_cliente_tecnico d INNER JOIN tecnico t ON d.ID_tecnico = t.ID_tecnico INNER JOIN personal p ON t.id_personal = p.ID_personal ORDER BY d.Id_det_cliente_tecnico");
-            $consulta_detalle_cliente_tecnico->execute();
-            while ($fila_detalle_cliente_tecnico = $consulta_detalle_cliente_tecnico->fetch(PDO::FETCH_ASSOC)) {
-                ?>
-                <option value="<?php echo $fila_detalle_cliente_tecnico['Id_det_cliente_tecnico']; ?>" <?php echo $id_detalle_cliente_tecnico == $fila_detalle_cliente_tecnico['Id_det_cliente_tecnico'] ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars("{$fila_detalle_cliente_tecnico['Nombre']} {$fila_detalle_cliente_tecnico['Dni']}"); ?>
-                </option>
-                <?php
-            }
-            ?>
-        </select>
+    <label for="detalle-cliente-tecnico-<?php echo $id; ?>">Técnico encargado</label>
+    <input type="text" class="form-control" id="detalle-cliente-tecnico-<?php echo $id; ?>" name="id_detalle_cliente_tecnico-reg" value="<?php
+        $stmt4 = $pdo->prepare("SELECT t.ID_tecnico, p.ID_personal, p.Dni, p.Nombre, p.Apellido_paterno, p.Apellido_materno
+                                FROM tecnico t
+                                INNER JOIN personal p ON t.id_personal = p.ID_personal
+                                WHERE t.ID_tecnico = :id_tecnico");
+        $stmt4->bindParam(':id_tecnico', $id_detalle_cliente_tecnico, PDO::PARAM_INT);
+        $stmt4->execute();
+        $personal = $stmt4->fetch(PDO::FETCH_ASSOC);
+        if ($personal && is_array($personal)) {
+            echo htmlspecialchars("{$personal['Dni']} {$personal['Nombre']} {$personal['Apellido_paterno']} {$personal['Apellido_materno']}");
+        }
+    ?>" readonly>
 </div>
 
-    
     <div class="form-group">
         <label for="codigo-operacion-<?php echo $id; ?>">Código Operación</label>
         <input type="text" class="form-control" id="codigo-operacion-<?php echo $id; ?>" name="codigo-operacion-reg" value="<?php echo htmlspecialchars($Codigo_Operacion); ?>" readonly onfocus="mostrarAviso('No se puede modificar el código de la operación');">
@@ -318,4 +313,5 @@ include ('../../layout/parte2.php');
             }, 'json');
         }
     </script>
+
 

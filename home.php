@@ -1,3 +1,12 @@
+
+<?php
+
+	@include 'plant/control/veri.php';
+    include "app/config.php";
+    include "layout/sesion.php";
+    include "layout/parte1.php";
+    ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <?php
-    include "app/config.php";
-    include "layout/sesion.php";
-    include "layout/parte1.php";
-    ?>
+
 </head>
 <body>
     <!-- Content page -->
