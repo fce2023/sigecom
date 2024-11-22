@@ -161,8 +161,9 @@ function confirmacionCerrarSesion(e) {
 					</a>
 				</li>
 
+				
 				<?php if ($rol_sesion === "superadministrador"): ?>
-
+					
 				<li>
 					<a href="#!" class="btn-sideBar-SubMenu">
 						<i class="zmdi zmdi-graduation-cap zmdi-hc-fw"></i> Administración de Personal <i class="zmdi zmdi-caret-down pull-right"></i>
@@ -179,6 +180,7 @@ function confirmacionCerrarSesion(e) {
 					</ul>
 				</li>
 
+				
 
 				<li>
 					<a href="#!" class="btn-sideBar-SubMenu">
@@ -229,7 +231,7 @@ function confirmacionCerrarSesion(e) {
 					</ul>
 				</li>
 
-				
+				<?php endif; ?>
 
 				<li>
 					<a href="#!" class="btn-sideBar-SubMenu">
@@ -282,7 +284,7 @@ function confirmacionCerrarSesion(e) {
 			</ul>
 		</div>
 	</section>
-
+	<?php if ($rol_sesion === "superadministrador"): ?>
 <?php endif; ?>
 	<!-- Content page-->
 	<section class="full-box dashboard-contentPage">
