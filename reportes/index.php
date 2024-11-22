@@ -288,7 +288,7 @@
 <script src="<?php echo $URL; ?>/temple/AdminLTE-3.2.0/plugins/chart.js/Chart.min.js"></script>
 
 <!-- AdminLTE for demo purposes -->
-<script src="<?php echo $URL; ?>/temple/AdminLTE-3.2.0/dist/js/demo.js"></script>
+<!-- <script src="<?php echo $URL; ?>/temple/AdminLTE-3.2.0/dist/js/demo.js"></script> -->
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="<?php echo $URL; ?>/temple/AdminLTE-3.2.0/dist/js/pages/dashboard2.js"></script>
 </body>
