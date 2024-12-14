@@ -30,7 +30,9 @@ try {
 <div class="container-fluid">
     <div class="panel panel-success">
         <div class="panel-heading" style="background-color: #00b6ff;">
-            <h3 class="panel-title"><i class="zmdi zmdi-format-list-bulleted"></i> &nbsp; HISTORIAL DE ATENCIÓN AL CLIENTE</h3>
+            <h3 class="panel-title">
+                <i class="zmdi zmdi-format-list-bulleted"></i> &nbsp; HISTORIAL DE ATENCIÓN AL CLIENTE
+            </h3>
         </div>
         <div class="panel-body">
             <div class="table-responsive">
@@ -44,12 +46,15 @@ try {
                             <th class="text-center">ESTADO</th>
                             <th class="text-center">ACCIÓN</th>
                             <th class="text-center">DETALLE</th>
+                            <th class="text-center">ELIMINAR</th>
+
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                            $contador = 0;
-                            while ($fila = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
+                        $contador = 0;
+                        if ($stmt) {
+                            while ($fila = $stmt->fetch(PDO::FETCH_ASSOC)) : ?>
                                 <tr>
                                     <td><?php echo ++$contador; ?></td>
                                     <td><?php echo htmlspecialchars($fila['fecha']); ?></td>
@@ -58,8 +63,21 @@ try {
                                     <td><?php echo htmlspecialchars($fila['estado_atencion_cliente']); ?></td>
                                     <td><?php echo htmlspecialchars($fila['accion']); ?></td>
                                     <td><?php echo htmlspecialchars($fila['detalle']); ?></td>
+                                    <td>
+                                        <form action="delete_historial.php" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                            <input type="hidden" name="id" value="<?php echo $fila['id']; ?>">
+                                            <button type="submit" class="btn btn-danger btn-raised btn-xs">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
-                            <?php endwhile; ?>
+                            <?php endwhile;
+                        } else { ?>
+                            <tr>
+                                <td colspan="7">No se encontraron datos</td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -67,20 +85,25 @@ try {
     </div>
 </div>
 
+<!-- Paginación -->
+<nav class="text-center">
+    <ul class="pagination pagination-sm">
+        <li class="<?php echo ($page <= 1) ? 'disabled' : ''; ?>"><a href="<?php echo $URL . '/atencion_cliente/historial.php?page=1'; ?>">«</a>
+            <a href="<?php echo $page > 1 ? $URL . '/atencion_cliente/historial.php?page=' . ($page - 1) : 'javascript:void(0)'; ?>">«</a>
+        </li>
+        <?php
+        $query = "SELECT COUNT(*) as total FROM historial_atencion_cliente";
+        $stmt = $pdo->query($query);
+        $total = $stmt ? $stmt->fetchColumn() : 0;
+        $pages = ceil($total / $limit);
+        for ($i = 1; $i <= $pages; $i++) {
+            $active = ($i == $page) ? 'active' : '';
+            echo '<li class="' . $active . '"><a href="' . $URL . '/atencion_cliente/historial.php?page=' . $i . '">' . $i . '</a></li>';
+        }
+        ?>
+        <li class="<?php echo ($page >= $pages) ? 'disabled' : ''; ?>">
+            <a href="<?php echo $page < $pages ? $URL . '/atencion_cliente/historial.php?page=' . ($page + 1) : 'javascript:void(0)'; ?>">»</a>
+        </li>
+    </ul>
+</nav>
 
-    <nav class="text-center">
-					<ul class="pagination pagination-sm">
-						<li class="disabled"><a href="javascript:void(0)">«</a></li>
-						<?php
-							$query = "SELECT COUNT(*) as total FROM detalle_producto_proveedor";
-							$stmt = $pdo->query($query);
-							$total = $stmt->fetchColumn();
-							$pages = ceil($total / $limit);
-							for ($i = 1; $i <= $pages; $i++) {
-								$active = ($i == $page) ? 'active' : '';
-								                                echo '<li class="' . $active . '"><a href="' . $URL . '/inventario/movimientos/entrada/index.php?page=' . $i . '">' . $i . '</a></li>';
-							}
-						?>
-						<li><a href="javascript:void(0)">»</a></li>
-					</ul>
-	</nav>

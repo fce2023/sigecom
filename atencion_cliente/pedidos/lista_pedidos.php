@@ -95,7 +95,7 @@ include ('../../layout/cliente.php');
                                     <td><?php echo htmlspecialchars($servicio['Nom_servicio']); ?></td>
                                     <td><?php echo htmlspecialchars($row['Codigo_Operacion']); ?></td>
                                     <td><?php echo htmlspecialchars($row['fecha_creacion']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['estado'] == 1 ? 'Activo' : 'Inactivo'); ?></td>
+                                    <td><?php echo htmlspecialchars($row['estado'] == 1 ? 'Pedido finalizado' : 'En proceso'); ?></td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-raised btn-xs" onclick="window.location.href = 'editar_pedido.php?ID=<?php echo $row['ID']; ?>'">
                                             <i class="zmdi zmdi-edit"></i>

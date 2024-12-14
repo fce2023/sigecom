@@ -12,6 +12,7 @@ try {
         $estado = (int) ($_POST['estado-reg'] ?? 0);
         $id_usuario = $id_usuario_sesion;
 
+        $estado = 0;
         if (!$id_cliente || !$id_personal || !$id_tipo_servicio || !$fecha_creacion) {
             throw new Exception("Todos los campos requeridos no están presentes.");
         }

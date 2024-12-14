@@ -1,14 +1,29 @@
 <?php
 
-include('../../app/config.php');
-include('../../layout/sesion.php');
-include('../../layout/parte1.php');
+include('../app/config.php');
+include('../layout/sesion.php');
+include('../layout/parte1.php');
 
 
 
-if (isset($_GET['ID'])) {
-    $id_pedido = $_GET['ID'];
+if (isset($_GET['id'])) {
+    $id_pedido = $_GET['id'];
 }
+
+// Consultar aquí para obtener el ID de atención al cliente
+$consulta_id_atencion_cliente = $pdo->prepare("SELECT ID_atencion_cliente FROM detalle_cliente_tecnico WHERE ID_det_cliente_tecnico = :id_pedido");
+$consulta_id_atencion_cliente->execute([':id_pedido' => $id_pedido]);
+$fila_id_atencion_cliente = $consulta_id_atencion_cliente->fetch(PDO::FETCH_ASSOC);
+$id_atencion_cliente = $fila_id_atencion_cliente['ID_atencion_cliente'] ?? null;
+$id_pedido = $id_atencion_cliente;
+
+// Consultar aquí para obtener el estado de la asignación del tecnico
+$consulta_estado_detalle_cliente_tecnico = $pdo->prepare("SELECT Estado FROM detalle_cliente_tecnico WHERE ID_atencion_cliente = :id_pedido");
+$consulta_estado_detalle_cliente_tecnico->execute([':id_pedido' => $id_pedido]);
+$fila_estado_detalle_cliente_tecnico = $consulta_estado_detalle_cliente_tecnico->fetch(PDO::FETCH_ASSOC);
+$estado_detalle_cliente_tecnico = $fila_estado_detalle_cliente_tecnico['Estado'] ?? null;
+echo "el estado es". $estado_detalle_cliente_tecnico;
+
 
 $consulta_pedido = $pdo->prepare("SELECT ac.ID, ac.ID_usuario, ac.id_cliente, ac.ID_tipo_servicio, ac.Codigo_Operacion, ac.fecha_creacion, ac.estado
                                    FROM atencion_cliente ac
@@ -29,7 +44,7 @@ $estado = $fila_pedido['estado'];
 
 ?>
 <div class="container-fluid">
-    <?php include('../../layout/cliente.php'); ?>
+    <?php include('../layout/cliente.php'); ?>
 
 
     <div class="row">
@@ -40,7 +55,7 @@ $estado = $fila_pedido['estado'];
         $consulta_cliente->execute([':id_cliente' => $id_cliente]);
         $fila_cliente = $consulta_cliente->fetch(PDO::FETCH_ASSOC);
         ?>
-        <h1>Editar Pedido de <?php echo $fila_cliente['Nombre'] . ' ' . $fila_cliente['Apellido_paterno'] . ' ' . $fila_cliente['Apellido_materno']; ?></h1>
+        <h1>Editar Designación de tecnico a cliente <?php echo $fila_cliente['Nombre'] . ' ' . $fila_cliente['Apellido_paterno'] . ' ' . $fila_cliente['Apellido_materno']; ?></h1>
 
         <?php
 
@@ -64,6 +79,7 @@ $estado = $fila_pedido['estado'];
 
         <h2 style="color: #007bff">Usuario que realizó la ultima actualizacion: <span style="font-weight: bold; color: #dc3545;"><?php echo $usuario_ultima_actualizacion ?></span></h2>
     </div>
+   <!--  <form method="post" action="<?php echo $URL; ?>/app/controllers/designar_tecnico/editar_designar_tecnico.php" id="<?php echo $id; ?>"> -->
     <form id="editarFormPedido<?php echo $id; ?>">
 
         <div class="form-group">
@@ -95,9 +111,6 @@ $estado = $fila_pedido['estado'];
         $fila_detalle_cliente_tecnico = $stmt3->fetch(PDO::FETCH_ASSOC);
         $id_tecnico = isset($fila_detalle_cliente_tecnico['ID_tecnico']) ? $fila_detalle_cliente_tecnico['ID_tecnico'] : null;
 
-
-
-
         $id_tecnico_id = $id_tecnico;
 
         if ($id_tecnico) {
@@ -109,35 +122,34 @@ $estado = $fila_pedido['estado'];
         }
         ?>
 
+        <div class="form-group">
+            <label for="detalle-cliente-tecnico-<?php echo $id; ?>">Técnico encargado</label>
+            <select class="form-control" id="id_atencion_cliente-reg-<?php echo $id; ?>" name="id_atencion_cliente-reg">
+                <?php
+                // Mostrar las opciones del select
+                $stmt4 = $pdo->prepare("SELECT t.ID_tecnico, p.Dni, p.Nombre FROM tecnico t
+                            INNER JOIN personal p ON t.id_personal = p.ID_personal
+                            ORDER BY p.Dni, p.Nombre");
+                $stmt4->execute();
 
-
-
-     
-
-
-
-            <div class="form-group">
-                <label for="detalle-cliente-tecnico-<?php echo $id; ?>">Técnico encargado</label>
-                <?php if (!$id_tecnico): ?>
-                    <button type="button" class="btn btn-success" onclick="window.location.href='<?php echo $URL;?>/tecnico/designar_tecnico.php?id_atencion_cliente=<?php echo $id; ?>'">Designar técnico</button>
+                // Mostrar la opción seleccionada previamente
+                if ($id_tecnico): ?>
+                    <option value="<?php echo $id_tecnico; ?>" selected><?php echo htmlspecialchars($id_tecnico); ?></option>
                 <?php else: ?>
-                    <select class="form-control" id="id_atencion_cliente-reg-<?php echo $id; ?>" name="id_atencion_cliente-reg">
-                        <option value="<?php echo $id_tecnico; ?>" selected><?php echo htmlspecialchars($id_tecnico); ?></option>
-                        <?php
-                        while ($fila_tecnico = $stmt4->fetch(PDO::FETCH_ASSOC)) {
-                        ?>
-                            <option value="<?php echo $fila_tecnico['ID_tecnico']; ?>">
-                                <?php echo htmlspecialchars("{$fila_tecnico['Dni']} {$fila_tecnico['Nombre']}"); ?>
-                            </option>
-                        <?php
-                        }
-                        ?>
-                    </select>
-                <?php endif; ?>
-                <input type="hidden" name="id_tecnico-reg" value="<?php echo $id_tecnico_id; ?>">
-            </div>
-       
+                    <option value="" selected>Seleccione un técnico</option>
+                <?php endif;
 
+                while ($fila_tecnico = $stmt4->fetch(PDO::FETCH_ASSOC)) {
+                ?>
+                    <option value="<?php echo $fila_tecnico['ID_tecnico']; ?>">
+                        <?php echo htmlspecialchars("{$fila_tecnico['Dni']} {$fila_tecnico['Nombre']}"); ?>
+                    </option>
+                <?php
+                }
+                ?>
+            </select>
+            <input type="hidden" name="id_tecnico-reg" value="<?php echo $id_tecnico_id; ?>">
+        </div>
 
         <div class="form-group">
             <label for="codigo-operacion-<?php echo $id; ?>">Código Operación</label>
@@ -173,17 +185,16 @@ $estado = $fila_pedido['estado'];
 
 
         <div class="form-group">
-            <label for="estado-pedido-<?php echo $id; ?>">Estado de pedido</label>
-            <select class="form-control" id="estado-pedido- <?php echo $fila_pedido['estado']; ?>" name="estado-reg">
-                <option value="1" <?php echo $fila_pedido['estado'] == 1 ? 'selected' : ''; ?>> Finalizado</option>
-                <option value="0" <?php echo $fila_pedido['estado'] == 0 ? 'selected' : ''; ?>>En Proceso</option>
+            <label for="estado-pedido-<?php echo $estado_detalle_cliente_tecnico; ?>">Estado de pedido</label>
+            <select class="form-control" id="estado-pedido-<?php echo $id; ?>" name="estado-reg">
+                <option value="0" <?php echo $estado_detalle_cliente_tecnico == 0 ? 'selected' : ''; ?>>Emitido</option>
+                <option value="1" <?php echo $estado_detalle_cliente_tecnico == 1 ? 'selected' : ''; ?>>Aceptado</option>
+                <option value="2" <?php echo $estado_detalle_cliente_tecnico == 2 ? 'selected' : ''; ?>>Rechazado</option>
+                <option value="3" <?php echo !in_array($estado_detalle_cliente_tecnico, [0, 1, 2]) ? 'selected' : ''; ?>>Desconocido</option>
             </select>
         </div>
 
-
-
-
-
+       
         <fieldset>
             <legend>Historial de Atenciones del Cliente</legend>
 
@@ -236,7 +247,7 @@ $estado = $fila_pedido['estado'];
                 var formData = $(this).serializeArray();
                 $.ajax({
                     type: 'POST',
-                    url: '<?php echo $URL; ?>/app/controllers/atencion_cliente/pedidos/editar_pedido.php',
+                    url: '<?php echo $URL; ?>/app/controllers/designar_tecnico/editar_designar_tecnico.php',
                     data: formData,
                     dataType: 'json',
                     success: function(response) {
@@ -244,7 +255,7 @@ $estado = $fila_pedido['estado'];
                         $('#mensajeModal').modal('show');
                         setTimeout(function() {
                             $('#mensajeModal').modal('hide');
-                            window.location.href = '<?php echo $URL; ?>/atencion_cliente/pedidos/lista_pedidos.php';
+                            window.location.href = '<?php echo $URL; ?>/tecnico/lista_tecnicos_asignados.php';
                         }, 1000);
                     },
                     error: function(xhr, status, error) {
@@ -287,7 +298,7 @@ $estado = $fila_pedido['estado'];
         <footer style="background-color: #3E3E3E; color: white; padding: 10px; text-align: center;">
 
             <?php
-            include('../../layout/parte2.php');
+            include('../layout/parte2.php');
             ?>
 </div>
 

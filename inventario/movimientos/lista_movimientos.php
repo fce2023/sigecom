@@ -7,9 +7,50 @@ include ('../../layout/parte1.php');
 ?>
 
 
+
+
 	<!-- Panel listado de movimientos -->
 	<div class="container-fluid">
         <?php include ('layout/parte1.php'); ?>
+
+	   <!-- Panel stock de productos -->
+	   <div class="container-fluid">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="zmdi zmdi-chart"></i> &nbsp; STOCK DE PRODUCTOS</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover text-center">
+                        <thead>
+                            <tr>
+                                <th class="text-center">NOMBRE PRODUCTO</th>
+                                <th class="text-center">STOCK</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $query = "SELECT p.nombre, 
+                                      COALESCE((SELECT SUM(dpp.cantidad) FROM detalle_producto_proveedor dpp WHERE dpp.ID_producto = p.id_producto), 0) - 
+                                      COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto), 0) AS stock
+                                      FROM productos p
+                                      GROUP BY p.id_producto";
+                            $stmt = $pdo->query($query);
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                echo "<tr>
+                                    <td>" . htmlspecialchars($row['nombre']) . "</td>
+                                    <td>" . htmlspecialchars($row['stock']) . "</td>
+                                </tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 		<div class="panel panel-primary">
         <form method="GET" action="" class="estado-filter-form">
             <label for="filtroTipo">Mostrar:</label>
@@ -119,40 +160,5 @@ include ('../../layout/parte1.php');
 					</ul>
 	</nav>
 
-	    <!-- Panel stock de productos -->
-    <div class="container-fluid">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h3 class="panel-title"><i class="zmdi zmdi-chart"></i> &nbsp; STOCK DE PRODUCTOS</h3>
-            </div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-hover text-center">
-                        <thead>
-                            <tr>
-                                <th class="text-center">NOMBRE PRODUCTO</th>
-                                <th class="text-center">STOCK</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $query = "SELECT p.nombre, 
-                                      COALESCE((SELECT SUM(dpp.cantidad) FROM detalle_producto_proveedor dpp WHERE dpp.ID_producto = p.id_producto), 0) - 
-                                      COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto), 0) AS stock
-                                      FROM productos p
-                                      GROUP BY p.id_producto";
-                            $stmt = $pdo->query($query);
-                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                echo "<tr>
-                                    <td>" . htmlspecialchars($row['nombre']) . "</td>
-                                    <td>" . htmlspecialchars($row['stock']) . "</td>
-                                </tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+	 
 

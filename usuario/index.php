@@ -88,8 +88,8 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                         <th class="text-center">#</th>
                         <th class="text-center">Nombre personal</th>
                         
-                        <th class="text-center">TIPO DE USUARIO</th>
-                        <th class="text-center">ESTADO</th>
+                        <th class="text-center">Nombre US</th>
+                        <th class="text-center">TIPO USUARIO</th>
                         <th class="text-center">EDITAR</th>
                         <th class="text-center">ELIMINAR</th>
                     </tr>

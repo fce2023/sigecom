@@ -25,8 +25,8 @@ include ('../layout/tecnico.php');
         <div class="panel-body">
 
         
-        <!-- <form id="nuevoTecnicoForm"> -->
-            <form  method="post" action="../app/controllers/designar_tecnico/guardar.php">
+        <form id="nuevoTecnicoForm">
+            <!-- <form  method="post" action="../app/controllers/designar_tecnico/guardar.php"> -->
                 <fieldset>
                     <legend style="color: black;"><i class="zmdi zmdi-assignment-o"></i> &nbsp; Información del cliente</legend>
                     <div class="container-fluid">
@@ -197,13 +197,13 @@ include ('../layout/tecnico.php');
         var formData = new FormData(form);
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '../app/controllers/tecnico/guardar_tecnico.php', true);
+        xhr.open('POST', '../app/controllers/designar_tecnico/guardar.php', true);
         xhr.onload = function() {
             try {
                 if (xhr.status === 200) {
                     var data = JSON.parse(xhr.responseText);
                     if (data.success) {
-                        showModal('Cliente guardado exitosamente.', 'success', true);
+                        showModal('Técnico designado guardado exitosamente.', 'success', true);
                     } else {
                         showModal('Error: ' + (data.error || 'No se pudo guardar el cliente.'), 'danger');
                     }
@@ -222,6 +222,9 @@ include ('../layout/tecnico.php');
         xhr.send(formData);
     });
 
+
+
+
     // Función para validar campos vacíos
     function validarCampos(form) {
         var camposInvalidos = [];
@@ -235,53 +238,6 @@ include ('../layout/tecnico.php');
             }
         });
         return camposInvalidos;
-    }
-
-    // Función para mostrar el modal
-    function showModal(message, type, showButtons = false) {
-        // Eliminar cualquier modal existente
-        var existingModal = document.getElementById('mensajeModal');
-        if (existingModal) {
-            existingModal.remove();
-        }
-
-        var modalContent = `
-            <div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="mensajeModalLabel">${type === 'success' ? 'Éxito' : 'Error'}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            ${message}
-                        </div>
-                        <div class="modal-footer">
-                            ${showButtons ? `
-                                <button id="nuevoClienteBtn" class="btn btn-primary btn-sm">Agregar nuevo cliente</button>
-                                <button id="listaClientesBtn" class="btn btn-secondary btn-sm">Ir a la lista</button>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-
-        document.body.insertAdjacentHTML('beforeend', modalContent);
-        $('#mensajeModal').modal('show');
-
-        if (showButtons) {
-            document.getElementById('nuevoClienteBtn').addEventListener('click', function() {
-                var form = document.getElementById('nuevoTecnicoForm');
-                form.reset();
-                $('#mensajeModal').modal('hide');
-                location.reload();
-            });
-            document.getElementById('listaClientesBtn').addEventListener('click', function() {
-                window.location.href = '<?php echo $URL; ?>atencion_cliente/tecnico/lista_tecnicos.php';
-            });
-        }
     }
 
 
@@ -467,6 +423,40 @@ document.getElementById('buscarPersonal').addEventListener('input', function() {
 
 
 
+
+
+    
+    // Función para mostrar el modal y redirigir automáticamente a la lista
+    function showModal(message) {
+        var modalContent = `
+            <div class="modal" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="mensajeModalLabel">Mensaje</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            ${message}
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+        document.body.insertAdjacentHTML('beforeend', modalContent);
+        $('#mensajeModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        });
+
+        setTimeout(function() {
+            $('#mensajeModal').modal('hide');
+            window.location.href = '<?php echo $URL; ?>atencion_cliente/tecnico/lista_tecnicos.php';
+        }, 2000000); // Adjust the delay as needed
+    }
 
 </script>
 
