@@ -1,32 +1,18 @@
 <div class="container-fluid">
 			<ul class="breadcrumb breadcrumb-tabs">
-			  	<li>
-			  		<a href="<?php echo $URL;?>inventario/movimientos/lista_movimientos.php" class="btn btn-primary">
-			  			<i class="zmdi zmdi-format-list-bulleted"></i> &nbsp; Lista de movimientos
-			  		</a>
-			  	</li>
-			
-			  		<a href="<?php echo $URL;?>inventario/movimientos/entrada/" class="btn btn-info">
-			  			<i class="zmdi zmdi-plus"></i> &nbsp; Entrada
-			  		</a>
-			  	</li>
+			  	
 				
-				<?php if ($rol_sesion !== 'tecnico'): ?>
 				<li>
-			  		<a href="<?php echo $URL;?>inventario/movimientos/salida/" class="btn btn-danger">
-			  			<i class="zmdi zmdi-format-list-bulleted"></i> &nbsp; Salida
-			  		</a>
-			  	</li>
-				<?php endif; ?>
 				
 				
-				  <?php if ($rol_sesion === 'tecnico'): ?>
+				
+				 
 				  <li>
-			  		<a href="<?php echo $URL;?>inventario/movimientos/salida/tecnico.php" class="btn btn-danger">
+			  		<a href="<?php echo $URL;?>inventario/tecnico/salida/lista.php" class="btn btn-danger">
 			  			<i class="zmdi zmdi-format-list-bulleted"></i> &nbsp; Salida
 			  		</a>
 			  	</li>
-				  <?php endif; ?>
+				
 
 				  <li>
 					<li class="dropdown">

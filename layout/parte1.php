@@ -233,6 +233,7 @@ function confirmacionCerrarSesion(e) {
 
 				<?php endif; ?>
 
+				<?php if ($rol_sesion !== "tecnico"): ?>
 				<li>
 					<a href="#!" class="btn-sideBar-SubMenu">
 						<i class="zmdi zmdi-group zmdi-hc-fw"></i> Proveedores <i class="zmdi zmdi-caret-down pull-right"></i>
@@ -246,7 +247,9 @@ function confirmacionCerrarSesion(e) {
 						</li>
 					</ul>
 				</li>
+<?php endif; ?>
 
+				<?php if ($rol_sesion !== "tecnico"): ?>
 				<li>
 					<a href="#!" class="btn-sideBar-SubMenu">
 						<i class="zmdi zmdi-comment-more zmdi-hc-fw"></i> Atencion al cliente<i class="zmdi zmdi-caret-down pull-right"></i>
@@ -264,7 +267,9 @@ function confirmacionCerrarSesion(e) {
 					</ul>
 				</li>
 
+				<?php endif; ?>
 
+				<?php if ($rol_sesion !== "tecnico"): ?>
 				<li>
 					<a href="#!" class="btn-sideBar-SubMenu">
 						<i class="zmdi zmdi-case-download zmdi-hc-fw"></i> Inventario <i class="zmdi zmdi-caret-down pull-right"></i>
@@ -278,7 +283,37 @@ function confirmacionCerrarSesion(e) {
 						</li>
 					</ul>
 				</li>
+				<?php endif; ?>
 
+				<?php if ($rol_sesion == "tecnico"): ?>
+				<li>
+					<a href="#!" class="btn-sideBar-SubMenu">
+						<i class="zmdi zmdi-case-download zmdi-hc-fw"></i> Movimientos <i class="zmdi zmdi-caret-down pull-right"></i>
+					</a>
+					<ul class="list-unstyled full-box">
+						<li>
+							<a href="<?php echo $URL; ?>/inventario/tecnico/salida/tecnico.php"><i class="zmdi zmdi-case-download zmdi-hc-fw"></i> Registrar movimiento</a>
+						</li>
+						<li>
+							<a href="<?php echo $URL; ?>inventario/tecnico/salida/lista.php/"><i class="zmdi zmdi-plus zmdi-hc-fw"></i> Lista de movimientos</a>
+						</li>
+					</ul>
+				</li>
+				<?php endif; ?>
+
+				<?php if ($rol_sesion === "tecnico"): ?>
+				<li>
+					<a href="#!" class="btn-sideBar-SubMenu">
+						<i class="zmdi zmdi-globe zmdi-hc-fw"></i> Registro de instalaciones <i class="zmdi zmdi-caret-down pull-right"></i>
+					</a>
+					<ul class="list-unstyled full-box">
+						
+						<li>
+							<a href="<?php echo $URL; ?>tecnico_rol/lista_tecnicos_asignados.php"><i class="zmdi zmdi-plus zmdi-hc-fw"></i> Lista de Instalaciones</a>
+						</li>
+					</ul>
+				</li>
+				<?php endif; ?>
 
 
 			</ul>
