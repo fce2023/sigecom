@@ -13,17 +13,17 @@ try {
         $observacion = $_POST['observacion-reg'] ?? null;
         $id_usuario_sesion = $_POST['id_usuario_sesion'] ?? null;
         $tipo = "salida" ?? null;
-
         // Consulta para calcular el stock
-        $query = "SELECT p.id_producto, p.nombre, tp.Nom_producto,
+        $stmt = $pdo->prepare("SELECT p.id_producto, p.nombre, tp.Nom_producto,
                     COALESCE((SELECT SUM(dpp.cantidad) FROM detalle_producto_proveedor dpp WHERE dpp.ID_producto = p.id_producto), 0) +
                     COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Entrada'), 0) -
                     COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Salida'), 0) AS stock
                     FROM productos p
                     LEFT JOIN tipo_producto tp ON p.id_tipo_producto = tp.ID_tipo_producto
-                    GROUP BY p.id_producto
-                    ORDER BY p.nombre";
-        $stmt = $pdo->query($query);
+                    WHERE p.id_producto = :id_producto
+                    LIMIT 1");
+        $stmt->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
+        $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $stock = (int) $row['stock'];
 
