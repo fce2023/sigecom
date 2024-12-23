@@ -44,7 +44,7 @@ $estado = $fila_pedido['estado'];
 
 ?>
 <div class="container-fluid">
-    <?php include('../layout/cliente.php'); ?>
+
 
 
     <div class="row">
@@ -125,28 +125,7 @@ $estado = $fila_pedido['estado'];
         <div class="form-group">
             <label for="detalle-cliente-tecnico-<?php echo $id; ?>">Técnico encargado</label>
             <select class="form-control" id="id_atencion_cliente-reg-<?php echo $id; ?>" name="id_atencion_cliente-reg">
-                <?php
-                // Mostrar las opciones del select
-                $stmt4 = $pdo->prepare("SELECT t.ID_tecnico, p.Dni, p.Nombre FROM tecnico t
-                            INNER JOIN personal p ON t.id_personal = p.ID_personal
-                            ORDER BY p.Dni, p.Nombre");
-                $stmt4->execute();
-
-                // Mostrar la opción seleccionada previamente
-                if ($id_tecnico): ?>
-                    <option value="<?php echo $id_tecnico; ?>" selected><?php echo htmlspecialchars($id_tecnico); ?></option>
-                <?php else: ?>
-                    <option value="" selected>Seleccione un técnico</option>
-                <?php endif;
-
-                while ($fila_tecnico = $stmt4->fetch(PDO::FETCH_ASSOC)) {
-                ?>
-                    <option value="<?php echo $fila_tecnico['ID_tecnico']; ?>">
-                        <?php echo htmlspecialchars("{$fila_tecnico['Dni']} {$fila_tecnico['Nombre']}"); ?>
-                    </option>
-                <?php
-                }
-                ?>
+                <option value="<?php echo $id_tecnico; ?>" selected><?php echo htmlspecialchars($id_tecnico); ?></option>
             </select>
             <input type="hidden" name="id_tecnico-reg" value="<?php echo $id_tecnico_id; ?>">
         </div>
@@ -255,7 +234,7 @@ $estado = $fila_pedido['estado'];
                         $('#mensajeModal').modal('show');
                         setTimeout(function() {
                             $('#mensajeModal').modal('hide');
-                            window.location.href = '<?php echo $URL; ?>/tecnico/lista_tecnicos_asignados.php';
+                            window.location.href = '<?php echo $URL; ?>/tecnico_rol/lista_tecnicos_asignados.php';
                         }, 1000);
                     },
                     error: function(xhr, status, error) {

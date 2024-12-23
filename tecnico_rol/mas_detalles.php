@@ -3,7 +3,7 @@
 include('../app/config.php');
 include('../layout/sesion.php');
 include('../layout/parte1.php');
-include('../layout/tecnico.php');
+
 
 $id_detalle_tecnico = (isset($_GET['id'])) ? $_GET['id'] : 0;
 

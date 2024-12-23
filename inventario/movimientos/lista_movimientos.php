@@ -88,59 +88,96 @@ include ('../../layout/parte1.php');
 
 							</tr>
 						</thead>
-						<tbody>
-							<?php
-							$filtroTipo = isset($_GET['filtroTipo']) ? $_GET['filtroTipo'] : 'todos';
+						                        <tbody>
+                            <?php
+                            $filtroTipo = isset($_GET['filtroTipo']) ? $_GET['filtroTipo'] : 'todos';
+                            
+                            // Pagination settings
+                            $itemsPerPage = 5;
+                            $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                            $offset = ($currentPage - 1) * $itemsPerPage;
 
-							$query = "SELECT dpp.Id_det_producto_proveedor AS id_detalle, 'Entrada' AS tipo, p.nombre AS nombre_producto, 
-							                  dpp.Fecha_abastecimiento AS fecha, dpp.Cantidad, dpp.Observación, dpp.Estado, u.Nombre_usuario
-							           FROM detalle_producto_proveedor dpp
-							           JOIN productos p ON dpp.ID_producto = p.id_producto
-							           JOIN usuario u ON dpp.ID_usuario = u.ID_usuario
+                            echo '<nav aria-label="Page navigation">';
+                            echo '<ul class="pagination">';
+                            if ($currentPage > 1) {
+                                echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage - 1) . '&filtroTipo=' . $filtroTipo . '">Anterior</a></li>';
+                            }
+                            // Add logic here for other pagination buttons if needed
+                            echo '</ul>';
+                            echo '</nav>';
+
+                            $query = "SELECT dpp.Id_det_producto_proveedor AS id_detalle, 'Entrada' AS tipo, p.nombre AS nombre_producto, 
+                                              dpp.Fecha_abastecimiento AS fecha, dpp.Cantidad, dpp.Observación, dpp.Estado, u.Nombre_usuario
+                                       FROM detalle_producto_proveedor dpp
+                                       JOIN productos p ON dpp.ID_producto = p.id_producto
+                                       JOIN usuario u ON dpp.ID_usuario = u.ID_usuario
                                        UNION ALL
-							           SELECT dtp.Id_det_tecnico_producto AS id_detalle, 'Salida' AS tipo, p.nombre AS nombre_producto, 
-							                  dtp.Fecha_retiro AS fecha, dtp.Cantidad, dtp.Observación, dtp.Estado, u.Nombre_usuario
-							           FROM detalle_tecnico_producto dtp
-							           JOIN productos p ON dtp.ID_producto = p.id_producto
-							           JOIN usuario u ON dtp.ID_usuario = u.ID_usuario";
+                                       SELECT dtp.Id_det_tecnico_producto AS id_detalle, 'Salida' AS tipo, p.nombre AS nombre_producto, 
+                                              dtp.Fecha_retiro AS fecha, dtp.Cantidad, dtp.Observación, dtp.Estado, u.Nombre_usuario
+                                       FROM detalle_tecnico_producto dtp
+                                       JOIN productos p ON dtp.ID_producto = p.id_producto
+                                       JOIN usuario u ON dtp.ID_usuario = u.ID_usuario";
 
-							if ($filtroTipo == 'Entrada') {
-								$query = "SELECT * FROM (" . $query . ") AS movimientos WHERE tipo = 'Entrada'";
-							} elseif ($filtroTipo == 'Salida') {
-								$query = "SELECT * FROM (" . $query . ") AS movimientos WHERE tipo = 'Salida'";
-							}
+                            if ($filtroTipo == 'Entrada') {
+                                $query = "SELECT * FROM (" . $query . ") AS movimientos WHERE tipo = 'Entrada'";
+                            } elseif ($filtroTipo == 'Salida') {
+                                $query = "SELECT * FROM (" . $query . ") AS movimientos WHERE tipo = 'Salida'";
+                            }
 
-							$stmt = $pdo->query($query, PDO::FETCH_ASSOC);
-							$num = 1;
-							while ($row = $stmt->fetch()) {
+                            // Get the total number of records
+                            $totalQuery = "SELECT COUNT(*) FROM (" . $query . ") AS total";
+                            $totalStmt = $pdo->query($totalQuery);
+                            $totalRecords = $totalStmt->fetchColumn();
+                            $totalPages = ceil($totalRecords / $itemsPerPage);
 
-								$id_detalle = $row['id_detalle'];
-								$tipo = $row['tipo'];
-								$nombre_producto = $row['nombre_producto'];
-								$fecha = $row['fecha'];
-								$cantidad = $row['Cantidad'];
-								$observación = $row['Observación'];
-								$estado = $row['Estado'];
-								$nombre_usuario = $row['Nombre_usuario'];
-								?>
-								<tr>
-									<td><?php echo $num; ?></td>
-									<td style='color: <?php echo ($row['tipo'] == 'Entrada') ? 'green' : 'red'; ?>;'><?php echo $row['tipo']; ?></td>
-									<td><?php echo $row['Nombre_usuario']; ?></td>
-									<td><?php echo $row['nombre_producto']; ?></td>
-									<td><?php echo $row['fecha']; ?></td>
-									<td><?php echo $row['Cantidad']; ?></td>
-									<td><?php echo $row['Observación']; ?></td>
-									<td><?php echo $row['Estado']; ?></td>
-						
-								</tr>
+                            // Add pagination to the query
+                            $query .= " LIMIT $offset, $itemsPerPage";
 
-								<?php
-								$num++;
-							}
-							?>
-						</tbody>
-					</table>
+                            $stmt = $pdo->query($query, PDO::FETCH_ASSOC);
+                            $num = $offset + 1;
+                            while ($row = $stmt->fetch()) {
+
+                                $id_detalle = $row['id_detalle'];
+                                $tipo = $row['tipo'];
+                                $nombre_producto = $row['nombre_producto'];
+                                $fecha = $row['fecha'];
+                                $cantidad = $row['Cantidad'];
+                                $observación = $row['Observación'];
+                                $estado = $row['Estado'];
+                                $nombre_usuario = $row['Nombre_usuario'];
+                                ?>
+                                <tr>
+                                    <td><?php echo $num; ?></td>
+                                    <td style='color: <?php echo ($row['tipo'] == 'Entrada') ? 'green' : 'red'; ?>;'><?php echo $row['tipo']; ?></td>
+                                    <td><?php echo $row['Nombre_usuario']; ?></td>
+                                    <td><?php echo $row['nombre_producto']; ?></td>
+                                    <td><?php echo $row['fecha']; ?></td>
+                                    <td><?php echo $row['Cantidad']; ?></td>
+                                    <td><?php echo $row['Observación']; ?></td>
+                                    <td><?php echo $row['Estado']; ?></td>
+                        
+                                </tr>
+
+                                <?php
+                                $num++;
+                            }
+                            ?>
+
+                        </tbody>
+                    </table>
+
+                    <!-- Pagination controls -->
+                    <div class="pagination">
+                        <?php if ($currentPage > 1): ?>
+                            <a href="?page=<?php echo $currentPage - 1; ?>&filtroTipo=<?php echo $filtroTipo; ?>" class="button">Anterior</a>
+                        <?php endif; ?>
+                        
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                            <a href="?page=<?php echo $i; ?>&filtroTipo=<?php echo $filtroTipo; ?>" <?php if ($i == $currentPage) echo 'class="active"'; ?>><?php echo $i; ?></a>
+                        <?php endfor; ?>
+                        
+                        <a href="?page=<?php echo min($currentPage + 1, $totalPages); ?>&filtroTipo=<?php echo $filtroTipo; ?>" class="button">Siguiente</a>
+                    </div>
 
 
 
@@ -156,17 +193,6 @@ include ('../../layout/parte1.php');
 			</div>
 		</div>
 	</div>
-    <nav class="text-center">
-					<ul class="pagination pagination-sm">
-						<li class="disabled"><a href="javascript:void(0)">«</a></li>
-						<li class="active"><a href="javascript:void(0)">1</a></li>
-						<li><a href="javascript:void(0)">2</a></li>
-						<li><a href="javascript:void(0)">3</a></li>
-						<li><a href="javascript:void(0)">4</a></li>
-						<li><a href="javascript:void(0)">5</a></li>
-						<li><a href="javascript:void(0)">»</a></li>
-					</ul>
-	</nav>
-
+  
 	 
 

@@ -6,7 +6,7 @@
         
                
                 <li>
-                    <a href="<?php echo $URL;?>tecnico/lista_tecnicos_asignados.php">
+                    <a href="<?php echo $URL;?>tecnico_rol/lista_tecnicos_asignados.php">
                         <i class="zmdi zmdi-eye"></i> &nbsp; Lista de instalaciones y clientes
                     </a>
                 </li>
