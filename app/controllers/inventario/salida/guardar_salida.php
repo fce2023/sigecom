@@ -14,6 +14,24 @@ try {
         $id_usuario_sesion = $_POST['id_usuario_sesion'] ?? null;
         $tipo = "salida" ?? null;
 
+        // Consulta para calcular el stock
+        $query = "SELECT p.id_producto, p.nombre, tp.Nom_producto,
+                    COALESCE((SELECT SUM(dpp.cantidad) FROM detalle_producto_proveedor dpp WHERE dpp.ID_producto = p.id_producto), 0) +
+                    COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Entrada'), 0) -
+                    COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Salida'), 0) AS stock
+                    FROM productos p
+                    LEFT JOIN tipo_producto tp ON p.id_tipo_producto = tp.ID_tipo_producto
+                    GROUP BY p.id_producto
+                    ORDER BY p.nombre";
+        $stmt = $pdo->query($query);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stock = (int) $row['stock'];
+
+        if ($stock < $cantidad) {
+            echo json_encode(['error' => 'faltastock', 'message' => "No hay suficiente stock del producto seleccionado. Stock actual: $stock"]);
+            exit;
+        }
+
         $stmt = $pdo->prepare("
             SELECT d.Id_det_cliente_tecnico
             FROM detalle_cliente_tecnico d
@@ -55,3 +73,4 @@ try {
     error_log("Error en guardar_salida.php: " . $e->getMessage(), 3, __DIR__ . '/error_log.txt');
     echo json_encode(['error' => $e->getMessage()]);
 }
+

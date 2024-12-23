@@ -175,7 +175,9 @@ include ('../../../layout/parte1.php');
         xhr.onload = function() {
             try {
                 var data = JSON.parse(xhr.responseText);
-                if (data.success) {
+                if (data.error === 'faltastock') {
+                    showModal('No hay suficiente stock del producto seleccionado.', 'danger');
+                } else if (data.success) {
                     showModal(data.message, 'success', true);
                 } else {
                     showModal(data.message || 'No se pudo guardar el detalle técnico del producto.', 'danger');
@@ -191,7 +193,6 @@ include ('../../../layout/parte1.php');
 
         xhr.send(formData);
     });
-
 
     // Función para validar campos vacíos
     function validarCampos(form) {

@@ -172,6 +172,8 @@ include ('../../../layout/parte1.php');
                 var data = JSON.parse(xhr.responseText);
                 if (data.success) {
                     showModal(data.message, 'success', true);
+                } else if (data.error === 'faltastock') {
+                    showModal('No hay suficiente stock del producto seleccionado.', 'danger');
                 } else {
                     showModal(data.message || 'No se pudo guardar el detalle técnico del producto.', 'danger');
                 }
