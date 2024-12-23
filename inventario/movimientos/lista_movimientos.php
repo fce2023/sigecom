@@ -38,7 +38,7 @@ include ('../../layout/parte1.php');
                                       GROUP BY p.id_producto";
                             $stmt = $pdo->query($query);
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                if ($row['stock'] == 0) {
+                                if ($row['stock'] <= 0) {
                                     echo "<tr>
                                         <td>" . htmlspecialchars($row['nombre']) . "</td>
                                         <td class='text-danger'><strong>STOCK AGOTADO</strong></td>
