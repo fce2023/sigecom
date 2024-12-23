@@ -1,17 +1,31 @@
 <?php
-require_once('../app/config.php');
+include ('../app/config.php');
 
-if (isset($_GET['id_cliente'])) {
-    $id_cliente = $_GET['id_cliente'];
-    $query = "SELECT t.ID_tipo_servicio, t.Nom_servicio, ac.Codigo_Operacion, ac.fecha_creacion FROM atencion_cliente ac
-              INNER JOIN tipo_servicio t ON ac.ID_tipo_servicio = t.ID_tipo_servicio
-              WHERE ac.id_cliente = :id_cliente ORDER BY ac.fecha_creacion DESC LIMIT 1";
+if (isset($_GET['id_atencion_cliente'])) {
+    $id_atencion_cliente = $_GET['id_atencion_cliente'];
+    
+    // Query para obtener los datos necesarios del cliente
+    $query = "SELECT ac.ID_tipo_servicio, t.Nom_servicio, ac.Codigo_Operacion
+              FROM atencion_cliente ac
+              LEFT JOIN tipo_servicio t ON ac.ID_tipo_servicio = t.ID_tipo_servicio
+              WHERE ac.ID = :id_atencion_cliente";
+    
     $stmt = $pdo->prepare($query);
-    $stmt->execute(['id_cliente' => $id_cliente]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo json_encode(['success' => true, 'id_tipo_servicio' => $row['ID_tipo_servicio'], 'codigo_operacion' => $row['Codigo_Operacion'], 'nom_servicio' => $row['Nom_servicio']]);
-} else {
-    echo json_encode(['success' => false, 'id_tipo_servicio' => '', 'codigo_operacion' => '', 'nom_servicio' => '']);
+    $stmt->bindParam(':id_atencion_cliente', $id_atencion_cliente);
+    $stmt->execute();
+    
+    $response = [];
+    
+    if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $response['success'] = true;
+        $response['id_tipo_servicio'] = $row['ID_tipo_servicio'];
+        $response['nom_servicio'] = $row['Nom_servicio'];
+        $response['codigo_operacion'] = $row['Codigo_Operacion'];
+    } else {
+        $response['success'] = false;
+    }
+    
+    echo json_encode($response);
 }
-
+?>
 

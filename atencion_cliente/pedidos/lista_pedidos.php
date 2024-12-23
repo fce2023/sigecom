@@ -37,80 +37,108 @@ include ('../../layout/cliente.php');
                     </thead>
                     <tbody>
                         <?php
-                            $limit = 3;
-                            $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
-                            $offset = ($page - 1) * $limit;
-                            $query = "SELECT * FROM atencion_cliente ORDER BY ID DESC LIMIT :limit OFFSET :offset";
-                            $stmt = $pdo->prepare($query);
-                            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-                            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-                            $stmt->execute();
-                            $contador = $offset;
-                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
-                                <tr>
-                                    <td><?php echo ++$contador; ?></td>
-                                    <?php
-                                    $stmt2 = $pdo->prepare("SELECT u.ID_usuario, u.id_personal, u.Nombre_usuario, p.Dni, p.Nombre, p.Apellido_paterno, p.Apellido_materno 
-                                    FROM usuario u 
-                                    INNER JOIN personal p ON u.id_personal = p.ID_personal 
-                                    WHERE u.ID_usuario = :id");
-                                    $stmt2->bindParam(':id', $row['ID_usuario'], PDO::PARAM_INT);
-                                    $stmt2->execute();
-                                    $user = $stmt2->fetch(PDO::FETCH_ASSOC);
-                                    ?>
-                                    <td><?php echo htmlspecialchars("{$user['Nombre_usuario']} - {$user['Dni']} {$user['Nombre']} {$user['Apellido_paterno']} {$user['Apellido_materno']}"); ?></td>
-                                    
-                                    <?php
-                                    $stmt3 = $pdo->prepare("SELECT ID_tecnico FROM detalle_cliente_tecnico WHERE ID_atencion_cliente = :id");
-                                    $stmt3->bindParam(':id', $row['ID'], PDO::PARAM_INT);
-                                    $stmt3->execute();
-                                    $detalle = $stmt3->fetch(PDO::FETCH_ASSOC);
-                                    $id_tecnico = $detalle ? $detalle['ID_tecnico'] : 'Tecnico no asignado';
-                                    if ($id_tecnico != 'Tecnico no asignado') {
-                                        $stmt4 = $pdo->prepare("SELECT id_personal FROM tecnico WHERE ID_tecnico = :id");
-                                        $stmt4->bindParam(':id', $id_tecnico, PDO::PARAM_INT);
-                                        $stmt4->execute();
-                                        $tecnico = $stmt4->fetch(PDO::FETCH_ASSOC);
-                                        $stmt5 = $pdo->prepare("SELECT Dni, Nombre, Apellido_paterno, Apellido_materno FROM personal WHERE ID_personal = :id");
-                                        $stmt5->bindParam(':id', $tecnico['id_personal'], PDO::PARAM_INT);
-                                        $stmt5->execute();
-                                        $personal = $stmt5->fetch(PDO::FETCH_ASSOC);
-                                        $id_tecnico = htmlspecialchars("{$personal['Dni']} {$personal['Nombre']} {$personal['Apellido_paterno']} {$personal['Apellido_materno']}");
-                                    }
-                                    ?>
-                                    <td><?php echo htmlspecialchars($id_tecnico); ?></td>
-                                    <?php
-                                    $stmt2 = $pdo->prepare("SELECT Dni, Nombre FROM cliente WHERE ID_cliente = :id");
-                                    $stmt2->bindParam(':id', $row['id_cliente'], PDO::PARAM_INT);
-                                    $stmt2->execute();
-                                    $cliente = $stmt2->fetch(PDO::FETCH_ASSOC);
-                                    ?>
-                                    <td><?php echo htmlspecialchars("{$cliente['Dni']} {$cliente['Nombre']}"); ?></td>
-                                    <?php
-                                    $stmt5 = $pdo->prepare("SELECT Nom_servicio FROM tipo_servicio WHERE ID_tipo_servicio = :id");
-                                    $stmt5->bindParam(':id', $row['ID_tipo_servicio'], PDO::PARAM_INT);
+                        $contador = 0;
+                        $query = "SELECT * FROM atencion_cliente";
+                        $stmt = $pdo->query($query);
+                        $items_per_page = 5;
+                        $total_items = $stmt->rowCount();
+                        $total_pages = ceil($total_items / $items_per_page);
+                        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        $offset = max(0, ($current_page - 1) * $items_per_page);
+
+                        // Fetch paginated data
+                        $query .= " LIMIT $offset, $items_per_page";
+                        $paginated_pedidos = $pdo->query($query);
+
+                        echo "<h4>Paginación: Página $current_page de $total_pages. Mostrando " . min($items_per_page, $total_items - $offset) . " de $total_items registros</h4>";
+
+                        foreach ($paginated_pedidos as $row) {
+                        ?>
+                            <tr>
+                                <td><?php echo ++$contador; ?></td>
+                                <?php
+                                $stmt2 = $pdo->prepare("SELECT u.ID_usuario, u.id_personal, u.Nombre_usuario, p.Dni, p.Nombre, p.Apellido_paterno, p.Apellido_materno 
+                                FROM usuario u 
+                                INNER JOIN personal p ON u.id_personal = p.ID_personal 
+                                WHERE u.ID_usuario = :id");
+                                $stmt2->bindParam(':id', $row['ID_usuario'], PDO::PARAM_INT);
+                                $stmt2->execute();
+                                $user = $stmt2->fetch(PDO::FETCH_ASSOC);
+                                ?>
+                                <td><?php echo htmlspecialchars("{$user['Nombre_usuario']} - {$user['Dni']} {$user['Nombre']} {$user['Apellido_paterno']} {$user['Apellido_materno']}"); ?></td>
+                                
+                                <?php
+                                $stmt3 = $pdo->prepare("SELECT ID_tecnico FROM detalle_cliente_tecnico WHERE ID_atencion_cliente = :id");
+                                $stmt3->bindParam(':id', $row['ID'], PDO::PARAM_INT);
+                                $stmt3->execute();
+                                $detalle = $stmt3->fetch(PDO::FETCH_ASSOC);
+                                $id_tecnico = $detalle ? $detalle['ID_tecnico'] : 'Tecnico no asignado';
+                                if ($id_tecnico != 'Tecnico no asignado') {
+                                    $stmt4 = $pdo->prepare("SELECT id_personal FROM tecnico WHERE ID_tecnico = :id");
+                                    $stmt4->bindParam(':id', $id_tecnico, PDO::PARAM_INT);
+                                    $stmt4->execute();
+                                    $tecnico = $stmt4->fetch(PDO::FETCH_ASSOC);
+                                    $stmt5 = $pdo->prepare("SELECT Dni, Nombre, Apellido_paterno, Apellido_materno FROM personal WHERE ID_personal = :id");
+                                    $stmt5->bindParam(':id', $tecnico['id_personal'], PDO::PARAM_INT);
                                     $stmt5->execute();
-                                    $servicio = $stmt5->fetch(PDO::FETCH_ASSOC);
-                                    ?>
-                                    <td><?php echo htmlspecialchars($servicio['Nom_servicio']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['Codigo_Operacion']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['fecha_creacion']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['estado'] == 1 ? 'Pedido finalizado' : 'En proceso'); ?></td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary btn-raised btn-xs" onclick="window.location.href = 'editar_pedido.php?ID=<?php echo $row['ID']; ?>'">
-                                            <i class="zmdi zmdi-edit"></i>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-danger btn-raised btn-xs" onclick="deletePedidoUnique(<?php echo htmlspecialchars($row['ID']); ?>);">
-                                            <i class="zmdi zmdi-delete"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
+                                    $personal = $stmt5->fetch(PDO::FETCH_ASSOC);
+                                    $id_tecnico = htmlspecialchars("{$personal['Dni']} {$personal['Nombre']} {$personal['Apellido_paterno']} {$personal['Apellido_materno']}");
+                                }
+                                ?>
+                                <td><?php echo htmlspecialchars($id_tecnico); ?></td>
+                                <?php
+                                $stmt2 = $pdo->prepare("SELECT Dni, Nombre FROM cliente WHERE ID_cliente = :id");
+                                $stmt2->bindParam(':id', $row['id_cliente'], PDO::PARAM_INT);
+                                $stmt2->execute();
+                                $cliente = $stmt2->fetch(PDO::FETCH_ASSOC);
+                                ?>
+                                <td><?php echo htmlspecialchars("{$cliente['Dni']} {$cliente['Nombre']}"); ?></td>
+                                <?php
+                                $stmt5 = $pdo->prepare("SELECT Nom_servicio FROM tipo_servicio WHERE ID_tipo_servicio = :id");
+                                $stmt5->bindParam(':id', $row['ID_tipo_servicio'], PDO::PARAM_INT);
+                                $stmt5->execute();
+                                $servicio = $stmt5->fetch(PDO::FETCH_ASSOC);
+                                ?>
+                                <td><?php echo htmlspecialchars($servicio['Nom_servicio']); ?></td>
+                                <td><?php echo htmlspecialchars($row['Codigo_Operacion']); ?></td>
+                                <td><?php echo htmlspecialchars($row['fecha_creacion']); ?></td>
+                                <td><?php echo htmlspecialchars($row['estado'] == 1 ? 'Pedido finalizado' : 'En proceso'); ?></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-raised btn-xs" onclick="window.location.href = 'editar_pedido.php?ID=<?php echo $row['ID']; ?>'">
+                                        <i class="zmdi zmdi-edit"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-raised btn-xs" onclick="deletePedidoUnique(<?php echo htmlspecialchars($row['ID']); ?>);">
+                                        <i class="zmdi zmdi-delete"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
+                    <!-- Pagination controls -->
+                    
                 </table>
             </div>
+            <nav>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<?php echo $current_page - 1; ?>" aria-label="Anterior">
+                                    Anterior
+                                </a>
+                            </li>
+                            <?php for ($page = 1; $page <= $total_pages; $page++): ?>
+                                <li class="page-item <?php echo ($page == $current_page) ? 'active' : ''; ?>">
+                                    <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+                                </li>
+                            <?php endfor; ?>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<?php echo $current_page + 1; ?>" aria-label="Siguiente">
+                                    Siguiente
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
         </div>
     </div>
 </div>
@@ -209,24 +237,5 @@ include ('../../layout/cliente.php');
     }
 </script>
 
-<nav class="text-center">
-    <ul class="pagination pagination-sm">
-        <li class="<?php echo ($page <= 1) ? 'disabled' : ''; ?>">
-            <a href="?page=<?php echo ($page > 1) ? $page - 1 : 1; ?>">«</a>
-        </li>
-        <?php
-            $query = "SELECT COUNT(*) as total FROM cliente";
-            $stmt = $pdo->query($query);
-            $total = $stmt->fetchColumn();
-            $pages = ceil($total / $limit);
-            for ($i = 1; $i <= $pages; $i++) {
-                $active = ($page == $i) ? 'active' : '';
-                echo '<li class="' . $active . '"><a href="?page=' . $i . '">' . $i . '</a></li>';
-            }
-        ?>
-        <li class="<?php echo ($page >= $pages) ? 'disabled' : ''; ?>">
-            <a href="?page=<?php echo ($page < $pages) ? $page + 1 : $pages; ?>">»</a>
-        </li>
-    </ul>
-</nav>
+</body>
 

@@ -77,6 +77,19 @@ include ('../app/controllers/cargo/listado_de_cargo.php');
 
 				// Ejecuta la consulta
 				$cargos = $pdo->query($query);
+
+				// Pagination logic
+				$items_per_page = 5;
+				$total_items = $cargos->rowCount();
+				$total_pages = ceil($total_items / $items_per_page);
+				$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+				$offset = max(0, ($current_page - 1) * $items_per_page);
+
+				// Fetch paginated data
+				$query .= " LIMIT $offset, $items_per_page";
+				$paginated_cargos = $pdo->query($query);
+
+				echo "<h4>Paginación: Página $current_page de $total_pages. Mostrando $items_per_page de $total_items registros.</h4>";
 			?>
 
 			<div class="panel-body">
@@ -92,51 +105,59 @@ include ('../app/controllers/cargo/listado_de_cargo.php');
 							</tr>
 						</thead>
 						<tbody>
-							<?php
-							foreach ($cargos as $fila) {
-							?>
+						<?php
+							$contador = $offset + 1;
+							foreach ($paginated_cargos as $fila) {
+						?>
 							<tr>
-							<td><?php echo isset($contador) ? ++$contador : ($contador = 1); ?></td>
+								<td><?php echo $contador++; ?></td>
 								<td><?php echo $fila['Nom_cargo']; ?></td>
 								<td style="color: <?php echo $fila['Estado'] == 1 ? 'green' : 'red'; ?>"><?php echo $fila['Estado'] == 1 ? 'Activo' : 'Inactivo'; ?></td>
 								<td>
 									<button type="button" class="btn btn-primary btn-raised btn-xs" onclick="openModal('editarModal<?php echo $fila['ID_cargo']; ?>')">
 										<i class="zmdi zmdi-edit"></i>
 									</button>
-									<?php 
-									$id_cargo = $fila['ID_cargo'];
-									include 'funciones.php';
-									?>
 								</td>
 								<td>
-								<form action="<?php echo $URL; ?>/app/controllers/cargo/eliminar.php" method="post" onsubmit="return confirmacionEliminar(event, this);">
-									<input type="hidden" name="id_cargo" value="<?php echo $fila['ID_cargo']; ?>">
-									<button type="submit" class="btn btn-danger btn-raised btn-xs">
-										<i class="zmdi zmdi-delete"></i>
-									</button>
-								</form>
-
-
+									<form action="<?php echo $URL; ?>/app/controllers/cargo/eliminar.php" method="post" onsubmit="return confirmacionEliminar(event, this);">
+										<input type="hidden" name="id_cargo" value="<?php echo $fila['ID_cargo']; ?>">
+										<button type="submit" class="btn btn-danger btn-raised btn-xs">
+											<i class="zmdi zmdi-delete"></i>
+										</button>
+									</form>
 								</td>
-
 							</tr>
-							<?php
+						<?php
 							}
-							?>
+						?>
 						</tbody>
 					</table>
+					
+<!-- Pagination controls -->
+<nav>
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" href="?page=<?php echo $current_page - 1; ?>" aria-label="Anterior">
+                Anterior
+            </a>
+        </li>
+        
+
+        <?php for ($page = 1; $page <= $total_pages; $page++): ?>
+            <li class="page-item <?php echo ($page == $current_page) ? 'active' : ''; ?>">
+                <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+            </li>
+        <?php endfor; ?>
+
+        <li class="page-item">
+            <a class="page-link" href="?page=<?php echo $current_page + 1; ?>" aria-label="Siguiente">
+                Siguiente
+            </a>
+        </li>
+    </ul>
+</nav>
 				</div>
-				<nav class="text-center">
-					<ul class="pagination pagination-sm">
-						<li class="disabled"><a href="javascript:void(0)">«</a></li>
-						<li class="active"><a href="javascript:void(0)">1</a></li>
-						<li><a href="javascript:void(0)">2</a></li>
-						<li><a href="javascript:void(0)">3</a></li>
-						<li><a href="javascript:void(0)">4</a></li>
-						<li><a href="javascript:void(0)">5</a></li>
-						<li><a href="javascript:void(0)">»</a></li>
-					</ul>
-				</nav>
+				
 			</div>
 		</div>
 	</div>

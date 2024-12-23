@@ -102,10 +102,28 @@ include ('../app/controllers/proveedor/listado_de_proveedor.php');
             </thead>
             <tbody>
                 <?php
-                foreach ($proveedores as $fila) {
+                $total_items = count($proveedores);
+                $items_por_pagina = 5;
+                $total_paginas = ceil($total_items / $items_por_pagina);
+                $pagina_actual = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
+                $offset = ($pagina_actual - 1) * $items_por_pagina;
+                $proveedores_paginados = array_slice($proveedores, $offset, $items_por_pagina);
+                ?>
+                
+                <tr>
+                    <td colspan="7">
+                        <div class="text-center">
+                            Mostrando <?php echo count($proveedores_paginados) ?> de <?php echo $total_items ?> registros.
+                            P&aacute;gina <?php echo $pagina_actual ?> de <?php echo $total_paginas ?>.
+                        </div>
+                    </td>
+                </tr>
+                
+                <?php
+                foreach ($proveedores_paginados as $fila) {
                 ?>
                 <tr>
-                    <td><?php echo isset($contador) ? ++$contador : ($contador = 1); ?></td>
+                    <td><?php echo isset($contador) ? ++$contador : ($contador = 1 + $offset); ?></td>
                     
                     <td><?php echo $fila['Nombre']; ?></td>
                     <td><?php echo $fila['Dirección']; ?></td>
@@ -133,6 +151,22 @@ include ('../app/controllers/proveedor/listado_de_proveedor.php');
                 }
                 ?>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="8" class="text-center">
+                        <?php
+                        // mostrar los botones de paginación
+                        for ($i = 1; $i <= $total_paginas; $i++) {
+                            ?>
+                            <a href="index.php?pagina=<?php echo $i; ?>&filtroEstado=<?php echo $filtroEstado; ?>&buscadorNombre=<?php echo $buscadorNombre; ?>" class="btn btn-raised btn-primary <?php echo $pagina_actual == $i ? 'btn-primary active' : 'btn-default'; ?>">
+                                <?php echo $i; ?>
+                            </a>
+                            <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
         <?php if (isset($_GET['error'])): ?>
             <div class="alert alert-danger">
@@ -146,17 +180,7 @@ include ('../app/controllers/proveedor/listado_de_proveedor.php');
         <?php endif; ?>
         <script src="<?php echo $URL; ?>/js/funciones_proveedor.js"></script>
     </div>
-    <nav class="text-center">
-        <ul class="pagination pagination-sm">
-            <li><a href="javascript:void(0)">«</a></li>
-            <li><a href="javascript:void(0)">1</a></li>
-            <li><a href="javascript:void(0)">2</a></li>
-            <li><a href="javascript:void(0)">3</a></li>
-            <li><a href="javascript:void(0)">4</a></li>
-            <li><a href="javascript:void(0)">5</a></li>
-            <li><a href="javascript:void(0)">»</a></li>
-        </ul>
-    </nav>
+    
 </div>
 
 <script>

@@ -6,19 +6,17 @@ include ('../../../layout/sesion.php');
 include ('../../../layout/parte1.php');
 ?>
 
-
 <!-- Panel nueva categoria -->
 <div class="container-fluid">
     <?php include ('../layout/parte1.php');?>
-
-    
     <div class="panel panel-info">
-	<div><?php include ('lista.php'); ?></div>
+	
         <div class="panel-heading">
             <h3 class="panel-title"><i class="zmdi zmdi-plus"></i> &nbsp; NUEVA SALIDA DE PRODUCTO</h3>
         </div>
         <div class="panel-body">
-        <form  action="../../../app/controllers/inventario/salida/guardar_salida.php" method="post">
+
+        <form id = "nuevaSalidaProductoForm">
     <fieldset>
         <legend><i class="zmdi zmdi-assignment-o"></i> &nbsp; Información de la salida del producto</legend>
         <div class="container-fluid">
@@ -27,9 +25,9 @@ include ('../../../layout/parte1.php');
                             <div class="form-group label-floating">
                                 <label class="control-label">Técnico *</label>
                                 <select class="form-control" name="tecnico-reg" id="listaTecnicos" required title="Seleccione un técnico." onchange="filtrarClientesPorTecnico(this.value)">
-                                    <option value="">Seleccione una opción</option>
+                                    <option value="">Seleccione tu nombre para que aparesca tus clientes asignados</option>
                                     <?php
-                                    $query = "SELECT t.ID_tecnico, p.nombre FROM tecnico t INNER JOIN personal p ON t.id_personal = p.ID_personal ORDER BY p.nombre";
+                                    $query = "SELECT t.ID_tecnico, p.nombre FROM tecnico t INNER JOIN personal p ON t.id_personal = p.ID_personal WHERE t.ID_tecnico = $id_tecnico_sesion ORDER BY p.nombre";
                                     $stmt = $pdo->query($query);
                                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         echo "<option value='" . $row['ID_tecnico'] . "'>" . $row['nombre'] . "</option>";
@@ -71,6 +69,7 @@ include ('../../../layout/parte1.php');
                                 clientes.forEach(function(cliente) {
                                     var option = document.createElement('option');
                                     option.value = cliente.ID_cliente;
+                                    option.text = cliente.Dni + " - " + cliente.Nombre + " " + cliente.Apellido_paterno + " " + cliente.Apellido_materno + " - " + cliente.Nom_servicio;
                                     option.text = cliente.Dni + " - " + cliente.Nombre + " " + cliente.Apellido_paterno + " " + cliente.Apellido_materno;
                                     listaClientes.add(option);
                                 });
@@ -95,15 +94,25 @@ include ('../../../layout/parte1.php');
 
         </script>
                 <div class="col-xs-12 col-sm-6">
-                    <div class="form-group label-floating">
+                <div class="form-group label-floating">
                         <label class="control-label">Producto *</label>
                         <select class="form-control" name="producto-reg" required title="Seleccione un producto.">
                             <option value="">Seleccione una opción</option>
                             <?php
-                            $query = "SELECT p.id_producto, p.nombre, tp.Nom_producto FROM productos p LEFT JOIN tipo_producto tp ON p.id_tipo_producto = tp.ID_tipo_producto ORDER BY p.nombre";
+                            $query = "SELECT p.nombre,                                        COALESCE((SELECT SUM(dpp.cantidad) FROM detalle_producto_proveedor dpp WHERE dpp.ID_producto = p.id_producto), 0) +                                        COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Entrada'), 0) -                                        COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Salida'), 0) AS stock                                       FROM productos p                                       GROUP BY p.id_producto";
                             $stmt = $pdo->query($query);
+                            $productosSinStock = [];
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                echo "<option value='" . $row['id_producto'] . "'>" . $row['nombre'] . " - " . $row['Nom_producto'] . "</option>";
+                                if ($row['stock'] <= 0) {
+                                    $productosSinStock[] = $row['nombre'];
+                                    echo "<option value='' style='color: red;' disabled>" . $row['nombre'] . " (No hay stock)</option>";
+                                } else {
+                                    echo "<option value='" . $row['id_producto'] . "'>" . $row['nombre'] . "</option>";
+                                }
+                            }
+                            if (count($productosSinStock) > 0) {
+                                echo "<option value='' disabled>--------------------</option>";
+                                echo "<option value='' disabled style='color: red;'>Productos sin stock: " . implode(', ', $productosSinStock) . "</option>";
                             }
                             ?>
                         </select>
@@ -155,7 +164,7 @@ include ('../../../layout/parte1.php');
         var formData = new FormData(form);
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '../../../app/controllers/inventario/salida/guardar_salida.php', true);
+        xhr.open('POST', '../../../app/controllers/inventario/salida/guardar_salida_tecnico.php', true);
         xhr.onload = function() {
             try {
                 var data = JSON.parse(xhr.responseText);
@@ -228,7 +237,7 @@ include ('../../../layout/parte1.php');
                 $('#mensajeModal').modal('hide');
             });
             document.getElementById('listaSalidasBtn').addEventListener('click', function() {
-                window.location.href = '<?php echo $URL; ?>inventario/movimientos/salida/index.php';
+                window.location.href = '<?php echo $URL; ?>inventario/tecnico/salida/lista.php';
             });
         }
     }

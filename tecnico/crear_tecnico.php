@@ -140,7 +140,7 @@ include ('../layout/parte1.php');
                 if (xhr.status === 200) {
                     var data = JSON.parse(xhr.responseText);
                     if (data.success) {
-                        showModal('Cliente guardado exitosamente.', 'success', true);
+                        showModal('Tecnico guardado exitosamente.', 'success', true);
                     } else {
                         showModal('Error: ' + (data.error || 'No se pudo guardar el cliente.'), 'danger');
                     }
@@ -197,7 +197,7 @@ include ('../layout/parte1.php');
                         </div>
                         <div class="modal-footer">
                             ${showButtons ? `
-                                <button id="nuevoClienteBtn" class="btn btn-primary btn-sm">Agregar nuevo cliente</button>
+                                <button id="nuevoClienteBtn" class="btn btn-primary btn-sm">Agregar nuevo tecnico</button>
                                 <button id="listaClientesBtn" class="btn btn-secondary btn-sm">Ir a la lista</button>
                             ` : ''}
                         </div>

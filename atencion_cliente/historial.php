@@ -6,7 +6,7 @@ include ('../layout/parte1.php');
 include ('../layout/tecnico.php');
 
 
-$limit = 5;
+$limit = 3;
 $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
@@ -15,13 +15,18 @@ try {
               FROM historial_atencion_cliente h
               JOIN usuario u ON h.id_usuario = u.ID_usuario
               JOIN atencion_cliente a ON h.id_atencion_cliente = a.ID
-              JOIN estado_atencion_cliente e ON h.id_estado_atencion_cliente = e.id
-              ORDER BY h.fecha DESC
-              LIMIT :offset, :limit";
+              JOIN estado_atencion_cliente e ON h.id_estado_atencion_cliente = e.id";
+    $stmt = $pdo->query($query);
+    $total = $stmt->rowCount();
+    $pages = ceil($total / $limit);
+
+    $query .= " ORDER BY h.fecha DESC LIMIT :offset, :limit";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
     $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
     $stmt->execute();
+
+    echo "<h4>Paginación: Página $page de $pages. Mostrando $limit de $total registros</h4>";
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }

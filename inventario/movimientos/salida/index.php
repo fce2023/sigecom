@@ -7,6 +7,27 @@ include ('../../../layout/parte1.php');
 ?>
 
 
+<?php
+                            $query = "SELECT p.nombre, 
+                                      COALESCE((SELECT SUM(dpp.cantidad) FROM detalle_producto_proveedor dpp WHERE dpp.ID_producto = p.id_producto), 0) + 
+                                      COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Entrada'), 0) - 
+                                      COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Salida'), 0) AS stock
+                                      FROM productos p
+                                      GROUP BY p.id_producto";
+                            $stmt = $pdo->query($query);
+                            $productosSinStock = [];
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                if ($row['stock'] == 0) {
+                                    $productosSinStock[] = htmlspecialchars($row['nombre']);
+                                }
+                            }
+                            if (count($productosSinStock) > 0) {
+                                echo "<tr>
+                                    <td colspan='2' class='text-danger' style='text-align: center'><strong>Los siguientes productos no tienen stock disponible: " . implode(', ', $productosSinStock) . "</strong></td>
+                                </tr>";
+                            }
+                            ?>
+
 <!-- Panel nueva categoria -->
 <div class="container-fluid">
     <?php include ('../layout/parte1.php');?>
@@ -18,7 +39,8 @@ include ('../../../layout/parte1.php');
             <h3 class="panel-title"><i class="zmdi zmdi-plus"></i> &nbsp; NUEVA SALIDA DE PRODUCTO</h3>
         </div>
         <div class="panel-body">
-        <form  action="../../../app/controllers/inventario/salida/guardar_salida.php" method="post">
+
+        <form id = "nuevaSalidaProductoForm">
     <fieldset>
         <legend><i class="zmdi zmdi-assignment-o"></i> &nbsp; Información de la salida del producto</legend>
         <div class="container-fluid">
@@ -71,6 +93,7 @@ include ('../../../layout/parte1.php');
                                 clientes.forEach(function(cliente) {
                                     var option = document.createElement('option');
                                     option.value = cliente.ID_cliente;
+                                    option.text = cliente.Dni + " - " + cliente.Nombre + " " + cliente.Apellido_paterno + " " + cliente.Apellido_materno + " - " + cliente.Nom_servicio;
                                     option.text = cliente.Dni + " - " + cliente.Nombre + " " + cliente.Apellido_paterno + " " + cliente.Apellido_materno;
                                     listaClientes.add(option);
                                 });
@@ -100,10 +123,20 @@ include ('../../../layout/parte1.php');
                         <select class="form-control" name="producto-reg" required title="Seleccione un producto.">
                             <option value="">Seleccione una opción</option>
                             <?php
-                            $query = "SELECT p.id_producto, p.nombre, tp.Nom_producto FROM productos p LEFT JOIN tipo_producto tp ON p.id_tipo_producto = tp.ID_tipo_producto ORDER BY p.nombre";
+                            $query = "SELECT p.nombre,                                        COALESCE((SELECT SUM(dpp.cantidad) FROM detalle_producto_proveedor dpp WHERE dpp.ID_producto = p.id_producto), 0) +                                        COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Entrada'), 0) -                                        COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Salida'), 0) AS stock                                       FROM productos p                                       GROUP BY p.id_producto";
                             $stmt = $pdo->query($query);
+                            $productosSinStock = [];
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                echo "<option value='" . $row['id_producto'] . "'>" . $row['nombre'] . " - " . $row['Nom_producto'] . "</option>";
+                                if ($row['stock'] <= 0) {
+                                    $productosSinStock[] = $row['nombre'];
+                                    echo "<option value='' style='color: red;' disabled>" . $row['nombre'] . " (No hay stock)</option>";
+                                } else {
+                                    echo "<option value='" . $row['id_producto'] . "'>" . $row['nombre'] . "</option>";
+                                }
+                            }
+                            if (count($productosSinStock) > 0) {
+                                echo "<option value='' disabled>--------------------</option>";
+                                echo "<option value='' disabled style='color: red;'>Productos sin stock: " . implode(', ', $productosSinStock) . "</option>";
                             }
                             ?>
                         </select>

@@ -9,7 +9,10 @@ include ('../../../layout/parte1.php');
 
 <!-- Panel nueva categoria -->
 <div class="container-fluid">
-    <?php include ('../layout/parte1.php');?>
+    <?php include ('../layout/parte1.php');
+	
+	
+	?>
 
 
 
@@ -61,14 +64,14 @@ include ('../../../layout/parte1.php');
 								INNER JOIN personal p ON t.id_personal = p.ID_personal
 								INNER JOIN productos dp ON dtp.ID_producto = dp.id_producto
 								INNER JOIN usuario u ON dtp.ID_usuario = u.ID_usuario
-								WHERE t.ID_usuario = $id_usuario_sesion
+								WHERE t.ID_tecnico = :id_tecnico_sesion
 								ORDER BY 
 									dtp.Id_det_tecnico_producto DESC
 								LIMIT $limit OFFSET $offset
 								";
 								
 								$stmt = $pdo->prepare($query);
-								$stmt->execute();
+								$stmt->execute([':id_tecnico_sesion' => $id_tecnico_sesion]);
 								
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
 								<tr>

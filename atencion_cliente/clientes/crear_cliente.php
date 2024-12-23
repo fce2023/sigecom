@@ -46,6 +46,7 @@ include ('../../layout/parte1.php');
                             required 
                             maxlength="10"
                             title="Ingrese un DNI válido (máximo 10 dígitos)."
+                            autocomplete="off"
                         >
                     </div>
                 </div>
@@ -60,6 +61,7 @@ include ('../../layout/parte1.php');
                             required 
                             maxlength="100"
                             title="Ingrese solo letras y espacios (hasta 100 caracteres)."
+                            autocomplete="off"
                         >
                     </div>
                 </div>
@@ -74,6 +76,7 @@ include ('../../layout/parte1.php');
                             required 
                             maxlength="100"
                             title="Ingrese solo letras y espacios (hasta 100 caracteres)."
+                            autocomplete="off"
                         >
                     </div>
                 </div>
@@ -88,6 +91,7 @@ include ('../../layout/parte1.php');
                             required 
                             maxlength="100"
                             title="Ingrese solo letras y espacios (hasta 100 caracteres)."
+                            autocomplete="off"
                         >
                     </div>
                 </div>
@@ -101,6 +105,7 @@ include ('../../layout/parte1.php');
                             required 
                             maxlength="100"
                             title="Ingrese la dirección (hasta 100 caracteres)."
+                            autocomplete="off"
                         >
                     </div>
                 </div>
@@ -115,6 +120,7 @@ include ('../../layout/parte1.php');
                             required 
                             maxlength="11"
                             title="Ingrese un número de celular válido (hasta 11 dígitos)."
+                            autocomplete="off"
                         >
                     </div>
                 </div>
@@ -127,6 +133,7 @@ include ('../../layout/parte1.php');
                             name="correo-electronico-reg" 
                             maxlength="150"
                             title="Ingrese el correo electrónico (hasta 150 caracteres)."
+                            autocomplete="off"
                         >
                     </div>
                 </div>

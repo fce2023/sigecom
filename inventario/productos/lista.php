@@ -34,7 +34,7 @@ include ('../../layout/parte1.php');
 					<table class="table table-hover text-center">
 						<thead>
 							<tr>
-								<th class="text-center">#</th>
+								<th class="text-center"># </th>
 								<th class="text-center">NOMBRE</th>
 								<th class="text-center">DESCRIPCIÓN</th>
 								<th class="text-center">TIPO DE PRODUCTO</th>
@@ -47,6 +47,16 @@ include ('../../layout/parte1.php');
 						</thead>
 						<tbody>
 							<?php
+							$items_per_page = 5;
+							$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+							$offset = ($page - 1) * $items_per_page;
+
+							$total_items_query = $pdo->query("SELECT COUNT(*) FROM productos");
+							$total_items = $total_items_query->fetchColumn();
+							$total_pages = ceil($total_items / $items_per_page);
+
+							echo "<h4>Paginación: Página $page de $total_pages. Mostrando $items_per_page de $total_items registros</h4>";
+
 							$query = "SELECT p.id_producto, p.nombre, p.descripcion, tp.Nom_producto, p.precio, 
 							          (SELECT COALESCE(SUM(dpp.Cantidad), 0) - COALESCE(SUM(dtp.Cantidad), 0) 
 							           FROM detalle_producto_proveedor dpp 
@@ -54,11 +64,16 @@ include ('../../layout/parte1.php');
 							           WHERE dpp.ID_producto = p.id_producto) AS stock, 
 							          p.fecha_registro, p.estado 
 							          FROM productos p 
-							          JOIN tipo_producto tp ON p.id_tipo_producto = tp.ID_tipo_producto";
-							$stmt = $pdo->query($query);
+							          JOIN tipo_producto tp ON p.id_tipo_producto = tp.ID_tipo_producto
+							          LIMIT :offset, :items_per_page";
+							$stmt = $pdo->prepare($query);
+							$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+							$stmt->bindParam(':items_per_page', $items_per_page, PDO::PARAM_INT);
+							$stmt->execute();
+
 							while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
 								<tr>
-									<td><?php echo htmlspecialchars($row['id_producto']); ?></td>
+									<td><?= ($offset++) + 1; ?></td>
 									<td><?php echo htmlspecialchars($row['nombre']); ?></td>
 									<td><?php echo htmlspecialchars($row['descripcion']); ?></td>
 									<td><?php echo htmlspecialchars($row['Nom_producto']); ?></td>
@@ -74,112 +89,43 @@ include ('../../layout/parte1.php');
 										<button type="button" class="btn btn-danger btn-raised btn-xs" onclick="deleteProducto(<?php echo htmlspecialchars($row['id_producto']); ?>);">
 											<i class="zmdi zmdi-delete"></i>
 										</button>
-										<script>
-											function deleteProducto(id_producto) {
-												showConfirmModal('¿Está seguro de que desea eliminar este producto?', function() {
-													var xhr = new XMLHttpRequest();
-													xhr.open('POST', '../../app/controllers/inventario/productos/eliminar.php', true);
-													xhr.onload = function() {
-														try {
-															if (xhr.status === 200) {
-																var data = JSON.parse(xhr.responseText);
-																if (data.success) {
-																	window.location.href = '<?php echo $URL; ?>inventario/productos/lista.php';
-																} else {
-																	showModal('Error: ' + (data.error || 'No se pudo eliminar el producto.'), 'danger');
-																}
-															} else {
-																showModal('Error en la conexión al servidor. Código de estado: ' + xhr.status, 'danger');
-															}
-														} catch (error) {
-															showModal('Error al procesar la respuesta del servidor: ' + error, 'danger');
-														}
-													};
-
-													xhr.onerror = function() {
-														showModal('Error al enviar la solicitud. Verifique su conexión.', 'danger');
-													};
-
-													xhr.send(JSON.stringify({ id_producto: id_producto }));
-												});
-											}
-
-											function showConfirmModal(message, onConfirm) {
-												var modalContent = `
-													<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-														<div class="modal-dialog" role="document">
-															<div class="modal-content">
-																<div class="modal-header">
-																	<h5 class="modal-title" id="confirmModalLabel">Confirmar Eliminación</h5>
-																	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-																		<span aria-hidden="true">&times;</span>
-																	</button>
-																</div>
-																<div class="modal-body">
-																	${message}
-																</div>
-																<div class="modal-footer">
-																	<button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-																	<button type="button" class="btn btn-primary" id="confirmBtn">Sí</button>
-																</div>
-															</div>
-														</div>
-													</div>
-												`;
-
-												document.body.insertAdjacentHTML('beforeend', modalContent);
-												$('#confirmModal').modal('show');
-
-												document.getElementById('confirmBtn').addEventListener('click', function() {
-													onConfirm();
-													$('#confirmModal').modal('hide');
-												});
-											}
-
-											function showModal(message, type) {
-												var modalContent = `
-													<div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
-														<div class="modal-dialog" role="document">
-															<div class="modal-content">
-																<div class="modal-header">
-																	<h5 class="modal-title" id="mensajeModalLabel">${type === 'success' ? 'Éxito' : 'Error'}</h5>
-																	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-																		<span aria-hidden="true">&times;</span>
-																	</button>
-																</div>
-																<div class="modal-body">
-																	${message}
-																</div>
-																<div class="modal-footer">
-																	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-																</div>
-															</div>
-														</div>
-													</div>
-												`;
-
-												document.body.insertAdjacentHTML('beforeend', modalContent);
-												$('#mensajeModal').modal('show');
-											}
-										</script>
 									</td>
 								</tr>
 							<?php endwhile; ?>
-							
 						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="9">
+									<nav aria-label="Page navigation">
+										<ul class="pagination justify-content-center">
+											<?php if ($page > 1): ?>
+												<li class="page-item">
+													<a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
+														<span aria-hidden="true">&laquo;</span>
+													</a>
+												</li>
+											<?php endif; ?>
+											<?php for ($i = 1; $i <= $total_pages; $i++): ?>
+												<li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
+													<a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+												</li>
+											<?php endfor; ?>
+											<?php if ($page < $total_pages): ?>
+												<li class="page-item">
+													<a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">
+														<span aria-hidden="true">&raquo;</span>
+													</a>
+												</li>
+											<?php endif; ?>
+										</ul>
+									</nav>
+								</td>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 			</div>
 		</div>
 	</div>
-    <nav class="text-center">
-					<ul class="pagination pagination-sm">
-						<li class="disabled"><a href="javascript:void(0)">«</a></li>
-						<li class="active"><a href="javascript:void(0)">1</a></li>
-						<li><a href="javascript:void(0)">2</a></li>
-						<li><a href="javascript:void(0)">3</a></li>
-						<li><a href="javascript:void(0)">4</a></li>
-						<li><a href="javascript:void(0)">5</a></li>
-						<li><a href="javascript:void(0)">»</a></li>
-					</ul>
-	</nav>
+    

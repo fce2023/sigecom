@@ -24,7 +24,7 @@
         </li>
         <li class="dropdown">
             <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                <i class="zmdi zmdi-eye"></i> &nbsp; Asiganar Tecnico <span class="caret"></span>
+                <i class="zmdi zmdi-eye"></i> &nbsp; Asignar Tecnico <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
               

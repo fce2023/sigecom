@@ -87,7 +87,7 @@ include ('../app/controllers/my_data/datos_perfil.php');
                 <div class="col-xs-12">
                     <div class="form-group label-floating">
                         <label class="control-label">Dirección *</label>
-                        <textarea name="direccion-up" class="form-control" rows="2" maxlength="250" required><?php echo htmlspecialchars($usuario['Direccion']); ?></textarea>
+                        <textarea name="direccion-up" class="form-control" rows="1" maxlength="250" required><?php echo htmlspecialchars($usuario['Direccion']); ?></textarea>
                     </div>
                 </div>
             </div>

@@ -3,29 +3,6 @@
 include '../../../config.php';
 
 
-
-
-
-
-
-/* if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_detalle_tecnico_producto = $_POST['id_detalle_tecnico_producto'] ?? null;
-    $id_tecnico = $_POST['ID_tecnico'] ?? null;
-    $id_producto = $_POST['ID_producto'] ?? null;
-    $fecha_retiro = $_POST['Fecha_retiro'] ?? null;
-    $cantidad = $_POST['cantidad'] ?? null;
-    $observacion = $_POST['Observación'] ?? null;
-    $estado = $_POST['Estado'] ?? null;
-    
-    echo "id_detalle_tecnico_producto: $id_detalle_tecnico_producto <br>";
-    echo "id_tecnico: $id_tecnico <br>";
-    echo "id_producto: $id_producto <br>";
-    echo "fecha_retiro: $fecha_retiro <br>";
-    echo "cantidad: $cantidad <br>";
-    echo "observacion: $observacion <br>";
-    echo "estado: $estado <br>";
-    
-} */
  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_detalle_tecnico_producto'])) {
     // Recibir datos del formulario
     $id_detalle_tecnico_producto = $_POST['id_detalle_tecnico_producto'];

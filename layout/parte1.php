@@ -292,7 +292,7 @@ function confirmacionCerrarSesion(e) {
 					</a>
 					<ul class="list-unstyled full-box">
 						<li>
-							<a href="<?php echo $URL; ?>/inventario/tecnico/salida/tecnico.php"><i class="zmdi zmdi-case-download zmdi-hc-fw"></i> Registrar movimiento</a>
+							<a href="<?php echo $URL; ?>/inventario/tecnico/salida/"><i class="zmdi zmdi-case-download zmdi-hc-fw"></i> Registrar movimiento</a>
 						</li>
 						<li>
 							<a href="<?php echo $URL; ?>inventario/tecnico/salida/lista.php/"><i class="zmdi zmdi-plus zmdi-hc-fw"></i> Lista de movimientos</a>

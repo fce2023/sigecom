@@ -1,9 +1,9 @@
 <?php
 //Definir las constantes para la conexion a la base de datos
-define('SERVIDOR','sehuacho.com');
+define('SERVIDOR','localhost');
 define('PUERTO','3306');
 define('USUARIO','root');
-define('PASSWORD','*Royner123123*');
+define('PASSWORD','');
 define('BD','sigecom');
 
 //Definir la variable $servidor con los datos de la conexion

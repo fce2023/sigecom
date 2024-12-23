@@ -52,10 +52,17 @@
               <div class="icon">
                 <i class="ion ion-bag"></i>
               </div>
+              <?php if ($rol_sesion != 'tecnico') { ?>
               <a href="<?php echo $URL; ?>/inventario/movimientos/salida/" class="small-box-footer">Mas informacion <i class="fas fa-arrow-circle-right"></i></a>
+              <?php } ?>
+
+              <?php if ($rol_sesion == 'tecnico') { ?>
+              <a href="<?php echo $URL; ?>/inventario/tecnico/salida/lista.php" class="small-box-footer">Mas informacion <i class="fas fa-arrow-circle-right"></i></a>
+              <?php } ?>
             </div>
           </div>
           <!-- ./col -->
+          <?php if ($rol_sesion != 'tecnico') { ?>
           <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-success">
@@ -74,7 +81,9 @@
               <a href="<?php echo $URL; ?>/inventario/movimientos/entrada/" class="small-box-footer">Mas informacion <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
+          <?php } ?>
           <!-- ./col -->
+          <?php if ($rol_sesion != 'tecnico') { ?>
           <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-warning">
@@ -93,6 +102,7 @@
               <a href="<?php echo $URL; ?>/atencion_cliente/clientes/lista_clientes/" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
+          <?php } ?>
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->

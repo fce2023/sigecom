@@ -38,10 +38,17 @@ include ('../../layout/parte1.php');
                                       GROUP BY p.id_producto";
                             $stmt = $pdo->query($query);
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                echo "<tr>
-                                    <td>" . htmlspecialchars($row['nombre']) . "</td>
-                                    <td>" . htmlspecialchars($row['stock']) . "</td>
-                                </tr>";
+                                if ($row['stock'] == 0) {
+                                    echo "<tr>
+                                        <td>" . htmlspecialchars($row['nombre']) . "</td>
+                                        <td class='text-danger'><strong>STOCK AGOTADO</strong></td>
+                                    </tr>";
+                                } else {
+                                    echo "<tr>
+                                        <td>" . htmlspecialchars($row['nombre']) . "</td>
+                                        <td>" . max(0, htmlspecialchars($row['stock'])) . "</td>
+                                    </tr>";
+                                }
                             }
                             ?>
                         </tbody>

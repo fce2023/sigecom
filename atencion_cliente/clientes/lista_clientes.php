@@ -47,6 +47,9 @@ include ('../../layout/cliente.php');
                             $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
                             $stmt->execute();
                             $contador = $offset; // Start the counter from the offset
+                            $total_records = $stmt->rowCount();
+                            $total_pages = ceil($total_records / $limit);
+                            echo "<h4>Paginación: Página $page de $total_pages. Mostrando $limit de $total_records registros</h4>";
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
                                 <tr>
                                     <td><?php echo ++$contador; ?></td>

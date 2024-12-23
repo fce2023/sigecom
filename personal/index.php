@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 include ('../app/config.php');
 include ('../layout/sesion.php');
 include ('../layout/parte1.php');
@@ -87,103 +84,121 @@ include ('../app/controllers/personal/listado_de_personal.php');
         <div class="panel-body" style="background-color: #F5F5F5;">
             <div style="overflow-x: scroll;">
                 
-            <table class="table table-striped table-bordered text-center">
-                <thead style="background-color: #2196F3; color: white;">
-                    <tr>
-                        <th class="text-center">#</th>
-                        <th class="text-center">DNI</th>
-                        <th class="text-center">NOMBRE</th>
-                        <th class="text-center">APELLIDO PATERNO</th>
-                        <th class="text-center">APELLIDO MATERNO</th>
-                        <th class="text-center">CELULAR</th>
-                        <th class="text-center">DIRECCION</th>
-                        <th class="text-center">CARGO</th>
-                        <th class="text-center">ESTADO</th>
-                        <th class="text-center">EDITAR</th>
-                        <th class="text-center">ELIMINAR</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    foreach ($personal as $fila) {
-                    ?>
-                    <tr>
-                        <td><?php 
-                            static $contador = 1;
-                            echo $contador;
-                            $contador++;
-                            ?>
-                        </td>
+            <?php
+// Pagination logic
+$items_per_page = 5;
+$total_items = $personal->rowCount();
+$total_pages = ceil($total_items / $items_per_page);
+$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = max(0, ($current_page - 1) * $items_per_page);
 
-                        
-                        <td><?php echo $fila['Dni']; ?></td>
-                        <td><?php echo $fila['Nombre']; ?></td>
-                        <td><?php echo $fila['Apellido_paterno']; ?></td>
-                        <td><?php echo $fila['Apellido_materno']; ?></td>
-                        <td><?php echo $fila['Celular']; ?></td>
-                        <td><?php echo $fila['Direccion']; ?></td>
+// Fetch paginated data
+$query .= " LIMIT $offset, $items_per_page";
+$paginated_personal = $pdo->query($query);
+?>
 
-                        <td><?php 
-                            
-                            $query2 = "SELECT Nom_cargo FROM cargo WHERE ID_cargo = " . $fila['ID_cargo'];
-                            $cargo = $pdo->query($query2);
-                            foreach ($cargo as $fila2) {
-                                echo $fila2['Nom_cargo'];
-                            }
-                        ?></td>
+<h4>Paginación: <?php echo "Página $current_page de $total_pages. Mostrando $items_per_page de $total_items registros"; ?></h4>
 
-                        <td style="color: <?php echo $fila['Estado'] == 1 ? 'green' : 'red'; ?>"><?php echo $fila['Estado'] == 1 ? 'Activo' : 'Inactivo'; ?></td>
-                        <td>
+<table class="table table-striped table-bordered text-center">
+    <thead style="background-color: #2196F3; color: white;">
+        <tr>
+            <th class="text-center">#</th>
+            <th class="text-center">DNI</th>
+            <th class="text-center">NOMBRE</th>
+            <th class="text-center">APELLIDO PATERNO</th>
+            <th class="text-center">APELLIDO MATERNO</th>
+            <th class="text-center">CELULAR</th>
+            <th class="text-center">DIRECCION</th>
+            <th class="text-center">CARGO</th>
+            <th class="text-center">ESTADO</th>
+            <th class="text-center">EDITAR</th>
+            <th class="text-center">ELIMINAR</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $contador = $offset + 1;
+        foreach ($paginated_personal as $fila) {
+        ?>
+        <tr>
+            <td><?php echo $contador++; ?></td>
+            <td><?php echo $fila['Dni']; ?></td>
+            <td><?php echo $fila['Nombre']; ?></td>
+            <td><?php echo $fila['Apellido_paterno']; ?></td>
+            <td><?php echo $fila['Apellido_materno']; ?></td>
+            <td><?php echo $fila['Celular']; ?></td>
+            <td><?php echo $fila['Direccion']; ?></td>
+            <td>
+                <?php
+                $query2 = "SELECT Nom_cargo FROM cargo WHERE ID_cargo = " . $fila['ID_cargo'];
+                $cargo = $pdo->query($query2);
+                foreach ($cargo as $fila2) {
+                    echo $fila2['Nom_cargo'];
+                }
+                ?>
+            </td>
+            <td style="color: <?php echo $fila['Estado'] == 1 ? 'green' : 'red'; ?>"><?php echo $fila['Estado'] == 1 ? 'Activo' : 'Inactivo'; ?></td>
+            <td>
+                <button type="button" class="btn btn-primary btn-raised btn-xs" onclick="openModal('editarModalPersonal<?php echo $fila['ID_personal']; ?>')">
+                    <i class="zmdi zmdi-edit"></i>
+                </button>
+                <?php 
+                $id_personal = $fila['ID_personal'];
+                include 'funciones.php';
+                ?>
+                <script src="<?php echo $URL; ?>/js/funciones_personal.js"></script>
+            </td>
+            <td>
+                <form action="<?php echo $URL; ?>/app/controllers/personal/eliminar.php" method="post" onsubmit="return confirmacionEliminar(event, this);">
+                    <input type="hidden" name="id_personal" value="<?php echo $fila['ID_personal']; ?>">
+                    <button type="submit" class="btn btn-danger btn-raised btn-xs">
+                        <i class="zmdi zmdi-delete"></i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        <?php
+        }
+        ?>
+    </tbody>
+</table>
 
-                            <!--Boton de editar -->
-							<button type="button" class="btn btn-primary btn-raised btn-xs" onclick="openModal('editarModalPersonal<?php echo $fila['ID_personal']; ?>')">
-								<i class="zmdi zmdi-edit"></i>
-							</button>
-							<?php 
-							$id_personal = $fila['ID_personal'];
-							include 'funciones.php';
-							?>
-							<script src="<?php echo $URL; ?>/js/funciones_personal.js"></script>
-						</td>
 
-                        <td>
-						<form action="<?php echo $URL; ?>/app/controllers/personal/eliminar.php" method="post" onsubmit="return confirmacionEliminar(event, this);">
-									<input type="hidden" name="id_personal" value="<?php echo $fila['ID_personal']; ?>">
-									<button type="submit" class="btn btn-danger btn-raised btn-xs">
-										<i class="zmdi zmdi-delete"></i>
-									</button>
-						</form>
 
-                        </td>
-                    </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
+
+
+<!-- Pagination controls -->
+<nav>
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" href="?page=<?php echo $current_page - 1; ?>" aria-label="Anterior">
+                Anterior
+            </a>
+        </li>
+        
+
+        <?php for ($page = 1; $page <= $total_pages; $page++): ?>
+            <li class="page-item <?php echo ($page == $current_page) ? 'active' : ''; ?>">
+                <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+            </li>
+        <?php endfor; ?>
+
+        <li class="page-item">
+            <a class="page-link" href="?page=<?php echo $current_page + 1; ?>" aria-label="Siguiente">
+                Siguiente
+            </a>
+        </li>
+    </ul>
+</nav>
 
             </div>
-            <nav class="text-center">
-                <ul class="pagination pagination-sm">
-                <li><a href="javascript:void(0)">«</a></li>
-                    <li><a href="javascript:void(0)">1</a></li>
-                    <li><a href="javascript:void(0)">2</a></li>
-                    <li><a href="javascript:void(0)">3</a></li>
-                    <li><a href="javascript:void(0)">4</a></li>
-                    <li><a href="javascript:void(0)">5</a></li>
-                    <li><a href="javascript:void(0)">»</a></li>
-                </ul>
-            </nav>
+           
         </div>
     </div>
 </div>
-
 </section>
-
 </body>
 </html>
-
-
 
 <script>
 function confirmacionEliminar(e, form) {
@@ -210,10 +225,6 @@ function confirmacionEliminar(e, form) {
         }
     };
 }
-
-
-
-
 
 </script>
 

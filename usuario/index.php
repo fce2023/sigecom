@@ -96,10 +96,22 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                 </thead>
                 <tbody>
                     <?php
-                    foreach ($usuarios as $fila) {
+                    $items_per_page = 5;
+                    $total_items = $usuarios->rowCount();
+                    $total_pages = ceil($total_items / $items_per_page);
+                    $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $offset = max(0, ($current_page - 1) * $items_per_page);
+
+                    // Fetch paginated data
+                    $query .= " LIMIT $offset, $items_per_page";
+                    $paginated_usuarios = $pdo->query($query);
+
+                    echo "<h4>Paginación: Página $current_page de $total_pages. Mostrando $items_per_page de $total_items registros</h4>";
+
+                    foreach ($paginated_usuarios as $fila) {
                     ?>
                     <tr>
-                        <td><?php echo isset($contador) ? ++$contador : ($contador = 1); ?></td>
+                        <td><?php echo isset($contador) ? ++$contador : ($contador = 1 + $offset); ?></td>
                        
                         <td>
                             <?php 
@@ -148,6 +160,29 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                     ?>
                 </tbody>
             </table>
+
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<?php echo $current_page - 1; ?>" aria-label="Anterior">
+                            Anterior
+                        </a>
+                    </li>
+                    
+
+                    <?php for ($page = 1; $page <= $total_pages; $page++): ?>
+                        <li class="page-item <?php echo ($page == $current_page) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<?php echo $current_page + 1; ?>" aria-label="Siguiente">
+                            Siguiente
+                        </a>
+                    </li>
+                </ul>
+            </nav>
             <?php if (isset($_GET['error'])): ?>
                             <div class="alert alert-danger">
                                 <?php echo htmlspecialchars($_GET['error']); ?>
@@ -160,17 +195,7 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                         <?php endif; ?>
 			<script src="<?php echo $URL; ?>/js/funciones_usuario.js"></script>
             </div>
-            <nav class="text-center">
-                <ul class="pagination pagination-sm">
-                <li><a href="javascript:void(0)">«</a></li>
-                    <li><a href="javascript:void(0)">1</a></li>
-                    <li><a href="javascript:void(0)">2</a></li>
-                    <li><a href="javascript:void(0)">3</a></li>
-                    <li><a href="javascript:void(0)">4</a></li>
-                    <li><a href="javascript:void(0)">5</a></li>
-                    <li><a href="javascript:void(0)">»</a></li>
-                </ul>
-            </nav>
+            
         </div>
     </div>
 </div>

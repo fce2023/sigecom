@@ -94,10 +94,31 @@ include ('../app/controllers/roles/listado_de_tipos_usuario.php');
                 </thead>
                 <tbody>
                     <?php
+                    // calcular el número de registros por página
+                    $registros_por_pagina = 5;
+
+                    // obtener el número de página actual
+                    $pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+
+                    // calcular el offset para la consulta
+                    $offset = max(0, ($pagina_actual - 1) * $registros_por_pagina);
+
+                    // obtener el total de registros
+                    $total_registros = $pdo->query("SELECT COUNT(*) FROM tipo_usuario")->fetchColumn();
+
+                    // calcular el total de páginas
+                    $total_paginas = ceil($total_registros / $registros_por_pagina);
+
+                    // ejecutar la consulta con el offset y el límite
+                    $query .= " LIMIT $registros_por_pagina OFFSET $offset";
+                    $tipos_usuario = $pdo->query($query);
+
+                    echo "<h4>Paginación: Página $pagina_actual de $total_paginas. Mostrando $registros_por_pagina de $total_registros registros</h4>";
+
                     foreach ($tipos_usuario as $fila) {
                     ?>
                     <tr>
-                    <td><?php echo isset($contador) ? ++$contador : ($contador = 1); ?></td>
+                    <td><?php echo isset($contador) ? ++$contador : ($contador = 1 + $offset); ?></td>
                         <td><?php echo $fila['Nombre_tipousuario']; ?></td>
                         <td style="color: <?php echo $fila['Estado'] == '1' ? 'green' : 'red'; ?>"><?php echo $fila['Estado'] == '1' ? 'Activo' : 'Inactivo'; ?></td>
                         <td>
@@ -127,19 +148,27 @@ include ('../app/controllers/roles/listado_de_tipos_usuario.php');
                     ?>
                 </tbody>
             </table>
+
+            <!-- Paginación -->
+            <div class="text-center">
+                <ul class="pagination">
+                    <?php
+                    // mostrar los botones de paginación
+                    for ($i = 1; $i <= $total_paginas; $i++) {
+                        ?>
+                        <li class="<?php echo $pagina_actual == $i ? 'active' : ''; ?>">
+                            <a href="index.php?pagina=<?php echo $i; ?>&filtroEstado=<?php echo $filtroEstado; ?>">
+                                <?php echo $i; ?>
+                            </a>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                </ul>
+            </div>
 			<script src="<?php echo $URL; ?>/js/funciones_tipo_usuario.js"></script>
             </div>
-            <nav class="text-center">
-                <ul class="pagination pagination-sm">
-                    <li class="disabled"><a href="javascript:void(0)">«</a></li>
-                    <li class="active"><a href="javascript:void(0)">1</a></li>
-                    <li><a href="javascript:void(0)">2</a></li>
-                    <li><a href="javascript:void(0)">3</a></li>
-                    <li><a href="javascript:void(0)">4</a></li>
-                    <li><a href="javascript:void(0)">5</a></li>
-                    <li><a href="javascript:void(0)">»</a></li>
-                </ul>
-            </nav>
+           
         </div>
     </div>
 </div>

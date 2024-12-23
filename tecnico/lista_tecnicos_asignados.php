@@ -153,7 +153,7 @@ $tecnicosHtml .= "<thead>
 
 // Obtener parámetros de paginación
 $totalTecnicos = count($tecnicos);
-$itemsPerPage = 10;
+$itemsPerPage = 5;
 $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $startIndex = ($currentPage - 1) * $itemsPerPage;
 $totalPages = ceil($totalTecnicos / $itemsPerPage);
