@@ -212,7 +212,7 @@ foreach ($tecnicosPagina as $tecnico) {
             <td style='display: flex; gap: 10px;'>
                 <button type='button' class='btn btn-primary btn-sm' onclick=\"window.location.href='editar_tecnico_designado.php?id=$idDetalleClienteTecnico'\">Editar</button>
                 <button type='button' class='btn btn-info btn-sm' onclick=\"window.location.href='mas_detalles.php?id=$idDetalleClienteTecnico'\">Materiales</button>
-                <button type='button' class='btn btn-danger btn-sm' onclick=\"openDeleteModal($idDetalleClienteTecnico)\">Eliminar</button>
+                <button type='button' class='btn btn-danger btn-sm' onclick=\"window.location.href='eliminar_cliente.php?id=$idDetalleClienteTecnico'\">Eliminar</button>
             </td>
         </tr>";
     $contador++;

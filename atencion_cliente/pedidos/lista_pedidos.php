@@ -50,7 +50,9 @@ include ('../../layout/cliente.php');
                         $query .= " LIMIT $offset, $items_per_page";
                         $paginated_pedidos = $pdo->query($query);
 
-                        echo "<h4>Paginación: Página $current_page de $total_pages. Mostrando " . min($items_per_page, $total_items - $offset) . " de $total_items registros</h4>";
+                        if ($total_items > $offset) {
+                            echo "<h4>Paginación: Página $current_page de $total_pages. Mostrando " . min($items_per_page, $total_items - $offset) . " de $total_items registros</h4>";
+                        }
 
                         foreach ($paginated_pedidos as $row) {
                         ?>
@@ -123,7 +125,7 @@ include ('../../layout/cliente.php');
             <nav>
                         <ul class="pagination">
                             <li class="page-item">
-                                <a class="page-link" href="?page=<?php echo $current_page - 1; ?>" aria-label="Anterior">
+                                <a class="page-link" href="?page=<?php echo $current_page - 1; ?>" aria-label="Anterior" <?php echo ($current_page == 1) ? 'style="pointer-events: none;"' : ''; ?>>
                                     Anterior
                                 </a>
                             </li>
@@ -133,7 +135,7 @@ include ('../../layout/cliente.php');
                                 </li>
                             <?php endfor; ?>
                             <li class="page-item">
-                                <a class="page-link" href="?page=<?php echo $current_page + 1; ?>" aria-label="Siguiente">
+                                <a class="page-link" href="?page=<?php echo $current_page + 1; ?>" aria-label="Siguiente" <?php echo ($current_page == $total_pages) ? 'style="pointer-events: none;"' : ''; ?>>
                                     Siguiente
                                 </a>
                             </li>

@@ -26,7 +26,7 @@ try {
     $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
     $stmt->execute();
 
-    echo "<h4>Paginación: Página $page de $pages. Mostrando $limit de $total registros</h4>";
+    echo "<h4>Paginación: Mostrando $limit registros de $total, de 5 en 5</h4>";
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
@@ -106,8 +106,8 @@ try {
             echo '<li class="' . $active . '"><a href="' . $URL . '/atencion_cliente/historial.php?page=' . $i . '">' . $i . '</a></li>';
         }
         ?>
-        <li class="<?php echo ($page >= $pages) ? 'disabled' : ''; ?>">
-            <a href="<?php echo $page < $pages ? $URL . '/atencion_cliente/historial.php?page=' . ($page + 1) : 'javascript:void(0)'; ?>">»</a>
+        <li class="<?php echo ($page >= $pages || $total <= ($page * $limit)) ? 'disabled' : ''; ?>">
+            <a href="<?php echo $page < $pages && $total > ($page * $limit) ? $URL . '/atencion_cliente/historial.php?page=' . ($page + 1) : 'javascript:void(0)'; ?>">»</a>
         </li>
     </ul>
 </nav>

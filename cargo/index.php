@@ -79,11 +79,17 @@ include ('../app/controllers/cargo/listado_de_cargo.php');
 				$cargos = $pdo->query($query);
 
 				// Pagination logic
-				$items_per_page = 5;
+				$items_per_page = 3;
 				$total_items = $cargos->rowCount();
 				$total_pages = ceil($total_items / $items_per_page);
 				$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 				$offset = max(0, ($current_page - 1) * $items_per_page);
+
+				// No permite retroceder si ya no hay más datos
+				if ($current_page > $total_pages) {
+					$current_page = $total_pages;
+					$offset = ($current_page - 1) * $items_per_page;
+				}
 
 				// Fetch paginated data
 				$query .= " LIMIT $offset, $items_per_page";

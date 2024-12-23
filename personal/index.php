@@ -83,21 +83,19 @@ include ('../app/controllers/personal/listado_de_personal.php');
 
         <div class="panel-body" style="background-color: #F5F5F5;">
             <div style="overflow-x: scroll;">
-                
-            <?php
+                <?php
 // Pagination logic
-$items_per_page = 5;
+$items_per_page = 3;
 $total_items = $personal->rowCount();
 $total_pages = ceil($total_items / $items_per_page);
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = max(0, ($current_page - 1) * $items_per_page);
+$current_page = max(1, min($current_page, $total_pages)); // Ensure current page is within range
+$offset = ($current_page - 1) * $items_per_page;
 
 // Fetch paginated data
 $query .= " LIMIT $offset, $items_per_page";
 $paginated_personal = $pdo->query($query);
 ?>
-
-<h4>Paginación: <?php echo "Página $current_page de $total_pages. Mostrando $items_per_page de $total_items registros"; ?></h4>
 
 <table class="table table-striped table-bordered text-center">
     <thead style="background-color: #2196F3; color: white;">
@@ -163,19 +161,14 @@ $paginated_personal = $pdo->query($query);
     </tbody>
 </table>
 
-
-
-
-
 <!-- Pagination controls -->
 <nav>
     <ul class="pagination">
-        <li class="page-item">
+        <li class="page-item <?php echo ($current_page <= 1) ? 'disabled' : ''; ?>">
             <a class="page-link" href="?page=<?php echo $current_page - 1; ?>" aria-label="Anterior">
                 Anterior
             </a>
         </li>
-        
 
         <?php for ($page = 1; $page <= $total_pages; $page++): ?>
             <li class="page-item <?php echo ($page == $current_page) ? 'active' : ''; ?>">
@@ -183,7 +176,7 @@ $paginated_personal = $pdo->query($query);
             </li>
         <?php endfor; ?>
 
-        <li class="page-item">
+        <li class="page-item <?php echo ($current_page >= $total_pages) ? 'disabled' : ''; ?>">
             <a class="page-link" href="?page=<?php echo $current_page + 1; ?>" aria-label="Siguiente">
                 Siguiente
             </a>

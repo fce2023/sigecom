@@ -100,7 +100,7 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                     $total_items = $usuarios->rowCount();
                     $total_pages = ceil($total_items / $items_per_page);
                     $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-                    $offset = max(0, ($current_page - 1) * $items_per_page);
+                    $offset = max(0, min(($current_page - 1) * $items_per_page, $total_items - $items_per_page));
 
                     // Fetch paginated data
                     $query .= " LIMIT $offset, $items_per_page";
