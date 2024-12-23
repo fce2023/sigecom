@@ -108,16 +108,11 @@ include ('../app/controllers/proveedor/listado_de_proveedor.php');
                 $pagina_actual = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
                 $offset = ($pagina_actual - 1) * $items_por_pagina;
                 $proveedores_paginados = array_slice($proveedores, $offset, $items_por_pagina);
+
+                echo "Paginación: Página $pagina_actual de $total_paginas. Mostrando $items_por_pagina de $total_items registros";
                 ?>
                 
-                <tr>
-                    <td colspan="7">
-                        <div class="text-center">
-                            Mostrando <?php echo count($proveedores_paginados) ?> de <?php echo $total_items ?> registros.
-                            P&aacute;gina <?php echo $pagina_actual ?> de <?php echo $total_paginas ?>.
-                        </div>
-                    </td>
-                </tr>
+                
                 
                 <?php
                 foreach ($proveedores_paginados as $fila) {

@@ -97,25 +97,27 @@ include ('../../../layout/parte1.php');
                 <div class="form-group label-floating">
                         <label class="control-label">Producto *</label>
                         <select class="form-control" name="producto-reg" required title="Seleccione un producto.">
-                            <option value="">Seleccione una opción</option>
-                            <?php
-                            $query = "SELECT p.nombre,                                        COALESCE((SELECT SUM(dpp.cantidad) FROM detalle_producto_proveedor dpp WHERE dpp.ID_producto = p.id_producto), 0) +                                        COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Entrada'), 0) -                                        COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Salida'), 0) AS stock                                       FROM productos p                                       GROUP BY p.id_producto";
-                            $stmt = $pdo->query($query);
-                            $productosSinStock = [];
-                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                if ($row['stock'] <= 0) {
-                                    $productosSinStock[] = $row['nombre'];
-                                    echo "<option value='' style='color: red;' disabled>" . $row['nombre'] . " (No hay stock)</option>";
-                                } else {
-                                    echo "<option value='" . $row['id_producto'] . "'>" . $row['nombre'] . "</option>";
-                                }
-                            }
-                            if (count($productosSinStock) > 0) {
-                                echo "<option value='' disabled>--------------------</option>";
-                                echo "<option value='' disabled style='color: red;'>Productos sin stock: " . implode(', ', $productosSinStock) . "</option>";
-                            }
-                            ?>
-                        </select>
+            <option value="">Seleccione una opción</option>
+            <?php
+            // Consulta para calcular el stock
+            $query = "SELECT p.id_producto, p.nombre, tp.Nom_producto, 
+                      COALESCE((SELECT SUM(dpp.cantidad) FROM detalle_producto_proveedor dpp WHERE dpp.ID_producto = p.id_producto), 0) + 
+                      COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Entrada'), 0) - 
+                      COALESCE((SELECT SUM(dtp.cantidad) FROM detalle_tecnico_producto dtp WHERE dtp.ID_producto = p.id_producto AND dtp.tipo_movimiento = 'Salida'), 0) AS stock
+                      FROM productos p
+                      LEFT JOIN tipo_producto tp ON p.id_tipo_producto = tp.ID_tipo_producto
+                      GROUP BY p.id_producto
+                      ORDER BY p.nombre";
+
+            $stmt = $pdo->query($query);
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $stock = (int) $row['stock'];
+                $disabled = $stock <= 0 ? 'disabled' : '';
+                $class = $stock <= 0 ? 'style="color: red;"' : '';
+                echo "<option value='" . $row['id_producto'] . "' $disabled $class>" . htmlspecialchars($row['nombre']) . " - " . htmlspecialchars($row['Nom_producto']) . ($stock <= 0 ? " (Sin stock)" : " (Stock: $stock)") . "</option>";
+            }
+            ?>
+        </select>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-6">
