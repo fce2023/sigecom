@@ -174,13 +174,15 @@ foreach ($tecnicosPagina as $tecnico) {
            
         </tr>";
         $tecnicosHtml .= "<tr>
-            <td colspan='8'>
-                <a href='generar_reporte_pdf.php?id_tecnico=" . urlencode($tecnico[$id_tecnico]) . "' class='btn btn-secondary btn-sm me-2'>
-                    <i class='fas fa-file-pdf'></i> Generar PDF
-                </a>
-                <a href='generar_reporte_excel.php?id_tecnico=" . urlencode($tecnico[$id_tecnico]) . "' class='btn btn-success btn-sm'>
-                    <i class='fas fa-file-excel'></i> Generar Excel
-                </a>
+            <td colspan='8' style='background-color: #f8f9fa;'>
+                <div class='d-flex justify-content-between'>
+                    <a href='generar_reporte_pdf.php?id_tecnico=" . urlencode($tecnico[$id_tecnico]) . "' class='btn btn-secondary btn-sm me-2'>
+                        <i class='fas fa-file-pdf'></i> Generar PDF
+                    </a>
+                    <a href='generar_reporte_excel.php?id_tecnico=" . urlencode($tecnico[$id_tecnico]) . "' class='btn btn-success btn-sm'>
+                        <i class='fas fa-file-excel'></i> Generar Excel
+                    </a>
+                </div>
             </td>
         </tr>";
     }

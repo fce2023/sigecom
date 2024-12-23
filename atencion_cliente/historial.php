@@ -6,7 +6,7 @@ include ('../layout/parte1.php');
 include ('../layout/tecnico.php');
 
 
-$limit = 3;
+$limit = 5;
 $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
