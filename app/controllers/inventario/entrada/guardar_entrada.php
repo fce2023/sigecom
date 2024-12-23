@@ -19,7 +19,7 @@ try {
         }
 
         $query = "INSERT INTO detalle_producto_proveedor (ID_proveedor, ID_producto, ID_usuario, Fecha_abastecimiento, cantidad, Observación, Estado) 
-                  VALUES (:id_proveedor, :id_producto, :id_usuario, :fecha_abastecimiento, :cantidad, :observacion, 'Activo')";
+                  VALUES (:id_proveedor, :id_producto, :id_usuario, :fecha_abastecimiento, :cantidad, :observacion, '1')";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':id_proveedor', $id_proveedor, PDO::PARAM_INT);
         $stmt->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
