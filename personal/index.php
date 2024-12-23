@@ -85,7 +85,7 @@ include ('../app/controllers/personal/listado_de_personal.php');
             <div style="overflow-x: scroll;">
                 <?php
 // Pagination logic
-$items_per_page = 3;
+$items_per_page = 5;
 $total_items = $personal->rowCount();
 $total_pages = ceil($total_items / $items_per_page);
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -95,6 +95,9 @@ $offset = ($current_page - 1) * $items_per_page;
 // Fetch paginated data
 $query .= " LIMIT $offset, $items_per_page";
 $paginated_personal = $pdo->query($query);
+
+// Show pagination details
+echo "Mostrando $items_per_page de $total_items registros. P&aacute;gina $current_page de $total_pages";
 ?>
 
 <table class="table table-striped table-bordered text-center">
@@ -163,24 +166,12 @@ $paginated_personal = $pdo->query($query);
 
 <!-- Pagination controls -->
 <nav>
-    <ul class="pagination">
-        <li class="page-item <?php echo ($current_page <= 1) ? 'disabled' : ''; ?>">
-            <a class="page-link" href="?page=<?php echo $current_page - 1; ?>" aria-label="Anterior">
-                Anterior
-            </a>
-        </li>
-
+    <ul class="pagination justify-content-center">
         <?php for ($page = 1; $page <= $total_pages; $page++): ?>
             <li class="page-item <?php echo ($page == $current_page) ? 'active' : ''; ?>">
                 <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
             </li>
         <?php endfor; ?>
-
-        <li class="page-item <?php echo ($current_page >= $total_pages) ? 'disabled' : ''; ?>">
-            <a class="page-link" href="?page=<?php echo $current_page + 1; ?>" aria-label="Siguiente">
-                Siguiente
-            </a>
-        </li>
     </ul>
 </nav>
 

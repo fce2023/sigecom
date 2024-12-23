@@ -88,7 +88,7 @@ include ('../../layout/parte1.php');
 
 							</tr>
 						</thead>
-						                        <tbody>
+						    <tbody>
                             <?php
                             $filtroTipo = isset($_GET['filtroTipo']) ? $_GET['filtroTipo'] : 'todos';
                             
@@ -97,14 +97,8 @@ include ('../../layout/parte1.php');
                             $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                             $offset = ($currentPage - 1) * $itemsPerPage;
 
-                            echo '<nav aria-label="Page navigation">';
-                            echo '<ul class="pagination">';
-                            if ($currentPage > 1) {
-                                echo '<li class="page-item"><a class="page-link" href="?page=' . ($currentPage - 1) . '&filtroTipo=' . $filtroTipo . '">Anterior</a></li>';
-                            }
-                            // Add logic here for other pagination buttons if needed
-                            echo '</ul>';
-                            echo '</nav>';
+                            // Remove pagination button logic
+                           
 
                             $query = "SELECT dpp.Id_det_producto_proveedor AS id_detalle, 'Entrada' AS tipo, p.nombre AS nombre_producto, 
                                               dpp.Fecha_abastecimiento AS fecha, dpp.Cantidad, dpp.Observación, dpp.Estado, u.Nombre_usuario

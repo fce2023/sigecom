@@ -75,12 +75,12 @@ include ('../app/controllers/cargo/listado_de_cargo.php');
 					$query .= " WHERE Estado = 0";
 				}
 
-				// Ejecuta la consulta
+				// Ejecuta la consulta y obtiene el total de registros
 				$cargos = $pdo->query($query);
+				$total_items = $cargos->rowCount();
 
 				// Pagination logic
-				$items_per_page = 3;
-				$total_items = $cargos->rowCount();
+				$items_per_page = 5;
 				$total_pages = ceil($total_items / $items_per_page);
 				$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 				$offset = max(0, ($current_page - 1) * $items_per_page);
@@ -95,7 +95,7 @@ include ('../app/controllers/cargo/listado_de_cargo.php');
 				$query .= " LIMIT $offset, $items_per_page";
 				$paginated_cargos = $pdo->query($query);
 
-				echo "<h4>Paginación: Página $current_page de $total_pages. Mostrando $items_per_page de $total_items registros.</h4>";
+				echo "<h4>Paginación: Página $current_page de $total_pages. Mostrando " . min($items_per_page, $total_items - $offset) . " de $total_items registros.</h4>";
 			?>
 
 			<div class="panel-body">
@@ -142,24 +142,11 @@ include ('../app/controllers/cargo/listado_de_cargo.php');
 <!-- Pagination controls -->
 <nav>
     <ul class="pagination">
-        <li class="page-item">
-            <a class="page-link" href="?page=<?php echo $current_page - 1; ?>" aria-label="Anterior">
-                Anterior
-            </a>
-        </li>
-        
-
         <?php for ($page = 1; $page <= $total_pages; $page++): ?>
             <li class="page-item <?php echo ($page == $current_page) ? 'active' : ''; ?>">
                 <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
             </li>
         <?php endfor; ?>
-
-        <li class="page-item">
-            <a class="page-link" href="?page=<?php echo $current_page + 1; ?>" aria-label="Siguiente">
-                Siguiente
-            </a>
-        </li>
     </ul>
 </nav>
 				</div>

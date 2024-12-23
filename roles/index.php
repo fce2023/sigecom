@@ -94,6 +94,9 @@ include ('../app/controllers/roles/listado_de_tipos_usuario.php');
                 </thead>
                 <tbody>
                     <?php
+                    // obtener el total de registros
+                    $total_registros = $pdo->query("SELECT COUNT(*) FROM tipo_usuario")->fetchColumn();
+
                     // calcular el número de registros por página
                     $registros_por_pagina = 5;
 
@@ -103,9 +106,6 @@ include ('../app/controllers/roles/listado_de_tipos_usuario.php');
                     // calcular el offset para la consulta
                     $offset = max(0, ($pagina_actual - 1) * $registros_por_pagina);
 
-                    // obtener el total de registros
-                    $total_registros = $pdo->query("SELECT COUNT(*) FROM tipo_usuario")->fetchColumn();
-
                     // calcular el total de páginas
                     $total_paginas = ceil($total_registros / $registros_por_pagina);
 
@@ -113,7 +113,7 @@ include ('../app/controllers/roles/listado_de_tipos_usuario.php');
                     $query .= " LIMIT $registros_por_pagina OFFSET $offset";
                     $tipos_usuario = $pdo->query($query);
 
-                    echo "<h4>Paginación: Página $pagina_actual de $total_paginas. Mostrando $registros_por_pagina de $total_registros registros</h4>";
+                    echo "<h4>Paginación: Página $pagina_actual de $total_paginas. Mostrando " . min($registros_por_pagina, $total_registros - $offset) . " de $total_registros registros</h4>";
 
                     foreach ($tipos_usuario as $fila) {
                     ?>

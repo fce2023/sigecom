@@ -101,33 +101,42 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
                     $total_pages = ceil($total_items / $items_per_page);
                     $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                     $offset = max(0, min(($current_page - 1) * $items_per_page, $total_items - $items_per_page));
+                    
+                    // Fetch paginated data with offset and limit
+                    $stmt = $pdo->prepare($query . " LIMIT :offset, :items_per_page");
+                    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+                    $stmt->bindParam(':items_per_page', $items_per_page, PDO::PARAM_INT);
+                    $stmt->execute();
+                    $paginated_usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    // Fetch paginated data
-                    $query .= " LIMIT $offset, $items_per_page";
-                    $paginated_usuarios = $pdo->query($query);
+                    $contador = $offset + 1;
 
                     echo "<h4>Paginación: Página $current_page de $total_pages. Mostrando $items_per_page de $total_items registros</h4>";
 
                     foreach ($paginated_usuarios as $fila) {
                     ?>
                     <tr>
-                        <td><?php echo isset($contador) ? ++$contador : ($contador = 1 + $offset); ?></td>
+                        <td><?php echo $contador++; ?></td>
                        
                         <td>
                             <?php 
-                                $query2 = "SELECT Nombre, Apellido_paterno, Apellido_materno, Dni FROM personal WHERE ID_personal = ".$fila['id_personal'];
-                                $personal = $pdo->query($query2);
-                                foreach ($personal as $fila2) {
+                                $query2 = "SELECT Nombre, Apellido_paterno, Apellido_materno, Dni FROM personal WHERE ID_personal = :id_personal";
+                                $stmt2 = $pdo->prepare($query2);
+                                $stmt2->execute([':id_personal' => $fila['id_personal']]);
+                                $fila2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+                                if ($fila2) {
                                     echo $fila2['Nombre']." ".$fila2['Apellido_paterno']." ".$fila2['Apellido_materno']." (DNI: ".$fila2['Dni']." )";
                                 }
                             ?>
                         </td>
-                        <td><?php echo $fila['Nombre_usuario']; ?></td>
+                        <td><?php echo htmlspecialchars($fila['Nombre_usuario']); ?></td>
                         <td><?php 
-                            $query2 = "SELECT Nombre_tipousuario FROM tipo_usuario WHERE ID_tipousuario = ".$fila['ID_tipousuario'];
-                            $tipo_usuario = $pdo->query($query2);
-                            foreach ($tipo_usuario as $fila2) {
-                                echo $fila2['Nombre_tipousuario'];
+                            $query2 = "SELECT Nombre_tipousuario FROM tipo_usuario WHERE ID_tipousuario = :id_tipousuario";
+                            $stmt2 = $pdo->prepare($query2);
+                            $stmt2->execute([':id_tipousuario' => $fila['ID_tipousuario']]);
+                            $fila2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+                            if ($fila2) {
+                                echo htmlspecialchars($fila2['Nombre_tipousuario']);
                             }
                         ?></td>
 
@@ -136,12 +145,7 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
 							<button type="button" class="btn btn-primary btn-raised btn-xs" onclick="openModal('editarModalUsuario<?php echo $fila['ID_usuario']; ?>')">
 								<i class="zmdi zmdi-edit"></i>
 							</button>
-							<?php 
-							$id_usuario = $fila['ID_usuario']; 
-							include 'funciones.php';
-							?>
 						</td>
-
 
                         <td>
 						<form action="<?php echo $URL; ?>/app/controllers/usuario/eliminar.php" method="post" onsubmit="return confirmacionEliminar(event, this);">
@@ -150,9 +154,6 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
 										<i class="zmdi zmdi-delete"></i>
 									</button>
 						</form>
-
-
-
                         </td>
                     </tr>
                     <?php
@@ -163,24 +164,11 @@ include ('../app/controllers/usuario/listado_de_usuario.php');
 
             <nav>
                 <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="?page=<?php echo $current_page - 1; ?>" aria-label="Anterior">
-                            Anterior
-                        </a>
-                    </li>
-                    
-
                     <?php for ($page = 1; $page <= $total_pages; $page++): ?>
                         <li class="page-item <?php echo ($page == $current_page) ? 'active' : ''; ?>">
-                            <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+                            <a class="page-link" href="?page=<?php echo $page; ?>&filtroEstado=<?php echo $filtroEstado; ?>"><?php echo $page; ?></a>
                         </li>
                     <?php endfor; ?>
-
-                    <li class="page-item">
-                        <a class="page-link" href="?page=<?php echo $current_page + 1; ?>" aria-label="Siguiente">
-                            Siguiente
-                        </a>
-                    </li>
                 </ul>
             </nav>
             <?php if (isset($_GET['error'])): ?>

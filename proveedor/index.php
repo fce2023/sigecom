@@ -109,7 +109,8 @@ include ('../app/controllers/proveedor/listado_de_proveedor.php');
                 $offset = ($pagina_actual - 1) * $items_por_pagina;
                 $proveedores_paginados = array_slice($proveedores, $offset, $items_por_pagina);
 
-                echo "Paginación: Página $pagina_actual de $total_paginas. Mostrando $items_por_pagina de $total_items registros";
+                $contador = $offset + 1;
+                echo "Paginación: Página $pagina_actual de $total_paginas. Mostrando " . min($items_por_pagina, $total_items - $offset) . " de $total_items registros";
                 ?>
                 
                 

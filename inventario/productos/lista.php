@@ -53,7 +53,7 @@ include ('../../layout/parte1.php');
 
 							$total_items_query = $pdo->query("SELECT COUNT(*) FROM productos");
 							$total_items = $total_items_query->fetchColumn();
-							$total_pages = ceil($total_items / $items_per_page);
+							$total_pages = min(ceil($total_items / $items_per_page), $page);
 
 							echo "<h4>Paginación: Página $page de $total_pages. Mostrando $items_per_page de $total_items registros</h4>";
 
