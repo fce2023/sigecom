@@ -42,8 +42,7 @@
 								// Calcular el número total de páginas
 								$total_paginas = ceil($total_registros / $por_pagina);
 
-								// Mostrar la paginación
-								echo "<h4>Paginación: Página $pagina_actual de $total_paginas. Mostrando $por_pagina de $total_registros registros</h4>";
+								
 
 								// Consultar los registros para la página actual
 								$query = "
